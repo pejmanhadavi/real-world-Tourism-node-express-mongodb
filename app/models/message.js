@@ -11,7 +11,7 @@ const messageSchema = new Schema({
       }],
       validate: [(val)=>{
         return val.length>1 && val.length<3;
-      }, 'Sould be 2 participants']
+      }, 'MOST_BE_2_PARTICIPANTS']
     },
     body: {
       type: String,

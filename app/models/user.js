@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const userSchema = new Schema({
     username: {
         type: String,
-        required: [true, 'Username can not be blank'],
+        required: [true, 'USERNAME_IS_BLANK'],
         match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
         minlength: 4, 
         maxlength: 50,
@@ -20,14 +20,14 @@ const userSchema = new Schema({
     },
     password: {
         type: string , 
-        required: [true, 'Password can not be blank'],
+        required: [true, 'PASSWORD_IS_BLANK'],
         minlength: 5, 
         maxlength: 1024,
         select: false
     } ,
-    phoneNumber: {
+    phone: {
         type:string,
-        required: [true, 'Phone number can not be blank'],
+        required: [true, 'PHONE_IS_BLANK'],
         select: false,
         //es-indexed
     },
@@ -42,18 +42,18 @@ const userSchema = new Schema({
         type: String, 
         lowercase: true,
         unique: true,
-        match: [/\S+@\S+\.\S+/, 'Is invalid'],
+        match: [/\S+@\S+\.\S+/, 'IS_INVALID'],
         maxlength: 255,
         validate: {
             validator: validator.isEmail,
-            message: 'Email is not valid'
+            message: 'EMAIL_IS_NOT_VALID'
         }
     },
     profileImage: {
         type: [string],
         validate: [()=>{
             return val.length <= 5;
-        }, 'Photos should be at most 5']
+        }, 'PHOTOS_AT_MOST_5']
     },
     backgroundImage: string,
     name: {
