@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 // connect mongoose to mongod
-mongoose.connect(config.get('database'), {useNewUrlParser: true})
+mongoose.connect(config.get('DATABASE'), {useNewUrlParser: true})
 .then(()=>console.log('Connected to mongodb...'))
 .catch(()=>console.log('Could not connect to mongodb...'));
 
