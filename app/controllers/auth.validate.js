@@ -20,6 +20,14 @@ exports.register = [
             min: 5
         })
         .withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+    check('confirmPassword')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY')
+        //I should do this for confirm password
+        ,
     check('phone')
         .exists()
         .withMessage('MISSING')
