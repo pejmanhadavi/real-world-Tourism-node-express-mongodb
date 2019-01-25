@@ -1,5 +1,6 @@
 const User = require('../models/user').User;
 const bcrypt = require('bcrypt');
+const request = require('request');
 
 exports.handleError = (res, err)=>{
     //send errors to user
@@ -52,4 +53,19 @@ exports.phoneExists = async phone =>{
             resolve(false);
         });
     });
+}
+
+
+exports.sendVerificationCode = (phone, verification) => {
+    request.post({
+        uri:"this is some uri",
+        form: {
+            receiver:phone,
+            text:verification,
+            from: 'from',
+            username: 'username',
+            password: 'password'
+        }
+    }).then(result => console.log(result))
+        .catch(err => console.log(err));
 }

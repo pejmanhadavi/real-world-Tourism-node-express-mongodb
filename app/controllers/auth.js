@@ -3,11 +3,13 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user').User;
 const mongoose = require('mongoose');
+const phoneToken = require('generate-sms-verification-code');
 
 const usernameExists = require('./base').usernameExists;
 const phoneExists = require('./base').phoneExists;
 const buildErrObject = require('./base').buildErrObject;
 const handleError = require('./base').handleError;
+const sendVerificationCode = require('./base').sendVerificationCode;
 
 
 exports.register = async(req, res) => {
@@ -19,7 +21,7 @@ exports.register = async(req, res) => {
             const result = await registerUser(req);
             const userInfo = setUserInfo(result);
             const response = returnRegistrationToken(result, userInfo);
-            // sendRegistrationSmsMessage(result);
+            // sendVerificationCode(result.phone, result.verification);
             res.status(201).json(response);
         }
     }catch(err){
@@ -36,7 +38,7 @@ const registerUser = async req => {
             username: req.username,
             password: req.password,
             phone: req.phone,
-            phoneVerification: 'verification'
+            verification: phoneToken(6, {type: 'string'})
         });
 
         await user.genSalt();

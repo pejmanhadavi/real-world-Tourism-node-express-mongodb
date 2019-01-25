@@ -30,10 +30,10 @@ const userSchema = new Schema({
         select: false,
         //es-indexed
     },
-    phoneVerification: {
+    verification: {
         type: String
     },
-    phoneVerified: {
+    verified: {
       type: Boolean,
       default: false
     },

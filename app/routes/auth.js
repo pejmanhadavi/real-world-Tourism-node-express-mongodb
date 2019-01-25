@@ -11,4 +11,6 @@ Routes
 
 router.post('/register', validate.register, controller.register);
 
+// router.post('/verify', validate.verify, controller.verify);
+
 module.exports = router;

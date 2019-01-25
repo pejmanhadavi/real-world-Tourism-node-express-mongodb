@@ -51,3 +51,22 @@ exports.register = [
     }
 }
 ];
+
+
+
+exports.verify = [
+    check('id')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY'),
+    (req, res, next) => {
+        try {
+            validationResult(req).throw()
+            return next()
+        } catch (err) {
+            return handleError(res, buildErrObject(422, err.array()))
+        }
+    }
+]
