@@ -1,5 +1,9 @@
-#
+#.idea
 .idea/
+
+#
+test.js
+
 # Logs
 logs
 *.log
