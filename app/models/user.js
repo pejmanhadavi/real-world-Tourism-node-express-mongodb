@@ -86,7 +86,7 @@ const userSchema = new Schema({
         default: false
       },
     scanTourleaderCertification: String,
-    TourleaderCertificationVerified: {
+    tourleaderCertificationVerified: {
         type: Boolean,
         default: false
       },
@@ -140,31 +140,18 @@ const hash = (user, salt, next) => {
     })
 }
 
-//generate salt
-const genSalt = (user, SALT_FACTOR, next) => {
-   bcrypt.genSalt(SALT_FACTOR, (err, salt) => {
-     if (err) {
-       return next(err);
-     }
-     return hash(user, salt, next);
-   })
- }
-
-//save 
-userSchema.pre('save', function(next) {
-  const that = this;
-  const SALT_FACTOR = 10;
-  if (!that.isModified('password')) {
-    return next();
-  }
-  return genSalt(that, SALT_FACTOR, next);
-});
 
 //compare passwords
 userSchema.methods.comparePassword = function(passwordAttempt, cb) {
   bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
     err ? cb(err) : cb(null, isMatch)
   );
+}
+
+//hash password
+userSchema.methods.genSalt = async function() {
+    const salt = await bcrypt.genSalt(10);
+    this.password= await bcrypt.hash(this.password, salt);
 }
 
 //index
