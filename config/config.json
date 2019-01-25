@@ -1,4 +1,5 @@
 {
     "JWT_SECRET" : "TourasoSecret" ,
-    "DATABASE" : "mongodb://localhost:27017/touraso"
+    "DATABASE" : "mongodb://localhost:27017/touraso",
+    "JWT_SECRET": "TourasoIsTheBest"
 }

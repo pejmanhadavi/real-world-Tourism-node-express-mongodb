@@ -2,17 +2,19 @@ const matchedData = require('express-validator/filter').matchedData;
 const config = require('config')
 const jwt = require('jsonwebtoken');
 const User = require('../models/user').User;
+const mongoose = require('mongoose');
+
 const usernameExists = require('./base').usernameExists;
 const buildErrObject = require('./base').buildErrObject;
-const handleError = require('./base').handle Error;
+const handleError = require('./base').handleError;
 
 
 exports.register = async(req, res) => {
     try{
-        req = matchedData(req)
-        const doesEmailExists = usernameExists(req.username);
-        if(!doesEmailExists){
-            const result = await regiserUser(req);
+        req = matchedData(req);
+        const doesUsernameExists =await usernameExists(req.username);
+        if(!doesUsernameExists){
+            const result = await registerUser(req);
             const userInfo = setUserInfo(result);
             const response = returnRegistrationToken(result, userInfo);
             // sendRegistrationSmsMessage(result);
@@ -20,23 +22,23 @@ exports.register = async(req, res) => {
         }
     }catch(err){
         handleError(res, err);
+        // console.log(err);
     }
 }
 
 
-const regiserUser = async req => {
-    return new Promise((resolve, reject)=>{
+
+const registerUser = async req => {
+    return new Promise((resolve, reject) => {
         const user = new User({
             username: req.username,
             password: req.password,
-            phone: phone
+            phone: req.phone,
+            phoneVerification: 'verification'
         });
-        user.save((err, result)=>{
-            if(err){
-                reject(buildErrObject(422, err.message))
-            }
-            resolve(result);
-        });
+        user.save()
+            .then(result => resolve(result))
+            .catch(err => reject(buildErrObject(422, err.message)));
     });
 }
 
@@ -68,8 +70,9 @@ const generateToken = id => {
     };
 
     //Instead of config.get('JWT_SECRET') i can use process.env
-    return jwt.sign(obj, config.get('JWT_SECRET'), {
+    return jwt.sign(obj, config.get('JWT_SECRET')
+        , {
         //Instead of config.get('JWT_EXPIRATION') i can use process.env
-        expiresIn: config.get('JWT_EXPIRATION')
+        // expiresIn: config.get('JWT_EXPIRATION')
     });
 }

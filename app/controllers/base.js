@@ -2,11 +2,14 @@ const User = require('../models/user').User;
 
 exports.handleError = (res, err)=>{
     //send errors to user
-    res.status(err.code).json({
-        errors: {
-            msg: err.message
-        }
-    });
+    // res.status(err.code).json({
+    //     errors: {
+    //         msg: err.message
+    //     }
+    // });
+
+    // errors in console
+    console.log(err);
     
 }
 

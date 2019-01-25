@@ -3,7 +3,7 @@ const mongoosePaginate = require('mongoose-paginate');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Types.ObjectId;
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 //user schema
@@ -12,21 +12,21 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'USERNAME_IS_BLANK'],
         match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
-        minlength: 4, 
+        minlength: 4,
         maxlength: 50,
         lowercase: true,
         unique: true,
         index: true,
     },
     password: {
-        type: string , 
+        type: String , 
         required: [true, 'PASSWORD_IS_BLANK'],
-        minlength: 5, 
+        minlength: 5,
         maxlength: 1024,
         select: false
     } ,
     phone: {
-        type:string,
+        type:String,
         required: [true, 'PHONE_IS_BLANK'],
         select: false,
         //es-indexed
@@ -50,48 +50,48 @@ const userSchema = new Schema({
         }
     },
     profileImage: {
-        type: [string],
-        validate: [()=>{
+        type: [String],
+        validate: [(val)=>{
             return val.length <= 5;
         }, 'PHOTOS_AT_MOST_5']
     },
-    backgroundImage: string,
+    backgroundImage: String,
     name: {
-        type: string,
+        type: String,
         maxlength: 50,
     }, 
     lastname: {
-        type: string,
+        type: String,
         maxlength: 255,
     },
     languages: [{
-        type: string,
+        type: String,
         maxlength: 50,
     }], 
     about: {
-        type: string,
+        type: String,
         maxlength: 500,
     },
     metto: {
-        type: string,
+        type: String,
         maxlength: 70,
     },
     iWillShowYou: [{
-        type: string,
+        type: String,
         maxlength: 50,
     }],
-    scanBirthCertification: string,
+    scanBirthCertification: String,
     birthCertificationVerified: {
         type: Boolean,
         default: false
       },
-    scanTourleaderCertification: string,
+    scanTourleaderCertification: String,
     TourleaderCertificationVerified: {
         type: Boolean,
         default: false
       },
     nationalId: {
-        type: string, 
+        type: String,
         maxlength: 10,
     },
     travelFacilities: [{
@@ -130,6 +130,16 @@ const userSchema = new Schema({
     timestamps: true
 });
 
+const hash = (user, salt, next) => {
+    bcrypt.hash(user.password, salt, null, (err, newHash) => {
+        if(err)
+            return next(err);
+        user.password = newHash;
+
+        return next();
+    })
+}
+
 //generate salt
 const genSalt = (user, SALT_FACTOR, next) => {
    bcrypt.genSalt(SALT_FACTOR, (err, salt) => {
@@ -141,7 +151,7 @@ const genSalt = (user, SALT_FACTOR, next) => {
  }
 
 //save 
-UserSchema.pre('save', function(next) {
+userSchema.pre('save', function(next) {
   const that = this;
   const SALT_FACTOR = 10;
   if (!that.isModified('password')) {
@@ -151,14 +161,14 @@ UserSchema.pre('save', function(next) {
 });
 
 //compare passwords
-UserSchema.methods.comparePassword = function(passwordAttempt, cb) {
+userSchema.methods.comparePassword = function(passwordAttempt, cb) {
   bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
     err ? cb(err) : cb(null, isMatch)
   );
 }
 
 //index
-UserSchema.index({
+userSchema.index({
   name: 'text',
   lastname: 'text',
   leaderVerified: 'text',
