@@ -1,5 +1,5 @@
 const matchedData = require('express-validator/filter').matchedData;
-const config = require('config')
+const config = require('config');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user').User;
 const mongoose = require('mongoose');
@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const usernameExists = require('./base').usernameExists;
 const buildErrObject = require('./base').buildErrObject;
 const handleError = require('./base').handleError;
+const genSalt =
 
 
 exports.register = async(req, res) => {
@@ -29,13 +30,15 @@ exports.register = async(req, res) => {
 
 
 const registerUser = async req => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const user = new User({
             username: req.username,
             password: req.password,
             phone: req.phone,
             phoneVerification: 'verification'
         });
+
+        await user.genSalt();
         user.save()
             .then(result => resolve(result))
             .catch(err => reject(buildErrObject(422, err.message)));

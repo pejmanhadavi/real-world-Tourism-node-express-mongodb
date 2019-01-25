@@ -1,4 +1,5 @@
 const User = require('../models/user').User;
+const bcrypt = require('bcrypt');
 
 exports.handleError = (res, err)=>{
     //send errors to user
@@ -34,8 +35,4 @@ exports.usernameExists = async username =>{
             resolve(false);
         });
     });
-}
-
-exports.encrypt = async text =>{
-
 }
