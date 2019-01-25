@@ -5,16 +5,17 @@ const User = require('../models/user').User;
 const mongoose = require('mongoose');
 
 const usernameExists = require('./base').usernameExists;
+const phoneExists = require('./base').phoneExists;
 const buildErrObject = require('./base').buildErrObject;
 const handleError = require('./base').handleError;
-const genSalt =
 
 
 exports.register = async(req, res) => {
     try{
         req = matchedData(req);
-        const doesUsernameExists =await usernameExists(req.username);
-        if(!doesUsernameExists){
+        const doesPhoneExists = await phoneExists(req.phone);
+        const doesUsernameExists = await usernameExists(req.username);
+        if(!doesUsernameExists && !doesPhoneExists){
             const result = await registerUser(req);
             const userInfo = setUserInfo(result);
             const response = returnRegistrationToken(result, userInfo);
