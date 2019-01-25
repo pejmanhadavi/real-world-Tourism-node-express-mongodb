@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
-const validator = require('validator');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -38,79 +37,6 @@ const userSchema = new Schema({
       type: Boolean,
       default: false
     },
-    email: {
-        type: String, 
-        lowercase: true,
-        unique: true,
-        match: [/\S+@\S+\.\S+/, 'IS_INVALID'],
-        maxlength: 255,
-        validate: {
-            validator: validator.isEmail,
-            message: 'EMAIL_IS_NOT_VALID'
-        }
-    },
-    profileImage: {
-        type: [String],
-        validate: [(val)=>{
-            return val.length <= 5;
-        }, 'PHOTOS_AT_MOST_5']
-    },
-    backgroundImage: String,
-    name: {
-        type: String,
-        maxlength: 50,
-    }, 
-    lastname: {
-        type: String,
-        maxlength: 255,
-    },
-    languages: [{
-        type: String,
-        maxlength: 50,
-    }], 
-    about: {
-        type: String,
-        maxlength: 500,
-    },
-    metto: {
-        type: String,
-        maxlength: 70,
-    },
-    iWillShowYou: [{
-        type: String,
-        maxlength: 50,
-    }],
-    scanBirthCertification: String,
-    birthCertificationVerified: {
-        type: Boolean,
-        default: false
-      },
-    scanTourleaderCertification: String,
-    tourleaderCertificationVerified: {
-        type: Boolean,
-        default: false
-      },
-    nationalId: {
-        type: String,
-        maxlength: 10,
-    },
-    travelFacilities: [{
-        type: ObjectId,
-        ref: 'Facility'
-    }],
-    constPerHour:{
-        type: Number, 
-        default: 0
-    },
-    city: {
-        type: ObjectId,
-        ref: 'City'
-    },
-    province: {
-      type: ObjectId,
-      ref: 'Province'
-    },
-    
     loginAttempts: {
       type: Number,
       default: 0,
@@ -121,11 +47,6 @@ const userSchema = new Schema({
       default: Date.now,
       select: false
     },
-    leaderVerified: {
-        type: Boolean,
-        default: false
-    }
-    
 },{
     timestamps: true
 });
