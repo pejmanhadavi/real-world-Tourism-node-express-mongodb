@@ -11,7 +11,7 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: [true, 'USERNAME_IS_BLANK'],
-        match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+        match: [/^[a-zA-Z]+[a-zA-Z0-9\-\_\.]+[a-zA-Z0-9]$/, 'is invalid'],
         minlength: 4,
         maxlength: 50,
         lowercase: true,
