@@ -18,16 +18,17 @@ exports.register = [
         .withMessage('IS_EMPTY')
         .isLength({
             min: 5
+        }),
+    check('confirmpassword')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY')
+        .isLength({
+            min: 5
         })
         .withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
-    // check('confirmPassword')
-    //     .exists()
-    //     .withMessage('MISSING')
-    //     .not()
-    //     .isEmpty()
-    //     .withMessage('IS_EMPTY')
-        //I should do this for confirm password
-        // ,
     check('phone')
         .exists()
         .withMessage('MISSING')
@@ -38,6 +39,10 @@ exports.register = [
         .withMessage('PHONE_IS_NOT_VALID'),
     (req, res, next)=>{
     try{
+        //check password and confirm password
+        if(req.body.password !== req.body.confirmpassword){
+            return handleError(res, buildErrObject(422, 'PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME'));
+        }
         validationResult(req).throw();
         return next();
     }catch(err){
