@@ -18,7 +18,8 @@ exports.register = [
         .withMessage('IS_EMPTY')
         .isLength({
             min: 5
-        }),
+        })
+        .withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
     check('confirmpassword')
         .exists()
         .withMessage('MISSING')
