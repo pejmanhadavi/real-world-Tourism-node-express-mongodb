@@ -2,6 +2,9 @@ const User = require('../models/user').User;
 const bcrypt = require('bcrypt');
 const request = require('request');
 const config = require('config');
+const dateFns = require('date-fns');
+
+const MINUTES_TO_EXPIRE_VERIFICATION = 2;
 
 exports.handleError = (res, err)=>{
     //send errors to user
@@ -57,11 +60,13 @@ exports.phoneExists = async phone =>{
 }
 
 
-exports.sendVerificationCode = (res, phone, verification) => {
-    var propertiesObject = {
+
+exports.sendVerificationCode = (res, user) => {
+    expiresVerification(user);
+    let propertiesObject = {
         from: config.get('PANEL_FROM'),
-        to: phone,
-        msg: config.get('PANEL_MESSAGE')+ verification,
+        to: user.phone,
+        msg: config.get('PANEL_MESSAGE')+ user.verification,
         uname: config.get('PANEL_USERNAME'),
         pass: config.get('PANEL_PASS'),
     };
@@ -69,5 +74,14 @@ exports.sendVerificationCode = (res, phone, verification) => {
     request({url:config.get('PANEL_URI'), qs:propertiesObject}, function(err, response, body) {
         if(err) { this.handleError(res, this.buildErrObject(err.code, err.message)); return; }
         console.log("Get response: " + response.statusCode);
+    });
+}
+
+const expiresVerification = async (user) => {
+    return new Promise((resolve, reject) => {
+        user.verificationExpires = dateFns.addMinutes(new Date, MINUTES_TO_EXPIRE_VERIFICATION);
+        user.save()
+            .then(result => resolve(result))
+            .catch(err => reject(this.buildErrObject(err.code, err.message)));
     });
 }

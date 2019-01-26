@@ -33,6 +33,14 @@ const userSchema = new Schema({
     verification: {
         type: String
     },
+    verificationExpires: {
+        type: Date
+    },
+    blockPhoneExpires: {
+        type: Date,
+        default: Date.now,
+        select: false
+    },
     verified: {
       type: Boolean,
       default: false

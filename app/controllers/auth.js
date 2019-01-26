@@ -12,6 +12,7 @@ const handleError = require('./base').handleError;
 const sendVerificationCode = require('./base').sendVerificationCode;
 
 
+
 exports.register = async(req, res) => {
     try{
         req = matchedData(req);
@@ -21,7 +22,7 @@ exports.register = async(req, res) => {
             const result = await registerUser(req);
             const userInfo = setUserInfo(result);
             const response = returnRegistrationToken(result, userInfo);
-            sendVerificationCode(res, result.phone, result.verification);
+            sendVerificationCode(res, result);
             res.status(201).json(response);
         }
     }catch(err){
