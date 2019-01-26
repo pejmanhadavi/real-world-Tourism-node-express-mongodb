@@ -8,14 +8,18 @@ const MINUTES_TO_EXPIRE_VERIFICATION = 2;
 
 exports.handleError = (res, err)=>{
     //send errors to user
-    res.status(err.code).json({
-        errors: {
-            msg: err.message
-        }
-    });
 
-    // errors in console
-    // console.log(err);
+        res.status(err.code).json({
+            errors: {
+                msg: err.message
+            }
+        });
+
+
+    //errors in console
+    console.log(err);
+
+
     
 }
 
@@ -73,7 +77,7 @@ exports.sendVerificationCode = (res, user) => {
 
     request({url:config.get('PANEL_URI'), qs:propertiesObject}, function(err, response, body) {
         if(err) { this.handleError(res, this.buildErrObject(err.code, err.message)); return; }
-        console.log("Get response: " + response.statusCode);
+        console.log("Get response sms panel: " + response.statusCode);
     });
 }
 

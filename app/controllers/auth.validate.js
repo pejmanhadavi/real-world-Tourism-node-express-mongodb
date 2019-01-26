@@ -61,6 +61,12 @@ exports.verify = [
         .not()
         .isEmpty()
         .withMessage('IS_EMPTY'),
+    check('verification')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY'),
     (req, res, next) => {
         try {
             validationResult(req).throw()

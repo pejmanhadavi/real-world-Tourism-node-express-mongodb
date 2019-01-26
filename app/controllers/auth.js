@@ -12,7 +12,7 @@ const handleError = require('./base').handleError;
 const sendVerificationCode = require('./base').sendVerificationCode;
 
 
-
+//REGISTER CONTROLLER
 exports.register = async(req, res) => {
     try{
         req = matchedData(req);
@@ -27,12 +27,28 @@ exports.register = async(req, res) => {
         }
     }catch(err){
         handleError(res, err);
-        // console.log(err);
+    }
+}
+
+//VERIFY CONTROLLER
+exports.verify = async (req, res) => {
+    try{
+        req = matchedData(req);
+        const user = await verificationExists(req.id);
+        if(!user){
+            handleError(res, buildErrObject(422, 'NOT_USER_OR_ALREADY_REGISTERED'));
+            return;
+        }
+        res.status(200).json(await verifyUser(req, res, user));
+    }catch (err) {
+        handleError(res, err);
     }
 }
 
 
-
+/*
+REGISTER METHODS
+ */
 const registerUser = async req => {
     return new Promise(async (resolve, reject) => {
         const user = new User({
@@ -81,5 +97,40 @@ const generateToken = id => {
         , {
         //Instead of config.get('JWT_EXPIRATION') i can use process.env
         // expiresIn: config.get('JWT_EXPIRATION')
+    });
+}
+
+/*
+VERIFY METHODS
+ */
+const verificationExists = async id => {
+    return new Promise((resolve, reject) => {
+        User.findOne({
+            _id: id,
+            verified: false
+        })
+            .then(result => resolve(result))
+            .catch(err => reject(err));
+    })
+}
+
+const verifyUser = async (req, res, user) => {
+    return new Promise((resolve, reject) => {
+        if (user.verification !== req.verification ){
+            handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
+            return;
+        }
+        if(user.verificationExpires <= new Date()){
+            handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
+            return;
+        }
+        user.verified = true;
+
+        user.save()
+            .then(result => resolve({
+                phone: result.phone,
+                verified: result.verified}))
+            .catch(err => reject(buildErrObject(err.code, err.message)));
+
     });
 }
