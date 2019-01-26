@@ -21,7 +21,7 @@ exports.register = async(req, res) => {
             const result = await registerUser(req);
             const userInfo = setUserInfo(result);
             const response = returnRegistrationToken(result, userInfo);
-            // sendVerificationCode(result.phone, result.verification);
+            sendVerificationCode(res, result.phone, result.verification);
             res.status(201).json(response);
         }
     }catch(err){

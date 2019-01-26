@@ -1,6 +1,7 @@
 const User = require('../models/user').User;
 const bcrypt = require('bcrypt');
 const request = require('request');
+const config = require('config');
 
 exports.handleError = (res, err)=>{
     //send errors to user
@@ -56,16 +57,17 @@ exports.phoneExists = async phone =>{
 }
 
 
-exports.sendVerificationCode = (phone, verification) => {
-    request.post({
-        uri:"this is some uri",
-        form: {
-            receiver:phone,
-            text:verification,
-            from: 'from',
-            username: 'username',
-            password: 'password'
-        }
-    }).then(result => console.log(result))
-        .catch(err => console.log(err));
+exports.sendVerificationCode = (res, phone, verification) => {
+    var propertiesObject = {
+        from: config.get('PANEL_FROM'),
+        to: phone,
+        msg: config.get('PANEL_MESSAGE')+ verification,
+        uname: config.get('PANEL_USERNAME'),
+        pass: config.get('PANEL_PASS'),
+    };
+
+    request({url:config.get('PANEL_URI'), qs:propertiesObject}, function(err, response, body) {
+        if(err) { this.handleError(res, this.buildErrObject(err.code, err.message)); return; }
+        console.log("Get response: " + response.statusCode);
+    });
 }

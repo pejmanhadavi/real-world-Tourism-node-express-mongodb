@@ -1,4 +1,10 @@
 {
     "JWT_SECRET" : "TourasoSecret" ,
-    "DATABASE" : "mongodb://localhost:27017/touraso"
+    "DATABASE" : "mongodb://localhost:27017/touraso",
+    "PANEL_URI": "http://37.130.202.188/class/sms/webservice/send_url.php",
+    "PANEL_USERNAME": "s-haydari",
+    "PANEL_PASS": "04060118702",
+    "PANEL_FROM": "10002040504030",
+    "PANEL_MESSAGE": "کد ورود شما به تورآسو : "
+
 }
