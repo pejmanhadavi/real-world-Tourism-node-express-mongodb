@@ -13,14 +13,14 @@ const handleError = require('./base').handleError;
 const sendVerificationCode = require('./base').sendVerificationCode;
 
 
-//REGISTER CONTROLLER
+//1_REGISTER CONTROLLER
 exports.register = async(req, res) => {
     try{
-        req = matchedData(req);
-        const doesPhoneExists = await phoneExists(req.phone);
-        const doesUsernameExists = await usernameExists(req.username);
+        let data = matchedData(req);
+        const doesPhoneExists = await phoneExists(data.phone);
+        const doesUsernameExists = await usernameExists(data.username);
         if(!doesUsernameExists && !doesPhoneExists){
-            const result = await registerUser(req);
+            const result = await registerUser(data);
             const userInfo = setUserInfo(result);
             const response = returnRegistrationToken(result, userInfo);
             sendVerificationCode(res, result);
@@ -31,34 +31,34 @@ exports.register = async(req, res) => {
     }
 }
 
-//VERIFY CONTROLLER
+//2_VERIFY CONTROLLER
 exports.verify = async (req, res) => {
     try{
-        req = matchedData(req);
-        const user = await verificationExists(req.id);
+        let data = matchedData(req);
+        const user = await verificationExists(data.id);
         if(!user){
             handleError(res, buildErrObject(422, 'NOT_USER_OR_ALREADY_REGISTERED'));
             return;
         }
-        res.status(200).json(await verifyUser(req, res, user));
+        res.status(200).json(await verifyUser(data, res, user));
     }catch (err) {
         handleError(res, buildErrObject(422, err.message));
     }
 }
 
-//FORGOT_PASSWORD CONTROLLER
+//3_FORGOT_PASSWORD CONTROLLER
 exports.forgotPassword = async (req, res) => {
     try{
-        req = matchedData(req);
-        const PhoneExists = await forgotPhoneExists(req.phone);
+        let data = matchedData(req);
+        const PhoneExists = await forgotPhoneExists(data.phone);
         console.log(PhoneExists);
         if (!PhoneExists){
             handleError(res, buildErrObject(404, 'PHONE_NOT_FOUND'));
             return;
         }
 
-        console.log(req.phone);
-        const result = await saveForgotPassword(req);
+        console.log(data.phone);
+        const result = await saveForgotPassword(data);
         sendVerificationCode(res, result);
         res.status(200).json(forgotPasswordResponse(result));
 
@@ -67,8 +67,20 @@ exports.forgotPassword = async (req, res) => {
     }
 }
 
+//4_FORGOT_VERIFY CONTROLLER
+exports.forgotVerify = async (req, res) => {
+    try{
+        let data = matchedData(req);
+        const forgotPassword = findForgotPassword(data.id);
+        const user = await findUserByPhone(data.phone);
+
+    }catch (err) {
+        handleError(res, buildErrObject(422, err.message));
+    }
+}
+
 /*
-REGISTER METHODS
+1_REGISTER METHODS
  */
 const registerUser = async req => {
     return new Promise(async (resolve, reject) => {
@@ -122,7 +134,7 @@ const generateToken = id => {
 }
 
 /*
-VERIFY METHODS
+2_VERIFY METHODS
  */
 const verificationExists = async id => {
     return new Promise((resolve, reject) => {
@@ -157,7 +169,7 @@ const verifyUser = async (req, res, user) => {
 }
 
 /*
-FORGOT_PASSWORD METHODS
+3_FORGOT_PASSWORD METHODS
  */
 
 const saveForgotPassword = async req => {
@@ -175,7 +187,41 @@ const saveForgotPassword = async req => {
 
 const forgotPasswordResponse = item => {
     return {
+        id: item._id,
         msg: 'RESET_SMS_SENT',
         verification: item.verification
     }
+}
+
+/*
+4_FORGOT_VERIFY METHODS
+ */
+const findForgotPassword = async id => {
+    return new Promise((resolve, reject) => {
+        ForgotPassword.findOne({
+            _id: id,
+            used: false
+        })
+            .then(result => {
+                if (result===null)
+                    reject(buildErrObject(404, 'NOT_FOUND_OR_ALREADY_USED'));
+                resolve(result);
+            })
+            .catch(err=> reject(buildErrObject(422, err.message)));
+    })
+}
+
+const findUserByPhone = async phone => {
+    return new Promise((resolve, reject) => {
+        User.findOne({
+            phone
+        })
+            .then(result => {
+                if (result === null)
+                    reject(buildErrObject(404, 'NOT_FOUND'));
+
+                resolve(result);
+            })
+            .catch(err => reject(buildErrObject(422, err.message)));
+    })
 }
