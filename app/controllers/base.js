@@ -29,20 +29,20 @@ exports.buildErrObject = (code, message)=>{
     }
 }
 
+
 exports.usernameExists = async username =>{
     return new Promise((resolve, reject)=>{
         username = username.toLowerCase();
         User.findOne({
             username
-        }, (err, result)=>{
-            if(err){
-                reject(this.buildErrObject(422, err.message));
-            }
-            if(result){
+        })
+            .then(result => {
+                if (result === null)
+                    resolve(false);
+
                 reject(this.buildErrObject(422, 'USERNAME_ALREADY_EXISTS'));
-            }
-            resolve(false);
-        });
+            })
+            .catch(err => reject(this.buildErrObject(422, err.message)));
     });
 }
 
@@ -50,31 +50,31 @@ exports.phoneExists = async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
             phone
-        }, (err, result)=>{
-            if(err){
-                reject(this.buildErrObject(422, err.message));
-            }
-            if(result){
+        })
+            .then(result => {
+                if (result === null)
+                    resolve(false);
+
                 reject(this.buildErrObject(422, 'PHONE_ALREADY_EXISTS'));
-            }
-            resolve(false);
-        });
+            })
+            .catch(err => reject(this.buildErrObject(422, err.message)));
     });
 }
+
 
 exports.forgotPhoneExists = async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
             phone
-        }, (err, result)=>{
-            if(err){
-                reject(this.buildErrObject(422, err.message));
-            }
-            if(result){
-                resolve(true);
-            }
-            resolve(false);
-        });
+        })
+            .then(result => {
+                console.log('result '+result);
+                if (result !== null)
+                    resolve(true);
+
+                resolve(false);
+            })
+            .catch(err => reject(this.buildErrObject(422, err.message)));
     });
 }
 
@@ -90,10 +90,10 @@ exports.sendVerificationCode = (res, user) => {
         pass: config.get('PANEL_PASS'),
     };
 
-    request({url:config.get('PANEL_URI'), qs:propertiesObject}, function(err, response, body) {
-        if(err) { this.handleError(res, this.buildErrObject(err.code, err.message)); return; }
-        console.log("Get response sms panel: " + response.statusCode);
-    });
+    // request({url:config.get('PANEL_URI'), qs:propertiesObject}, function(err, response, body) {
+    //     if(err) { this.handleError(res, this.buildErrObject(err.code, err.message)); return; }
+    //     console.log("Get response sms panel: " + response.statusCode);
+    // });
 }
 
 const expiresVerification = async (user) => {
