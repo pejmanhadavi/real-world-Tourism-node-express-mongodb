@@ -32,5 +32,5 @@ forgotPasswordSchema.index({
     verificationKey: 'text'
 });
 
-//EXPORT FORGOT_PASSWORD MODEL
-module.exports.ForgotPassword = mongoose.model('ForgotPassword', forgotPasswordSchema);
+//EXPORT SCHEMA
+module.exports.forgotPasswordSchema = forgotPasswordSchema;

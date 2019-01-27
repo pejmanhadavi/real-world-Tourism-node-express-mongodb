@@ -5,11 +5,10 @@ const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
-//user schema
+//USER SCHEMA
 const userSchema = new Schema({
     username: {
         type: String,
-        required: [true, 'USERNAME_IS_BLANK'],
         match: [/^[a-zA-Z]+[a-zA-Z0-9\-\_\.]+[a-zA-Z0-9]$/, 'is invalid'],
         minlength: 4,
         maxlength: 50,
@@ -18,8 +17,7 @@ const userSchema = new Schema({
         index: true,
     },
     password: {
-        type: String , 
-        required: [true, 'PASSWORD_IS_BLANK'],
+        type: String ,
         minlength: 5,
         maxlength: 1024,
         select: false
@@ -58,42 +56,16 @@ const userSchema = new Schema({
     timestamps: true
 });
 
-const hash = (user, salt, next) => {
-    bcrypt.hash(user.password, salt, null, (err, newHash) => {
-        if(err)
-            return next(err);
-        user.password = newHash;
 
-        return next();
-    })
-}
-
-
-//compare passwords
-userSchema.methods.comparePassword = function(passwordAttempt, cb) {
-  bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
-    err ? cb(err) : cb(null, isMatch)
-  );
-}
-
-//hash password
-userSchema.methods.genSalt = async function() {
-    const salt = await bcrypt.genSalt(10);
-    this.password= await bcrypt.hash(this.password, salt);
-}
-
-//index
+//INDEX
 userSchema.index({
   name: 'text',
   lastname: 'text',
   leaderVerified: 'text',
 });
 
-//pagination
+//PAGINATE
 userSchema.plugin(mongoosePaginate);
 
-//create user model
-const User = mongoose.model('User', userSchema);
-
-//export user
-module.exports.User = User;
+//EXPORT SCHEMA
+module.exports.userSchema = userSchema;

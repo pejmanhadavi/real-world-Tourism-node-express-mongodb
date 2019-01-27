@@ -4,7 +4,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const mongoosePaginate = require('mongoose-paginate');
 const validator = require('validator');
 
-//tourleader schema
+//TOUR_LEADER SCHEMA
 const tourLeaderSchema = new Schema({
     user: {
         required: [true, 'USER_IS_BLANK'],
@@ -112,9 +112,8 @@ const tourLeaderSchema = new Schema({
 }, {
     timestamps: true
 });
-//paginate plugin
+//PAGINATE PLUGIN
 tourLeaderSchema.plugin(mongoosePaginate);
-//tourleader model
-const TourLeader = mongoose.model('Tourleader', tourLeaderSchema);
-//export tourleader model
+
+//EXPORT SCHEMA
 module.exports.TourLeader = TourLeader;

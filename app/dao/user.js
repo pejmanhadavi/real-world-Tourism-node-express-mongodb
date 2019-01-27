@@ -1,36 +1,16 @@
-const User = require('../models/user').User;
-const bcrypt = require('bcrypt');
-const request = require('request');
-const config = require('config');
+const mongoose = require('mongoose');
 const dateFns = require('date-fns');
-const requestIP = require('request-ip');
-
+const userSchema = require('../schemas/user').userSchema;
 const MINUTES_TO_EXPIRE_VERIFICATION = 2;
 
-exports.handleError = (res, err)=>{
-    //send errors to user
-    res.status(err.code).json({
-        errors: {
-            msg: err.message
-        }
-    });
 
-    //errors in console
-    console.log(err);
+//CREATE MODEL
+const User = mongoose.model('User', userSchema);
 
-
-    
-}
-
-exports.buildErrObject = (code, message)=>{
-    return{
-        code, 
-        message
-    }
-}
-
-
-exports.usernameExists = async username =>{
+/*
+STATICS
+ */
+userSchema.statics.usernameExists = async username =>{
     return new Promise((resolve, reject)=>{
         username = username.toLowerCase();
         User.findOne({
@@ -44,9 +24,10 @@ exports.usernameExists = async username =>{
             })
             .catch(err => reject(this.buildErrObject(422, err.message)));
     });
-}
+};
 
-exports.phoneExists = async phone =>{
+
+userSchema.methods.phoneExists= async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
             phone
@@ -59,10 +40,10 @@ exports.phoneExists = async phone =>{
             })
             .catch(err => reject(this.buildErrObject(422, err.message)));
     });
-}
+};
 
 
-exports.forgotPhoneExists = async phone =>{
+userSchema.statics.forgotPhoneExists = async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
             phone
@@ -80,28 +61,46 @@ exports.forgotPhoneExists = async phone =>{
 
 
 
-exports.sendVerificationCode = (res, user) => {
-    expiresVerification(user);
-    let propertiesObject = {
-        from: config.get('PANEL_FROM'),
-        to: user.phone,
-        msg: config.get('PANEL_MESSAGE')+ user.verification,
-        uname: config.get('PANEL_USERNAME'),
-        pass: config.get('PANEL_PASS'),
-    };
 
-    // request({url:config.get('PANEL_URI'), qs:propertiesObject}, function(err, response, body) {
-    //     if(err) { this.handleError(res, this.buildErrObject(err.code, err.message)); return; }
-    //     console.log("Get response sms panel: " + response.statusCode);
-    // });
-}
+/*
+METHODS
+ */
 
-const expiresVerification = async (user) => {
+userSchema.methods.comparePassword = function(passwordAttempt, cb) {
+    bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
+        err ? cb(err) : cb(null, isMatch)
+    );
+};
+
+userSchema.methods.genSalt = async function() {
+    const salt = await bcrypt.genSalt(10);
+    this.password= await bcrypt.hash(this.password, salt);
+};
+
+userSchema.methods.expiresVerification = async () => {
     return new Promise((resolve, reject) => {
-        user.verificationExpires = dateFns.addMinutes(new Date, MINUTES_TO_EXPIRE_VERIFICATION);
-        user.save()
+        this.verificationExpires = dateFns.addMinutes(new Date, MINUTES_TO_EXPIRE_VERIFICATION);
+        this.save()
             .then(result => resolve(result))
             .catch(err => reject(this.buildErrObject(err.code, err.message)));
     });
+};
+
+
+
+
+/*
+HELPERS
+ */
+const hash = (user, salt, next) => {
+    bcrypt.hash(user.password, salt, null, (err, newHash) => {
+        if(err)
+            return next(err);
+        user.password = newHash;
+
+        return next();
+    })
 }
+
+
 

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
 
-//province schema
+//PROVINCE SCHEMA
 const provinceSchema = new Schema(
     {
       name: {
@@ -20,7 +20,7 @@ const provinceSchema = new Schema(
     name: 'text'
   })
 
-//city schema
+//CITY SCHEMA
 const citySchema = new Schema(
   {
 
@@ -42,16 +42,12 @@ citySchema.index({
   name: 'text'
 });
 
-//pagination
+//PAGINATE
 provinceSchema.plugin(mongoosePaginate);
 citySchema.plugin(mongoosePaginate);
 
-//province and city model
-const City = mongoose.model('City', citySchema);
-const Province = mongoose.model('Province', provinceSchema);
-
-//export city and province model
-module.exports.City = City;
-module.exports.Province = Province;
+//EXPORT SCHEMAS
+module.exports.citySchema = citySchema;
+module.exports.provinceSchema = provinceSchema;
 
 

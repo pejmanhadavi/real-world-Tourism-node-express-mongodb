@@ -1,16 +1,11 @@
 const matchedData = require('express-validator/filter').matchedData;
 const config = require('config');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user').User;
-const ForgotPassword = require('../models/forgot_password').ForgotPassword;
+const User = require('../dao/user').User;
+const ForgotPassword = require('../dao/forgot_password').ForgotPassword;
 const phoneToken = require('generate-sms-verification-code');
 
-const usernameExists = require('./base').usernameExists;
-const phoneExists = require('./base').phoneExists;
-const forgotPhoneExists = require('./base').forgotPhoneExists;
-const buildErrObject = require('./base').buildErrObject;
-const handleError = require('./base').handleError;
-const sendVerificationCode = require('./base').sendVerificationCode;
+
 
 
 //1_REGISTER CONTROLLER
@@ -91,7 +86,7 @@ const registerUser = async req => {
             verification: phoneToken(6, {type: 'string'})
         });
 
-        await user.genSalt();
+        await user.zgenSalt();
         user.save()
             .then(result => resolve(result))
             .catch(err => reject(buildErrObject(422, err.message)));

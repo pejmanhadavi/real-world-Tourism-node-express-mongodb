@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-//facility schema
+//FACILITY SCHEMA
 const facilitySchema = new Schema(
     {
       name: {
@@ -20,9 +20,5 @@ const facilitySchema = new Schema(
   facilitySchema.plugin(mongoosePaginate);
   
 
-
-//facility model
-const Facility = mongoose.model('Facility' , facilitySchema);
-
-//export facility model
-module.exports = Facility;
+//EXPORT SCHEMA
+module.exports.facilitySchema = facilitySchema;

@@ -2,7 +2,7 @@ const mongoose =  require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
 
-//request schema
+//REQUEST SCHEMA
 const requestSchema = new Schema({
     from: {
         type: ObjectId,
@@ -30,8 +30,6 @@ const requestSchema = new Schema({
     timestamps: true
 });
 
-//request model
-const Request = mongoose.model('Request', requestSchema);
 
-//export request model
+//EXPORT SCHEMA
 module.exports = Request;

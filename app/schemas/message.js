@@ -1,8 +1,9 @@
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
-//message schema
+//MESSAGE SCHEMA
 const messageSchema = new Schema({
     participants: {
         type:  [{
@@ -26,11 +27,8 @@ const messageSchema = new Schema({
   {
     timestamps: true
   });
-  
-  //message model
-  const Message = mongoose.model('Message', messageSchema);
 
-  //export message model
-  module.exports = Message;
+  //EXPORT SCHEMA
+  module.exports.messageSchema = messageSchema;
 
   

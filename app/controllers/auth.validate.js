@@ -1,6 +1,5 @@
 const check = require('express-validator/check').check;
 const validationResult = require('express-validator/check').validationResult;
-const {handleError, buildErrObject} = require('./base');
 
 
 exports.register = [
