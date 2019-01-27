@@ -28,7 +28,6 @@ const userSchema = new Schema({
         type:String,
         required: [true, 'PHONE_IS_BLANK'],
         select: false,
-        //es-indexed
     },
     verification: {
         type: String

@@ -75,4 +75,24 @@ exports.verify = [
             return handleError(res, buildErrObject(422, err.array()))
         }
     }
-]
+];
+
+
+exports.forgotPassword = [
+    check('phone')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY')
+        .isMobilePhone()
+        .withMessage('PHONE_IS_NOT_VALID'),
+    (req, res, next)=>{
+        try{
+            validationResult(req).throw();
+            return next();
+        }catch(err){
+            return handleError(res, buildErrObject(422, err.array()));
+        }
+    }
+];

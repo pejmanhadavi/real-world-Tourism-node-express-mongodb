@@ -3,18 +3,17 @@ const bcrypt = require('bcrypt');
 const request = require('request');
 const config = require('config');
 const dateFns = require('date-fns');
+const requestIP = require('request-ip');
 
 const MINUTES_TO_EXPIRE_VERIFICATION = 2;
 
 exports.handleError = (res, err)=>{
     //send errors to user
-
-        res.status(err.code).json({
-            errors: {
-                msg: err.message
-            }
-        });
-
+    res.status(err.code).json({
+        errors: {
+            msg: err.message
+        }
+    });
 
     //errors in console
     console.log(err);
@@ -63,6 +62,22 @@ exports.phoneExists = async phone =>{
     });
 }
 
+exports.forgotPhoneExists = async phone =>{
+    return new Promise((resolve, reject)=>{
+        User.findOne({
+            phone
+        }, (err, result)=>{
+            if(err){
+                reject(this.buildErrObject(422, err.message));
+            }
+            if(result){
+                resolve(true);
+            }
+            resolve(false);
+        });
+    });
+}
+
 
 
 exports.sendVerificationCode = (res, user) => {
@@ -89,3 +104,4 @@ const expiresVerification = async (user) => {
             .catch(err => reject(this.buildErrObject(err.code, err.message)));
     });
 }
+
