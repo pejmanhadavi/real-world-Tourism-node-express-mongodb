@@ -40,7 +40,7 @@ exports.verify = async (req, res) => {
             handleError(res, buildErrObject(422, 'NOT_USER_OR_ALREADY_REGISTERED'));
             return;
         }
-        res.status(200).json(await verifyUser(data, res, user));
+        res.status(200).json(await User.verifyUser(data, res, user));
     }catch (err) {
         handleError(res, buildErrObject(422, err.message));
     }

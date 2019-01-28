@@ -120,7 +120,7 @@ userSchema.statics.verificationExists = async id => {
             verified: false
         })
             .then(result => resolve(result))
-            .catch(err => reject(err));
+            .catch(err => reject(buildErrObject(422, err.message)));
     })
 };
 
@@ -136,16 +136,45 @@ userSchema.statics.expiresVerification = async (user) => {
 };
 
 
+//VERIFY USER
+userSchema.statics.verifyUser = async (req, res, user) => {
+    return new Promise((resolve, reject) => {
+        if (user.verification !== req.verification ){
+            handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
+            return;
+        }
+        if(user.verificationExpires <= new Date()){
+            handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
+            return;
+        }
+        user.verified = true;
+
+        user.save()
+            .then(result => resolve({
+                phone: result.phone,
+                verified: result.verified
+            }))
+            .catch(err => reject(buildErrObject(422, err.message)));
+
+    });
+};
+
 
 /*
 METHODS
  */
+
+
+
 //COMPARE PASSWORD
 userSchema.methods.comparePassword = function(passwordAttempt, cb) {
     bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
         err ? cb(err) : cb(null, isMatch)
     );
 };
+
+
+
 //GEN SALT
 userSchema.methods.genSalt = async function() {
     const salt = await bcrypt.genSalt(10);
@@ -153,27 +182,7 @@ userSchema.methods.genSalt = async function() {
 };
 
 
-//VERIFY USER
-userSchema.methods.verifyUser = async (req, res) => {
-    return new Promise((resolve, reject) => {
-        if (this.verification !== req.verification ){
-            handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
-            return;
-        }
-        if(this.verificationExpires <= new Date()){
-            handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
-            return;
-        }
-        this.verified = true;
 
-        this.save()
-            .then(result => resolve({
-                phone: result.phone,
-                verified: result.verified}))
-            .catch(err => reject(buildErrObject(err.code, err.message)));
-
-    });
-};
 
 
 //RETURN REGISTRATION TOKEN
