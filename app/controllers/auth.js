@@ -1,9 +1,12 @@
 const matchedData = require('express-validator/filter').matchedData;
 const config = require('config');
 const jwt = require('jsonwebtoken');
+
 const User = require('../dao/user').User;
 const ForgotPassword = require('../dao/forgot_password').ForgotPassword;
-const phoneToken = require('generate-sms-verification-code');
+
+const {buildErrObject, handleError} = require('../services/error_handler');
+const {sendVerificationCode} = require('../services/send_sms');
 
 
 
@@ -12,25 +15,27 @@ const phoneToken = require('generate-sms-verification-code');
 exports.register = async(req, res) => {
     try{
         let data = matchedData(req);
-        const doesPhoneExists = await phoneExists(data.phone);
-        const doesUsernameExists = await usernameExists(data.username);
+        console.log();
+        const doesPhoneExists = await User.phoneExists_register(data.phone);
+        const doesUsernameExists = await User.usernameExists(data.username);
         if(!doesUsernameExists && !doesPhoneExists){
-            const result = await registerUser(data);
-            const userInfo = setUserInfo(result);
-            const response = returnRegistrationToken(result, userInfo);
-            sendVerificationCode(res, result);
+            const user = await User.registerUser(data);
+            const userInfo = User.setUserInfo(user);
+            const response = user.returnRegistrationToken(userInfo);
+            User.expiresVerification(user);
+            sendVerificationCode(res, user.phone, user.verification);
             res.status(201).json(response);
         }
     }catch(err){
         handleError(res, buildErrObject(422, err.message));
     }
-}
+};
 
 //2_VERIFY CONTROLLER
 exports.verify = async (req, res) => {
     try{
         let data = matchedData(req);
-        const user = await verificationExists(data.id);
+        const user = await User.verificationExists(data.id);
         if(!user){
             handleError(res, buildErrObject(422, 'NOT_USER_OR_ALREADY_REGISTERED'));
             return;
@@ -39,7 +44,7 @@ exports.verify = async (req, res) => {
     }catch (err) {
         handleError(res, buildErrObject(422, err.message));
     }
-}
+};
 
 //3_FORGOT_PASSWORD CONTROLLER
 exports.forgotPassword = async (req, res) => {
@@ -60,108 +65,8 @@ exports.forgotPassword = async (req, res) => {
     }catch (err) {
         handleError(res, buildErrObject(422, err.message));
     }
-}
+};
 
-//4_FORGOT_VERIFY CONTROLLER
-exports.forgotVerify = async (req, res) => {
-    try{
-        let data = matchedData(req);
-        const forgotPassword = findForgotPassword(data.id);
-        const user = await findUserByPhone(data.phone);
-
-    }catch (err) {
-        handleError(res, buildErrObject(422, err.message));
-    }
-}
-
-/*
-1_REGISTER METHODS
- */
-const registerUser = async req => {
-    return new Promise(async (resolve, reject) => {
-        const user = new User({
-            username: req.username,
-            password: req.password,
-            phone: req.phone,
-            verification: phoneToken(6, {type: 'string'})
-        });
-
-        await user.zgenSalt();
-        user.save()
-            .then(result => resolve(result))
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
-}
-
-
-const setUserInfo = (req) => {
-    const user = {
-        _id: req._id,
-        username: req.username,
-        phone: req.phone,
-        verified: req.verified
-    };
-    return user;
-}
-
-
-
-const returnRegistrationToken = (user, userInfo) => {
-    userInfo.verification = user.verification;
-    return {
-        token: generateToken(user._id),
-        user: userInfo
-    };
-}
-
-
-const generateToken = id => {
-    const obj = {
-        _id: id
-    };
-
-    //Instead of config.get('JWT_SECRET') i can use process.env
-    return jwt.sign(obj, config.get('JWT_SECRET')
-        , {
-        //Instead of config.get('JWT_EXPIRATION') i can use process.env
-        // expiresIn: config.get('JWT_EXPIRATION')
-    });
-}
-
-/*
-2_VERIFY METHODS
- */
-const verificationExists = async id => {
-    return new Promise((resolve, reject) => {
-        User.findOne({
-            _id: id,
-            verified: false
-        })
-            .then(result => resolve(result))
-            .catch(err => reject(err));
-    })
-}
-
-const verifyUser = async (req, res, user) => {
-    return new Promise((resolve, reject) => {
-        if (user.verification !== req.verification ){
-            handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
-            return;
-        }
-        if(user.verificationExpires <= new Date()){
-            handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
-            return;
-        }
-        user.verified = true;
-
-        user.save()
-            .then(result => resolve({
-                phone: result.phone,
-                verified: result.verified}))
-            .catch(err => reject(buildErrObject(err.code, err.message)));
-
-    });
-}
 
 /*
 3_FORGOT_PASSWORD METHODS
@@ -186,37 +91,4 @@ const forgotPasswordResponse = item => {
         msg: 'RESET_SMS_SENT',
         verification: item.verification
     }
-}
-
-/*
-4_FORGOT_VERIFY METHODS
- */
-const findForgotPassword = async id => {
-    return new Promise((resolve, reject) => {
-        ForgotPassword.findOne({
-            _id: id,
-            used: false
-        })
-            .then(result => {
-                if (result===null)
-                    reject(buildErrObject(404, 'NOT_FOUND_OR_ALREADY_USED'));
-                resolve(result);
-            })
-            .catch(err=> reject(buildErrObject(422, err.message)));
-    })
-}
-
-const findUserByPhone = async phone => {
-    return new Promise((resolve, reject) => {
-        User.findOne({
-            phone
-        })
-            .then(result => {
-                if (result === null)
-                    reject(buildErrObject(404, 'NOT_FOUND'));
-
-                resolve(result);
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    })
-}
+};
