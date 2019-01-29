@@ -13,7 +13,7 @@ router.post('/register', validate.register, controller.register);
 
 router.post('/verify', validate.verify, controller.verify);
 
-// router.post('/forgot', validate.forgotPassword, controller.forgotPassword);
+router.post('/forgot', validate.forgotPassword, controller.forgotPassword);
 
 
 module.exports = router;

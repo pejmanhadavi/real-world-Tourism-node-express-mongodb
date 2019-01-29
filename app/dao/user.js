@@ -4,6 +4,9 @@ const phoneToken = require('generate-sms-verification-code');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const randomize = require('randomatic');
+
+
 
 
 const userSchema = require('../schemas/user').userSchema;
@@ -19,12 +22,24 @@ const MINUTES_TO_EXPIRE_VERIFICATION = 2;
 /*
 STATICS
  */
+
+
+//DELETE NOT VERIFIED USERS
+userSchema.statics.deleteNotVerifiedUsers = async () => {
+    return new Promise((resolve, reject) => {
+        User.deleteMany({
+            verified: false,
+            verificationExpires : {$lt: new Date(Date.now())}
+        }).then(result => resolve(result))
+            .catch(err => reject(buildErrObject(422, err.message)));
+    });
+};
+
 //CHECK USERNAME
-userSchema.statics.usernameExists = async username =>{
+userSchema.statics.usernameExists= async username =>{
     return new Promise((resolve, reject)=>{
-        username = username.toLowerCase();
         User.findOne({
-            username
+            username: username,
         })
             .then(result => {
                 if (result === null)
@@ -40,7 +55,8 @@ userSchema.statics.usernameExists = async username =>{
 userSchema.statics.phoneExists_register= async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
-            phone
+            phone: phone,
+            verified: true
         })
             .then(result => {
                 if (result === null)
@@ -53,33 +69,18 @@ userSchema.statics.phoneExists_register= async phone =>{
 };
 
 //CHECK PHONE_FORGOT
-userSchema.statics.phoneExists_forgot = async phone =>{
+userSchema.statics.phoneExists_verified = async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
-            phone
+            phone: phone,
+            verified: true
         })
             .then(result => {
                 console.log('result '+result);
                 if (result !== null)
-                    resolve(true);
+                    resolve(result);
 
                 resolve(false);
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
-};
-
-//CHECK PHONE_REGISTER
-userSchema.statics.userVerified= async phone =>{
-    return new Promise((resolve, reject)=>{
-        User.findOne({
-            phone
-        })
-            .then(result => {
-                if (result === null)
-                    resolve(false);
-
-                reject(buildErrObject(422, 'PHONE_ALREADY_EXISTS'));
             })
             .catch(err => reject(buildErrObject(422, err.message)));
     });
@@ -159,6 +160,27 @@ userSchema.statics.verifyUser = async (req, res, user) => {
     });
 };
 
+//GENERATE NEW PASSWORD
+userSchema.statics.generateNewPassword = async () => {
+    return randomize('Aa0', 12);
+
+};
+
+
+//UPDATE NEW PASSWORD
+userSchema.statics.updatePassword = async (res, user, newPassword) => {
+    return new Promise(async (resolve, reject) => {
+        const salt = await bcrypt.genSalt(10);
+        hashPassword = await bcrypt.hash(newPassword, salt);
+
+        await user.update({
+            password: hashPassword
+        })
+            .then(result => resolve(result))
+            .catch(err => reject(buildErrObject(422, err.message)));
+
+    });
+};
 
 /*
 METHODS
@@ -195,24 +217,20 @@ userSchema.methods.returnRegistrationToken = (userInfo) => {
 };
 
 
+userSchema.methods.forgotPassResponse = () => {
+    return {
+        phone: this.phone,
+        message: 'NEW_PASSWORD_SENT'
+    }
+};
+
+
 
 
 
 /*
 HELPERS
  */
-
-
-//HASH
-const hash = (user, salt, next) => {
-    bcrypt.hash(user.password, salt, null, (err, newHash) => {
-        if(err)
-            return next(err);
-        user.password = newHash;
-
-        return next();
-    })
-};
 
 
 //GENERATE TOKEN

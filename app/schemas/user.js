@@ -11,14 +11,15 @@ const userSchema = new Schema({
         minlength: 4,
         maxlength: 50,
         lowercase: true,
-        unique: true,
         index: true,
+        required: [true, 'USERNAME_IS_BLANK'],
     },
     password: {
         type: String ,
         minlength: 5,
         maxlength: 1024,
-        select: false
+        select: false,
+        required: [true, 'PASSWORD_IS_BLANK'],
     } ,
     phone: {
         type:String,
@@ -57,13 +58,13 @@ const userSchema = new Schema({
 
 //INDEX
 userSchema.index({
-  name: 'text',
-  lastname: 'text',
-  leaderVerified: 'text',
-});
+        username: 'text',
+        phone: 'text',
+        verification: 'text'
+    });
 
 //PAGINATE
 userSchema.plugin(mongoosePaginate);
 
 //EXPORT SCHEMA
-module.exports.userSchema = userSchema;
+exports.userSchema = userSchema;
