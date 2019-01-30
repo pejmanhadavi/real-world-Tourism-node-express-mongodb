@@ -3,7 +3,6 @@ const dateFns = require('date-fns');
 const phoneToken = require('generate-sms-verification-code');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const randomize = require('randomatic');
 
 
@@ -239,8 +238,8 @@ const generateToken = id => {
         _id: id
     };
 
-    return jwt.sign(obj, config.get('JWT_SECRET')
-        // , {expiresIn: config.get('JWT_EXPIRATION')}
+    return jwt.sign(obj, process.env.JWT_SECRET
+        , {expiresIn: process.env.JWT_EXPIRATION}
     );
 };
 

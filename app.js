@@ -1,3 +1,4 @@
+require('dotenv-safe').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -16,6 +17,9 @@ mongoose.connect(config.get('DATABASE'), {useNewUrlParser: true})
 
 // app
 var app = express();
+
+
+console.log('.ENV: '+process.env.PORT);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
