@@ -28,7 +28,7 @@ userSchema.statics.deleteNotVerifiedUsers = async () => {
     return new Promise((resolve, reject) => {
         User.deleteMany({
             verified: false,
-            verificationExpires : {$lt: new Date(Date.now())}
+            verificationExpires : {$lt: new Date()}
         }).then(result => resolve(result))
             .catch(err => reject(buildErrObject(422, err.message)));
     });
@@ -208,7 +208,7 @@ userSchema.methods.genSalt = async function() {
 
 //RETURN REGISTRATION TOKEN
 userSchema.methods.returnRegistrationToken = (userInfo) => {
-    userInfo.verification = this.verification;
+
     return {
         token: generateToken(this._id),
         user: userInfo

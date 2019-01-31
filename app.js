@@ -18,9 +18,6 @@ mongoose.connect(config.get('DATABASE'), {useNewUrlParser: true})
 // app
 var app = express();
 
-
-console.log('.ENV: '+process.env.PORT);
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

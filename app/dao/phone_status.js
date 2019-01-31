@@ -89,6 +89,17 @@ phoneSchema.statics.blockPhone = async (phoneStatus) => {
   });
 };
 
+
+phoneSchema.statics.deletePhoneStatus = async (phone) => {
+    return new Promise((resolve, reject) => {
+        PhoneStatus.remove({
+            phone
+        })
+            .then(result => resolve(result))
+            .catch(err => buildErrObject(422, err.message));
+    })
+};
+
 /*
 METHODS
  */

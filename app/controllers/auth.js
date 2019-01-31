@@ -36,10 +36,6 @@ exports.register = async(req, res) => {
             await PhoneStatus.registerPhone(data.phone);
         }
 
-
-
-        
-        
         //REGISTER
         if(!doesUsernameExists && !doesPhoneExists){
             const user = await User.registerUser(data);
@@ -49,6 +45,7 @@ exports.register = async(req, res) => {
             sendVerificationCode(res, user.phone, user.verification);
             res.status(201).json(response);
         }
+
     }catch(err){
         handleError(res, buildErrObject(422, err.message));
     }
@@ -64,8 +61,11 @@ exports.verify = async (req, res) => {
             handleError(res, buildErrObject(422, 'NOT_USER_OR_ALREADY_REGISTERED'));
             return;
         }
-        
+
+        console.log(user);
         //DELETE PHONE STATUS
+        await PhoneStatus.deletePhoneStatus(user.phone);
+
         res.status(200).json(await User.verifyUser(data, res, user));
     }catch (err) {
         handleError(res, buildErrObject(422, err.message));

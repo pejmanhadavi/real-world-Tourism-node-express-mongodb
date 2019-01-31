@@ -24,7 +24,6 @@ const userSchema = new Schema({
     phone: {
         type:String,
         required: [true, 'PHONE_IS_BLANK'],
-        select: false,
     },
     verification: {
         type: String
