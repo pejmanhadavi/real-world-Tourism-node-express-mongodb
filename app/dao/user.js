@@ -78,8 +78,7 @@ userSchema.statics.phoneExists_verified = async phone =>{
                 console.log('result '+result);
                 if (result !== null)
                     resolve(result);
-
-                resolve(false);
+                reject(buildErrObject(404, 'PHONE_DOES_NOT_EXISTS'));
             })
             .catch(err => reject(buildErrObject(422, err.message)));
     });
@@ -119,7 +118,11 @@ userSchema.statics.verificationExists = async id => {
             _id: id,
             verified: false
         })
-            .then(result => resolve(result))
+            .then(result => {
+                if (result === null)
+                    reject(buildErrObject(404, 'NOT_USER_OR_ALREADY_VERIFIED'));
+                resolve(result);
+            })
             .catch(err => reject(buildErrObject(422, err.message)));
     })
 };

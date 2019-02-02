@@ -4,6 +4,7 @@ const faker = require('faker');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const User = require('../app/dao/user').User;
+const mongoose = require('mongoose');
 
 const should = chai.should();
 
@@ -56,7 +57,7 @@ describe('AUTH', () => {
                 });
         });
 
-        it('should not POST if username exists',  done => {
+        it('should not POST register if username exists', done => {
             const user = {
                 username,
                 phone: faker.phone.phoneNumber('###########'),
@@ -79,17 +80,15 @@ describe('AUTH', () => {
 
     describe('POST verify', done => {
         it('should POST verify', done => {
-            //THERE IS NODE CREATED ID HERE
 
-            console.log("Created ID : " + createdID);
-            console.log("Created Verification: "+verification);
+            const verify = {
+                id: createdID,
+                verification: verification
+            };
             chai
                 .request(server)
                 .post('/auth/verify')
-                .send({
-                    id: createdID,
-                    verification: verification
-                })
+                .send(verify)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.include.keys('phone', 'verified');
@@ -98,13 +97,13 @@ describe('AUTH', () => {
 
         });
 
-        it('should not POST if phone exists', done => {
+        it('should not POST register if phone exists', done => {
             const user = {
                 username: faker.internet.userName(),
                 phone,
                 password,
                 confirmpassword: password
-            }
+            };
 
             chai
                 .request(server)
@@ -115,8 +114,54 @@ describe('AUTH', () => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
                     done();
-                })
+                });
+        });
+        it('should not POST verify if user does not exists', done => {
+            const verify = {
+                id: mongoose.Types.ObjectId(),
+                verification: verification,
+            };
+            chai
+                .request(server)
+                .post('/auth/verify')
+                .send(verify)
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('errors');
+                    done();
+                });
+        });
 
+        it('should not POST verify if verification is invalid', done => {
+            const verify = {
+                id: createdID,
+                verification: verification,
+            };
+            chai
+                .request(server)
+                .post('/auth/verify')
+                .send(verify)
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('errors');
+                    done();
+                });
+        });
+    });
+    describe('POST forgot pass', () => {
+        it('should POST forgot password',  done =>{
+            chai
+                .request(server)
+                .post('/auth/fogot')
+                .send({
+                    phone
+                })
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    done();
+                });
         });
     });
 });

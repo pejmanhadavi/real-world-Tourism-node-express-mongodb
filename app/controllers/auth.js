@@ -45,28 +45,20 @@ exports.register = async(req, res) => {
         }
 
     }catch(err){
-        handleError(res, buildErrObject(422, err.message));
+        handleError(res, buildErrObject(err.code, err.message));
     }
 };
 
 //2_VERIFY CONTROLLER
 exports.verify = async (req, res) => {
     try{
-        //VERIFY
         const data = matchedData(req);
         const user = await User.verificationExists(data.id);
-        if(!user){
-            handleError(res, buildErrObject(422, 'NOT_USER_OR_ALREADY_REGISTERED'));
-            return;
-        }
-
         console.log(user);
-        //DELETE PHONE STATUS
         await PhoneStatus.deletePhoneStatus(user.phone);
-
         res.status(200).json(await User.verifyUser(data, res, user));
     }catch (err) {
-        handleError(res, buildErrObject(422, err.message));
+        handleError(res, buildErrObject(err.code, err.message));
     }
 };
 
@@ -75,10 +67,6 @@ exports.forgotPassword = async (req, res) => {
     try{
         const data = matchedData(req);
         const user = await User.phoneExists_verified(data.phone);
-        if (!user){
-            handleError(res, buildErrObject(404, 'PHONE_NOT_FOUND_OR_NOT_VERIFIED'));
-            return;
-        }
         const newPassword = await User.generateNewPassword();
         User.updatePassword(req, user, newPassword);
         sendVerificationCode(res, user.phone, newPassword);
@@ -86,6 +74,6 @@ exports.forgotPassword = async (req, res) => {
         res.status(201).json(response);
 
     }catch (err) {
-        handleError(res, buildErrObject(422, err.message));
+        handleError(res, buildErrObject(err.code, err.message));
     }
 };
