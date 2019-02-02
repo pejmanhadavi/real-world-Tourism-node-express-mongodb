@@ -15,4 +15,6 @@ router.post('/verify', validate.verify, controller.verify);
 
 router.post('/forgot', validate.forgotPassword, controller.forgotPassword);
 
+router.post('/login', validate.login, controller.login);
+
 module.exports = router;

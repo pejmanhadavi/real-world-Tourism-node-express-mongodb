@@ -68,7 +68,7 @@ userSchema.statics.phoneExists_register= async phone =>{
 };
 
 //CHECK PHONE_FORGOT
-userSchema.statics.phoneExists_verified = async phone =>{
+userSchema.statics.phoneExists = async phone =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
             phone: phone,
@@ -224,6 +224,15 @@ userSchema.methods.forgotPassResponse = () => {
         phone: this.phone,
         message: 'NEW_PASSWORD_SENT'
     }
+};
+
+//USER IS BLOCKED
+userSchema.methods.userIsBlocked = async () => {
+    return new Promise((resolve, reject) => {
+        if(this.blockExpires > new Date())
+            reject(buildErrObject(409, 'BLOCKED_USER'));
+        resolve(true);
+    });
 };
 
 

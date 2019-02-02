@@ -1,6 +1,6 @@
 const check = require('express-validator/check').check;
 const validationResult = require('express-validator/check').validationResult;
-
+const {buildErrObject, handleError} = require('../services/error_handler');
 
 exports.register = [
     check('username')
@@ -91,6 +91,35 @@ exports.forgotPassword = [
             validationResult(req).throw();
             return next();
         }catch(err){
+            return handleError(res, buildErrObject(422, err.array()));
+        }
+    }
+];
+
+exports.login = [
+    check('phone')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY')
+        .isMobilePhone()
+        .withMessage('PHONE_IS_NOT_VALID'),
+    check('password')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY')
+        .isLength({
+            min: 5
+        })
+        .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+    (req, res, next) => {
+        try {
+            validationResult(req).throw();
+            return next();
+        } catch (err) {
             return handleError(res, buildErrObject(422, err.array()));
         }
     }

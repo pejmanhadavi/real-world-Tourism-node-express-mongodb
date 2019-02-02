@@ -12,19 +12,13 @@ const {sendVerificationCode} = require('../services/send_sms');
 //1_REGISTER CONTROLLER
 exports.register = async(req, res) => {
     try{
-
         const data = matchedData(req);
 
-        //DROP NOT VERIFIED USERS
         await User.deleteNotVerifiedUsers();
 
-
-        //PHONE STATUS
         const phoneStatus = await PhoneStatus.phoneExists(data.phone);
-
         const doesPhoneExists = await User.phoneExists_register(data.phone);
         const doesUsernameExists = await User.usernameExists(data.username);
-
         //REGISTER
         if(!doesUsernameExists && !doesPhoneExists){
             if (phoneStatus){
@@ -43,11 +37,11 @@ exports.register = async(req, res) => {
             sendVerificationCode(res, user.phone, user.verification);
             res.status(201).json(response);
         }
-
     }catch(err){
         handleError(res, buildErrObject(err.code, err.message));
     }
 };
+
 
 //2_VERIFY CONTROLLER
 exports.verify = async (req, res) => {
@@ -66,7 +60,7 @@ exports.verify = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
     try{
         const data = matchedData(req);
-        const user = await User.phoneExists_verified(data.phone);
+        const user = await User.phoneExists(data.phone);
         const newPassword = await User.generateNewPassword();
         User.updatePassword(req, user, newPassword);
         sendVerificationCode(res, user.phone, newPassword);
@@ -76,4 +70,11 @@ exports.forgotPassword = async (req, res) => {
     }catch (err) {
         handleError(res, buildErrObject(err.code, err.message));
     }
+};
+
+//4_LOGIN
+exports.login = async (req, res) => {
+    const data = matchedData(req);
+    const user = await User.phoneExists(data.phone);
+    await user.userIsBlocked();
 };
