@@ -25,19 +25,17 @@ exports.register = async(req, res) => {
         const doesPhoneExists = await User.phoneExists_register(data.phone);
         const doesUsernameExists = await User.usernameExists(data.username);
 
-        console.log('PHONE STATUS: '+phoneStatus);
-        if (phoneStatus){
-            await PhoneStatus.phoneIsBlocked(phoneStatus);
-            await PhoneStatus.checkRegisterAttemptsAndBlockExpires(phoneStatus);
-            await PhoneStatus.incrementAttemps(phoneStatus);
-            await PhoneStatus.blockPhone(phoneStatus);
-        }
-        else if (!phoneStatus && !doesPhoneExists){
-            await PhoneStatus.registerPhone(data.phone);
-        }
-
         //REGISTER
         if(!doesUsernameExists && !doesPhoneExists){
+            if (phoneStatus){
+                await PhoneStatus.phoneIsBlocked(phoneStatus);
+                await PhoneStatus.checkRegisterAttemptsAndBlockExpires(phoneStatus);
+                await PhoneStatus.incrementAttemps(phoneStatus);
+                await PhoneStatus.blockPhone(phoneStatus);
+            }
+            else if (!phoneStatus && !doesPhoneExists){
+                await PhoneStatus.registerPhone(data.phone);
+            }
             const user = await User.registerUser(data);
             const userInfo = User.setUserInfo(user);
             const response = user.returnRegistrationToken(userInfo);
