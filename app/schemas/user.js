@@ -18,7 +18,6 @@ const userSchema = new Schema({
         type: String ,
         minlength: 5,
         maxlength: 1024,
-        select: false,
         required: [true, 'PASSWORD_IS_BLANK'],
     } ,
     phone: {
@@ -51,6 +50,7 @@ const userSchema = new Schema({
       select: false
     },
 },{
+    versionKey: false,
     timestamps: true
 });
 

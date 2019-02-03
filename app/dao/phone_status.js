@@ -42,7 +42,7 @@ phoneSchema.statics.registerPhone = async phone => {
 
 
 
-//CHECK REGISTER ATTEMPS AND BLOCK EXPIRES
+//CHECK REGISTER ATTEMPTS AND BLOCK EXPIRES
 phoneSchema.statics.checkRegisterAttemptsAndBlockExpires = async phoneStatus => {
     return new Promise(async (resolve, reject) => {
         if (blockIsExpired(phoneStatus)) {

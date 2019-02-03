@@ -1,10 +1,11 @@
 const matchedData = require('express-validator/filter').matchedData;
 
-const User = require('../dao/user').User;
+const {User, saveLoginAttemptsToDB} = require('../dao/user');
 const PhoneStatus = require('../dao/phone_status').PhoneStatus;
 
 const {buildErrObject, handleError} = require('../services/error_handler');
 const {sendVerificationCode} = require('../services/send_sms');
+const {UserAccess} = require('../dao/user_access');
 
 
 
@@ -13,12 +14,15 @@ const {sendVerificationCode} = require('../services/send_sms');
 exports.register = async(req, res) => {
     try{
         const data = matchedData(req);
-
         await User.deleteNotVerifiedUsers();
+
+        await User.verificationSent(data.username, data.phone);
+
 
         const phoneStatus = await PhoneStatus.phoneExists(data.phone);
         const doesPhoneExists = await User.phoneExists_register(data.phone);
         const doesUsernameExists = await User.usernameExists(data.username);
+
         //REGISTER
         if(!doesUsernameExists && !doesPhoneExists){
             if (phoneStatus){
@@ -66,7 +70,6 @@ exports.forgotPassword = async (req, res) => {
         sendVerificationCode(res, user.phone, newPassword);
         const response = user.forgotPassResponse();
         res.status(201).json(response);
-
     }catch (err) {
         handleError(res, buildErrObject(err.code, err.message));
     }
@@ -74,7 +77,20 @@ exports.forgotPassword = async (req, res) => {
 
 //4_LOGIN
 exports.login = async (req, res) => {
-    const data = matchedData(req);
-    const user = await User.phoneExists(data.phone);
-    await user.userIsBlocked();
+    try {
+        const data = matchedData(req);
+        const user = await User.phoneExists(data.phone);
+        await user.userIsBlocked();
+        await User.checkLoginAttemptsAndBlockExpires(user);
+        const isPasswordMatch =await User.checkPassword(data.password, user);
+        if (!isPasswordMatch){
+            handleError(res, await User.passwordsDoNotMatch(user));
+        }else {
+            user.loginAttempts = 0;
+            await saveLoginAttemptsToDB(user);
+            res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
+        }
+    }catch (err) {
+        handleError(res, buildErrObject(422, err.message));
+    }
 };

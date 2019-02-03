@@ -10,8 +10,11 @@ const randomize = require('randomatic');
 
 const userSchema = require('../schemas/user').userSchema;
 const {handleError, buildErrObject}= require('../services/error_handler');
+const {generateToken} = require('../services/auth');
 
 const MINUTES_TO_EXPIRE_VERIFICATION = 2;
+const LOGIN_ATTEMPTS = 3;
+const HOURS_TO_BLOCK = 5;
 
 
 
@@ -28,7 +31,7 @@ userSchema.statics.deleteNotVerifiedUsers = async () => {
     return new Promise((resolve, reject) => {
         User.deleteMany({
             verified: false,
-            verificationExpires : {$lt: new Date()}
+            verificationExpires : {$lte: new Date()}
         }).then(result => resolve(result))
             .catch(err => reject(buildErrObject(422, err.message)));
     });
@@ -45,6 +48,23 @@ userSchema.statics.usernameExists= async username =>{
                     resolve(false);
 
                 reject(buildErrObject(422, 'USERNAME_ALREADY_EXISTS'));
+            })
+            .catch(err => reject(buildErrObject(422, err.message)));
+    });
+};
+
+//CHECK IF VERIFICATION SENT
+userSchema.statics.verificationSent= async (username, phone) =>{
+    return new Promise((resolve, reject)=>{
+        User.findOne({
+            username,
+            phone,
+            verificationExpires : {$gte: new Date()}
+        })
+            .then(result => {
+                if (result === null)
+                    resolve(false);
+                reject(buildErrObject(422, 'WAIT_VERIFICATION_SENT'));
             })
             .catch(err => reject(buildErrObject(422, err.message)));
     });
@@ -184,27 +204,65 @@ userSchema.statics.updatePassword = async (res, user, newPassword) => {
     });
 };
 
-/*
-METHODS
- */
 
-
-
-//COMPARE PASSWORD
-userSchema.methods.comparePassword = function(passwordAttempt, cb) {
-    bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
-        err ? cb(err) : cb(null, isMatch)
-    );
+//CHECK LOGIN ATTEMTPS AND BLOCK EXPIRES
+userSchema.statics.checkLoginAttemptsAndBlockExpires = async user => {
+    return new Promise((resolve, reject) => {
+        if(blockIsExpired(user)){
+            user.loginAttempts = 0;
+            user.save()
+                .then(result => resolve(result))
+                .catch(err => buildErrObject(422, err.message));
+        }else{
+            resolve(true);
+        }
+    });
 };
 
 
+//PASSWORDS DO NOT MATCH
+userSchema.statics.passwordsDoNotMatch = async user => {
+    user.loginAttempts += 1;
+    await this.saveLoginAttemptsToDB(user);
+    return new Promise((resolve, reject) => {
+        if (user.loginAttempts <= LOGIN_ATTEMPTS) {
+            resolve(buildErrObject(409, 'WRONG_PASSWORD'));
+        } else {
+            resolve(blockUser(user));
+        }
+        reject(buildErrObject(422, 'ERROR'));
+    });
+};
 
+//CHECK PASSWORD
+userSchema.statics.checkPassword = async (password, user) => {
+    return new Promise((resolve, reject) => {
+        User.comparePassword(password, user.password, (err, isMatch) => {
+            if (err) {
+                reject(buildErrObject(422, err.message))
+            }
+            if (!isMatch) {
+                resolve(false)
+            }
+            resolve(true)
+        });
+    });
+};
+
+//COMPARE PASSWORD
+userSchema.statics.comparePassword = (passwordAttempt, password, cb) => {
+    bcrypt.compare(passwordAttempt, password, (err, isMatch) =>
+        err ? cb(err) : cb(null, isMatch)
+    )
+};
+/*
+METHODS
+ */
 //GEN SALT
 userSchema.methods.genSalt = async function() {
     const salt = await bcrypt.genSalt(10);
     this.password= await bcrypt.hash(this.password, salt);
 };
-
 
 
 
@@ -218,7 +276,7 @@ userSchema.methods.returnRegistrationToken = (userInfo) => {
     };
 };
 
-
+//FORGOT PASS RES
 userSchema.methods.forgotPassResponse = () => {
     return {
         phone: this.phone,
@@ -239,22 +297,35 @@ userSchema.methods.userIsBlocked = async () => {
 
 
 
+
 /*
 HELPERS
  */
 
+//BLOCK IS EXPIRED
+const blockIsExpired = (user) =>
+    user.loginAttempts > LOGIN_ATTEMPTS && user.blockExpires <= new Date()
 
-//GENERATE TOKEN
-const generateToken = id => {
-    const obj = {
-        _id: id
+
+//BLOCK USER
+const blockUser = async user => {
+    return new Promise((resolve, reject) => {
+        user.blockExpires = dateFns.addHours(new Date(), HOURS_TO_BLOCK);
+        user.save()
+            .then(result => resolve(buildErrObject(409, 'BLOCKED_USER')))
+            .catch(err => reject(buildErrObject(422, err.message)));
+
+        });
     };
 
-    return jwt.sign(obj, process.env.JWT_SECRET
-        , {expiresIn: process.env.JWT_EXPIRATION}
-    );
+//SAVE LOGIN ATTEMPTS
+exports.saveLoginAttemptsToDB = async user => {
+    return new Promise((resolve, reject) => {
+        user.save()
+            .then(result => resolve(result))
+            .catch(err => buildErrObject(422, err.message));
+    });
 };
-
 
 /*
 CREATE AND EXPORT MODEL

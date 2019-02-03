@@ -42,20 +42,37 @@ describe('AUTH', () => {
                 .post('/auth/register')
                 .send(user)
                 .end(async (err, res) => {
-                    //HERE IS THE CREATED ID
                     res.should.have.status(201);
                     res.body.should.include.keys('token', 'user');
-
                     createdID = res.body.user._id;
                     const user = await User.findOne({
                         _id: createdID
                     });
                     verification = user.verification;
-
                     done();
 
                 });
         });
+
+        it('should not POST if verification has been sent',  done => {
+            const user = {
+                username,
+                phone,
+                password,
+                confirmpassword: password,
+            };
+            chai
+                .request(server)
+                .post('/auth/register')
+                .send(user)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('errors');
+                    done();
+                });
+        });
+
 
         it('should not POST register if username exists', done => {
             const user = {
@@ -154,9 +171,21 @@ describe('AUTH', () => {
         it('should POST forgot password',  done =>{
             chai
                 .request(server)
-                .post('/auth/fogot')
+                .post('/auth/forgot')
                 .send({
                     phone
+                })
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    done();
+                });
+        });
+        it('should not POST if phone does not exists', done => {
+            chai
+                .request(server)
+                .post('/auth/forgot')
+                .send({
+                    phone: faker.phone.phoneNumber('###########')
                 })
                 .end((err, res) => {
                     res.should.have.status(404);
@@ -164,4 +193,14 @@ describe('AUTH', () => {
                 });
         });
     });
+});
+
+
+after(() => {
+    User.deleteOne(
+        {
+            _id: createdID
+        })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
 });
