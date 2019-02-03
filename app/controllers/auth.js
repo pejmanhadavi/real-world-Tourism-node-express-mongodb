@@ -80,11 +80,11 @@ exports.login = async (req, res) => {
     try {
         const data = matchedData(req);
         const user = await User.phoneExists(data.phone);
-        await user.userIsBlocked();
+        await User.userIsBlocked(user);
         await User.checkLoginAttemptsAndBlockExpires(user);
         const isPasswordMatch =await User.checkPassword(data.password, user);
         if (!isPasswordMatch){
-            handleError(res, await User.passwordsDoNotMatch(user));
+            await User.passwordsDoNotMatch(user);
         }else {
             user.loginAttempts = 0;
             await saveLoginAttemptsToDB(user);

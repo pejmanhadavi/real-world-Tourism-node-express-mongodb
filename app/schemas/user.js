@@ -33,21 +33,17 @@ const userSchema = new Schema({
     blockPhoneExpires: {
         type: Date,
         default: Date.now,
-        select: false
     },
     verified: {
       type: Boolean,
-      default: false
     },
     loginAttempts: {
       type: Number,
       default: 0,
-      select: false
     },
     blockExpires: {
       type: Date,
       default: Date.now,
-      select: false
     },
 },{
     versionKey: false,

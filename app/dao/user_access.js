@@ -13,11 +13,6 @@ STATICS
 //SAVE_USER_ACCESS_AND_RETURN_TOKEN
 userAccessSchema.statics.saveUserAccessAndReturnToken = async (req, user) => {
   return new Promise((resolve, reject) => {
-
-    console.log('*********IP: '+getIP(req));
-    console.log('*********BI: '+getBrowserInfo(req));
-    console.log('*********C: '+getCountry(req));
-
       const userAccess = new UserAccess({
           phone: user.phone,
           ip: getIP(req),

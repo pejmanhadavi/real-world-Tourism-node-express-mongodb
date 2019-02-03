@@ -13,7 +13,7 @@ const {handleError, buildErrObject}= require('../services/error_handler');
 const {generateToken} = require('../services/auth');
 
 const MINUTES_TO_EXPIRE_VERIFICATION = 2;
-const LOGIN_ATTEMPTS = 3;
+const LOGIN_ATTEMPTS = 4;
 const HOURS_TO_BLOCK = 5;
 
 
@@ -95,7 +95,6 @@ userSchema.statics.phoneExists = async phone =>{
             verified: true
         })
             .then(result => {
-                console.log('result '+result);
                 if (result !== null)
                     resolve(result);
                 reject(buildErrObject(404, 'PHONE_DOES_NOT_EXISTS'));
@@ -224,11 +223,11 @@ userSchema.statics.checkLoginAttemptsAndBlockExpires = async user => {
 userSchema.statics.passwordsDoNotMatch = async user => {
     user.loginAttempts += 1;
     await this.saveLoginAttemptsToDB(user);
-    return new Promise((resolve, reject) => {
-        if (user.loginAttempts <= LOGIN_ATTEMPTS) {
-            resolve(buildErrObject(409, 'WRONG_PASSWORD'));
+    return new Promise(async (resolve, reject) => {
+        if (user.loginAttempts < LOGIN_ATTEMPTS) {
+            reject(buildErrObject(409, 'WRONG_PASSWORD'));
         } else {
-            resolve(blockUser(user));
+            reject(await blockUser(user));
         }
         reject(buildErrObject(422, 'ERROR'));
     });
@@ -254,6 +253,15 @@ userSchema.statics.comparePassword = (passwordAttempt, password, cb) => {
     bcrypt.compare(passwordAttempt, password, (err, isMatch) =>
         err ? cb(err) : cb(null, isMatch)
     )
+};
+
+//USER IS BLOCKED
+userSchema.statics.userIsBlocked = async (user) => {
+    return new Promise((resolve, reject) => {
+        if(user.blockExpires > new Date())
+            reject(buildErrObject(409, 'BLOCKED_USER'));
+        resolve(true);
+    });
 };
 /*
 METHODS
@@ -284,14 +292,7 @@ userSchema.methods.forgotPassResponse = () => {
     }
 };
 
-//USER IS BLOCKED
-userSchema.methods.userIsBlocked = async () => {
-    return new Promise((resolve, reject) => {
-        if(this.blockExpires > new Date())
-            reject(buildErrObject(409, 'BLOCKED_USER'));
-        resolve(true);
-    });
-};
+
 
 
 
@@ -323,7 +324,7 @@ exports.saveLoginAttemptsToDB = async user => {
     return new Promise((resolve, reject) => {
         user.save()
             .then(result => resolve(result))
-            .catch(err => buildErrObject(422, err.message));
+            .catch(err => reject(buildErrObject(422, err.message)));
     });
 };
 
