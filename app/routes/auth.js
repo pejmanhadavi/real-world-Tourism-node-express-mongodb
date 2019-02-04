@@ -6,7 +6,7 @@ const User = require('../dao/user').User;
 const router = express.Router();
 
 /*
-Routes
+ROUTES
 */
 
 router.post('/register', validate.register, controller.register);

@@ -256,11 +256,25 @@ userSchema.statics.comparePassword = (passwordAttempt, password, cb) => {
 };
 
 //USER IS BLOCKED
-userSchema.statics.userIsBlocked = async (user) => {
+userSchema.statics.userIsBlocked = async user => {
     return new Promise((resolve, reject) => {
         if(user.blockExpires > new Date())
             reject(buildErrObject(409, 'BLOCKED_USER'));
         resolve(true);
+    });
+};
+
+
+//GET PROFILE FROM DB
+userSchema.statics.getProfileFromDB = async id => {
+    return new Promise((resolve, reject) => {
+        User.findById(id, '-_id -updatedAt -createdAt')
+            .then(result => {
+                if (result === null)
+                    reject(buildErrObject(404, 'NOT_FOUND'));
+                resolve(result);
+            })
+            .catch(err => reject(buildErrObject(422, err.message)));
     });
 };
 
@@ -272,7 +286,6 @@ userSchema.methods.genSalt = async function() {
     const salt = await bcrypt.genSalt(10);
     this.password= await bcrypt.hash(this.password, salt);
 };
-
 
 
 

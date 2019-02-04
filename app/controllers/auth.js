@@ -6,6 +6,7 @@ const PhoneStatus = require('../dao/phone_status').PhoneStatus;
 const {buildErrObject, handleError} = require('../services/error_handler');
 const {sendVerificationCode} = require('../services/send_sms');
 const {UserAccess} = require('../dao/user_access');
+const {isIDGood} = require('./base');
 
 
 /**************************************
@@ -59,8 +60,9 @@ exports.register = async(req, res) => {
 exports.verify = async (req, res) => {
     try{
         const data = matchedData(req);
-        console.log('USER ID ***********'+data.id);
-        const user = await User.verificationExists(data.id);
+        const id = await isIDGood(data.id);
+        console.log('USER ID ***********'+id);
+        const user = await User.verificationExists(id);
         await PhoneStatus.deletePhoneStatus(user.phone);
         res.status(200).json(await User.verifyUser(data, res, user));
     }catch (err) {
