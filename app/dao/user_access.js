@@ -7,9 +7,9 @@ const User = require('../dao/user').User;
 const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access');
 const {generateToken} = require('../services/auth');
 
-/*
-STATICS
- */
+/********************
+    * STATICS *
+ ******************/
 //SAVE_USER_ACCESS_AND_RETURN_TOKEN
 userAccessSchema.statics.saveUserAccessAndReturnToken = async (req, user) => {
   return new Promise((resolve, reject) => {
@@ -34,8 +34,8 @@ userAccessSchema.statics.saveUserAccessAndReturnToken = async (req, user) => {
 
 
 
-/*
-CREATE AND EXPORT MODEL
- */
+/***************************************
+    * CREATE AND EXPORT MODEL *
+ **************************************/
 const UserAccess = mongoose.model('UserAccess', userAccessSchema);
 exports.UserAccess  = UserAccess;

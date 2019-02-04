@@ -27,7 +27,7 @@ before(done => {
 });
 
 
-describe('AUTH', () => {
+describe('  *   *   * AUTH *  *   *', () => {
     describe('POST register', () => {
         it('should POST register', done => {
             const user = {
@@ -43,8 +43,8 @@ describe('AUTH', () => {
                 .send(user)
                 .end(async (err, res) => {
                     res.should.have.status(201);
-                    res.body.should.include.keys('token', 'user');
-                    createdID = res.body.user._id;
+                    res.body.should.include.keys('username', 'phone');
+                    createdID = res.body._id;
                     const user = await User.findOne({
                         _id: createdID
                     });
@@ -108,7 +108,7 @@ describe('AUTH', () => {
                 .send(verify)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.include.keys('phone', 'verified');
+                    res.body.should.include.keys('token','user');
                     done();
                 });
 

@@ -278,9 +278,9 @@ userSchema.statics.getProfileFromDB = async id => {
     });
 };
 
-/***************************
+/************************
     * METHODS *
- **************************/
+ ***********************/
 //GEN SALT
 userSchema.methods.genSalt = async function() {
     const salt = await bcrypt.genSalt(10);

@@ -40,10 +40,9 @@ exports.register = async(req, res) => {
             }
             const user = await User.registerUser(data);
             const userInfo = User.setUserInfo(user);
-            const response = user.returnRegistrationToken(userInfo);
             User.expiresVerification(user);
             sendVerificationCode(res, user.phone, user.verification);
-            res.status(201).json(response);
+            res.status(201).json(userInfo);
         }
     }catch(err){
         handleError(res, buildErrObject(err.code, err.message));
@@ -61,10 +60,10 @@ exports.verify = async (req, res) => {
     try{
         const data = matchedData(req);
         const id = await isIDGood(data.id);
-        console.log('USER ID ***********'+id);
         const user = await User.verificationExists(id);
         await PhoneStatus.deletePhoneStatus(user.phone);
-        res.status(200).json(await User.verifyUser(data, res, user));
+        await User.verifyUser(data, res, user);
+        res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
     }catch (err) {
         handleError(res, buildErrObject(err.code, err.message));
     }
