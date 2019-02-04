@@ -8,9 +8,12 @@ const {sendVerificationCode} = require('../services/send_sms');
 const {UserAccess} = require('../dao/user_access');
 
 
-
-
-//1_REGISTER CONTROLLER
+/**************************************
+    * 1_REGISTER CONTROLLER *
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.register = async(req, res) => {
     try{
         const data = matchedData(req);
@@ -46,13 +49,18 @@ exports.register = async(req, res) => {
     }
 };
 
-
-//2_VERIFY CONTROLLER
+/************************************
+    * VERIFY CONTROLLER *
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.verify = async (req, res) => {
     try{
         const data = matchedData(req);
+        console.log('USER ID ***********'+data.id);
         const user = await User.verificationExists(data.id);
-        console.log(user);
         await PhoneStatus.deletePhoneStatus(user.phone);
         res.status(200).json(await User.verifyUser(data, res, user));
     }catch (err) {
@@ -60,7 +68,12 @@ exports.verify = async (req, res) => {
     }
 };
 
-//3_FORGOT_PASSWORD CONTROLLER
+/*****************************************
+   * FORGOT_PASSWORD CONTROLLER *
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.forgotPassword = async (req, res) => {
     try{
         const data = matchedData(req);
@@ -75,7 +88,12 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
-//4_LOGIN
+/*********************************************
+   * LOGIN CONTROLLER *
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.login = async (req, res) => {
     try {
         const data = matchedData(req);
@@ -91,6 +109,6 @@ exports.login = async (req, res) => {
             res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
         }
     }catch (err) {
-        handleError(res, buildErrObject(422, err.message));
+        handleError(res, buildErrObject(err.code, err.message));
     }
 };

@@ -7,9 +7,9 @@ const {handleError, buildErrObject}= require('../services/error_handler');
 const HOURS_TO_BLOCK = 5;
 const REGISTER_ATTEMPTS = 3;
 
-/*
-STATICS
- */
+/**********************
+    * STATICS *
+ **********************/
 
 //CHECK PHONE
 phoneSchema.statics.phoneExists = async phone => {
@@ -100,16 +100,16 @@ phoneSchema.statics.deletePhoneStatus = async (phone) => {
     })
 };
 
-/*
-METHODS
- */
+/*******************
+    * METHODS *
+ ******************/
 
 
 
 
-/*
-HELPERS
- */
+/*******************
+    * HELPERS *
+ ******************/
 //BLOCK IS EXPIRED
 const blockIsExpired = (phoneStatus) =>
     phoneStatus.attempts > REGISTER_ATTEMPTS && phoneStatus.blockExpires <= new Date();
@@ -124,8 +124,8 @@ const savePhoneStatus = async (phoneStatus) => {
     });
 };
 
-/*
-CREATE AND EXPORT MODEL
- */
+/**********************************
+    * CREATE AND EXPORT MODEL *
+**********************************/
 const PhoneStatus = mongoose.model('PhoneStatus', phoneSchema);
 exports.PhoneStatus = PhoneStatus;

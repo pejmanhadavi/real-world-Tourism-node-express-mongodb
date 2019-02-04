@@ -193,6 +193,59 @@ describe('AUTH', () => {
                 });
         });
     });
+    
+    describe('POST login', () => {
+        it('should POST login', done => {
+            const user = {
+                phone,
+                password
+            };
+
+            chai
+                .request(server)
+                .post('/auth/login')
+                .send(user)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('token');
+                    done();
+                });
+        });
+
+        it('should not POST login if password is incorrect', done => {
+            const user = {
+                phone,
+                password : faker.internet.password()
+            };
+            chai
+                .request(server)
+                .post('/auth/login')
+                .send(user)
+                .end((err, res) => {
+                    res.should.have.status(409);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('errors');
+                    done();
+                });
+        });
+
+        it('should not POST login if phone does not exists', done => {
+            const user = {
+                phone: faker.phone.phoneNumber('###########'),
+                password,
+            };
+            chai
+                .request(server)
+                .post('/auth/login')
+                .send(user)
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('errors');
+                    done();
+                });
+        });
+    });
 });
 
 

@@ -21,9 +21,9 @@ const HOURS_TO_BLOCK = 5;
 
 
 
-/*
-STATICS
- */
+/*************************
+    * STATICS *
+ ************************/
 
 
 //DELETE NOT VERIFIED USERS
@@ -263,9 +263,10 @@ userSchema.statics.userIsBlocked = async (user) => {
         resolve(true);
     });
 };
-/*
-METHODS
- */
+
+/***************************
+    * METHODS *
+ **************************/
 //GEN SALT
 userSchema.methods.genSalt = async function() {
     const salt = await bcrypt.genSalt(10);
@@ -299,9 +300,9 @@ userSchema.methods.forgotPassResponse = () => {
 
 
 
-/*
-HELPERS
- */
+/********************************
+    * HELPERS *
+ ********************************/
 
 //BLOCK IS EXPIRED
 const blockIsExpired = (user) =>
@@ -328,9 +329,9 @@ exports.saveLoginAttemptsToDB = async user => {
     });
 };
 
-/*
-CREATE AND EXPORT MODEL
- */
+/**************************************
+    * CREATE AND EXPORT MODEL*
+***************************************/
 const User = mongoose.model('User', userSchema);
 exports.User = User;
 
