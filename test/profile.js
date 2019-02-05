@@ -43,7 +43,7 @@ describe('  *   *   * PROFILE *   *   *', () => {
     });
 
     describe('GET profile', () => {
-        it('should NOT be able to consume the route since no token was sent', done => {
+        it('should NOT GET the profile since no token was sent', done => {
             chai
                 .request(server)
                 .get('/profile')
@@ -67,9 +67,74 @@ describe('  *   *   * PROFILE *   *   *', () => {
         });
     });
 
-
+    describe('PUT profile', () => {
+        it('should NOT PUT since no token was sent', done => {
+            chai
+                .request(server)
+                .put('/profile')
+                .send({})
+                .end((err, res) => {
+                    res.should.have.status(401);
+                    done();
+                });
+        });
+        it('should NOT PUT since username or password has not been sent', done => {
+            chai
+                .request(server)
+                .put('/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({})
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    done();
+                })
+        });
+        it('should PUT if username has been sent', done => {
+            chai
+                .request(server)
+                .put('/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    username: 'pejman'
+                })
+                .end((err, res) => {
+                   res.should.have.status(200);
+                   done();
+                });
+        });
+        it('should PUT if password has been sent', done => {
+            chai
+                .request(server)
+                .put('/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    currentpassword: 'admin',
+                    newpassword: '12345',
+                    confirmnewpassword: '12345'
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+        it('should PUT if username and password has been sent', done => {
+            chai
+                .request(server)
+                .put('/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    username: 'admin',
+                    currentpassword: '12345',
+                    newpassword: 'admin',
+                    confirmnewpassword: 'admin'
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
 });
-
 
 after(() => {
     createdID.map(item => {

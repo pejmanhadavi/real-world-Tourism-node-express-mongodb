@@ -283,6 +283,8 @@ userSchema.statics.getProfileFromDB = async id => {
 //UPDATE PROFILE IN DB
 userSchema.statics.updateProfileInDB = async (req, id) => {
     return new Promise((resolve, reject) => {
+        if (!req.body.username && !req.body.newpassword)
+            reject(buildErrObject(422, 'THERE_IS_NO_PROPERTY'));
         User.findById(id)
             .then(async result => {
                 if (!result)
