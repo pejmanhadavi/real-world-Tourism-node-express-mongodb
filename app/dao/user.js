@@ -41,10 +41,11 @@ userSchema.statics.deleteNotVerifiedUsers = async () => {
 userSchema.statics.usernameExists= async username =>{
     return new Promise((resolve, reject)=>{
         User.findOne({
-            username: username,
+            username,
         })
             .then(result => {
-                if (result === null)
+
+                if (!result)
                     resolve(false);
 
                 reject(buildErrObject(422, 'USERNAME_ALREADY_EXISTS'));
@@ -62,7 +63,7 @@ userSchema.statics.verificationSent= async (username, phone) =>{
             verificationExpires : {$gte: new Date()}
         })
             .then(result => {
-                if (result === null)
+                if (!result)
                     resolve(false);
                 reject(buildErrObject(422, 'WAIT_VERIFICATION_SENT'));
             })
@@ -78,7 +79,7 @@ userSchema.statics.phoneExists_register= async phone =>{
             verified: true
         })
             .then(result => {
-                if (result === null)
+                if (!result)
                     resolve(false);
 
                 reject(buildErrObject(422, 'PHONE_ALREADY_EXISTS'));
@@ -95,7 +96,7 @@ userSchema.statics.phoneExists = async phone =>{
             verified: true
         })
             .then(result => {
-                if (result !== null)
+                if (result)
                     resolve(result);
                 reject(buildErrObject(404, 'PHONE_DOES_NOT_EXISTS'));
             })
@@ -138,7 +139,7 @@ userSchema.statics.verificationExists = async id => {
             verified: false
         })
             .then(result => {
-                if (result === null)
+                if (!result)
                     reject(buildErrObject(404, 'NOT_USER_OR_ALREADY_VERIFIED'));
                 resolve(result);
             })
@@ -270,10 +271,28 @@ userSchema.statics.getProfileFromDB = async id => {
     return new Promise((resolve, reject) => {
         User.findById(id, '-_id -updatedAt -createdAt')
             .then(result => {
-                if (result === null)
+                if (!result)
                     reject(buildErrObject(404, 'NOT_FOUND'));
                 resolve(result);
             })
+            .catch(err => reject(buildErrObject(422, err.message)));
+    });
+};
+
+
+//UPDATE PROFILE IN DB
+userSchema.statics.updateProfileInDB = async (req, id) => {
+    return new Promise((resolve, reject) => {
+        User.findById(id)
+            .then(async result => {
+                if (!result)
+                    reject(buildErrObject(404, 'NOT_FOUND'));
+
+                await update_setUserInfo(req, result, reject);
+                await result.save();
+                resolve(result);
+            })
+            .then(result => resolve(result))
             .catch(err => reject(buildErrObject(422, err.message)));
     });
 };
@@ -342,6 +361,22 @@ exports.saveLoginAttemptsToDB = async user => {
     });
 };
 
+const update_setUserInfo =async (req, user, reject) => {
+        if (req.body.username) {
+            user.username = req.body.username;
+            await User.usernameExists(user.username);
+        }
+        if (req.body.newpassword) {
+            const isPasswordMatch = await User.checkPassword(req.body.currentpassword, user);
+            console.log('IS PASS MATCH : '+isPasswordMatch);
+            if (isPasswordMatch) {
+                user.password = req.body.newpassword;
+                await user.genSalt();
+            } else {
+                reject(buildErrObject(409, 'PASSWORD_IS_WRONG'));
+            }
+        }
+};
 /**************************************
     * CREATE AND EXPORT MODEL*
 ***************************************/
