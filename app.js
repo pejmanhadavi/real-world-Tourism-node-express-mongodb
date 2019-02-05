@@ -8,16 +8,15 @@ const indexRouter = require('./app/routes/index');
 const usersRouter = require('./app/routes/users');
 const authRouter = require('./app/routes/auth');
 const profileRouter = require('./app/routes/profile');
-const mongoose = require('mongoose');
+const initMongo = require('./init/mongo');
 const config = require('config');
 
-// connect mongoose to mongod
-mongoose.connect(config.get('DATABASE'), {useNewUrlParser: true})
-.then(()=>console.log('Connected to mongodb...'))
-.catch(()=>console.log('Could not connect to mongodb...'));
+
+//INIT MONGO
+initMongo();
 
 // app
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
