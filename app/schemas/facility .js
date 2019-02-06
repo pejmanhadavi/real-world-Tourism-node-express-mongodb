@@ -1,24 +1,25 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 
 //FACILITY SCHEMA
 const facilitySchema = new Schema(
-    {
-      name: {
-        type: String,
-        required: true
-      }
-    },
-    {
-      versionKey: false,
-      timestamps: true
-    }
-  );
-  facilitySchema.index({
-    name: 'text'
-  });
-  facilitySchema.plugin(mongoosePaginate);
+	{
+		name: {
+			type: String,
+			required: true
+		}
+	},
+	{
+		versionKey: false,
+		timestamps: true
+	}
+);
+facilitySchema.index({
+	name: 'text'
+});
+facilitySchema.plugin(mongoosePaginate);
   
 
 //EXPORT SCHEMA
-module.exports.facilitySchema = facilitySchema;
+exports.facilitySchema = facilitySchema;

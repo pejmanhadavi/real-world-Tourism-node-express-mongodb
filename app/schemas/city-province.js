@@ -1,45 +1,46 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
 
 //PROVINCE SCHEMA
 const provinceSchema = new Schema(
-    {
-      name: {
-        type: String,
-        required: true
-      }
-    },
-    {
-      versionKey: false,
-      timestamps: true
-    }
-  )
-  provinceSchema.index({
-    name: 'text'
-  })
+	{
+		name: {
+			type: String,
+			required: true
+		}
+	},
+	{
+		versionKey: false,
+		timestamps: true
+	}
+);
+provinceSchema.index({
+	name: 'text'
+});
 
 //CITY SCHEMA
 const citySchema = new Schema(
-  {
+	{
 
-    province: {
-        type: ObjectId,
-        required: true,
-    },
-    name: {
-      type: String,
-      required: true
-    }
-  },
-  {
-    versionKey: false,
-    timestamps: true
-  }
-)
+		province: {
+			type: ObjectId,
+			required: true,
+		},
+		name: {
+			type: String,
+			required: true
+		}
+	},
+	{
+		versionKey: false,
+		timestamps: true
+	}
+);
 citySchema.index({
-  name: 'text'
+	name: 'text'
 });
 
 //PAGINATE

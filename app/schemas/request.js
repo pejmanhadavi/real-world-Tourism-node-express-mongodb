@@ -4,32 +4,32 @@ const Schema = mongoose.Schema;
 
 //REQUEST SCHEMA
 const requestSchema = new Schema({
-    from: {
-        type: ObjectId,
-        ref: 'User',
-        required: true
-    },
-    to: {
-        type: ObjectId,
-        ref: 'User',
-        required: true
-    },
-    maxHourOccupancy: {
-        type:Number,
-        required: true
-    },
-    Verification: {
-        type: boolean,
-        default: false,
-    },
-    description: {
-        type: string,
-        maxlength: 500
-    }
+	from: {
+		type: ObjectId,
+		ref: 'User',
+		required: true
+	},
+	to: {
+		type: ObjectId,
+		ref: 'User',
+		required: true
+	},
+	maxHourOccupancy: {
+		type:Number,
+		required: true
+	},
+	Verification: {
+		type: Boolean,
+		default: false,
+	},
+	description: {
+		type: String,
+		maxlength: 500
+	}
 }, {
-    timestamps: true
+	timestamps: true
 });
 
 
 //EXPORT SCHEMA
-module.exports = Request;
+module.exports.requestSchema = requestSchema;

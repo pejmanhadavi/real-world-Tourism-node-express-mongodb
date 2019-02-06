@@ -2,7 +2,6 @@ const express = require('express');
 const validate = require('../validations/auth');
 const controller = require('../controllers/auth');
 
-const User = require('../dao/user').User;
 const router = express.Router();
 
 /*

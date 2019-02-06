@@ -3,124 +3,124 @@ const validationResult = require('express-validator/check').validationResult;
 const {buildErrObject, handleError} = require('../services/error_handler');
 
 exports.register = [
-    check('username')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY'),
-    check('password')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY')
-        .isLength({
-            min: 5
-        })
-        .withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
-    check('confirmpassword')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY')
-        .isLength({
-            min: 5
-        })
-        .withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
-    check('phone')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY')
-        .isMobilePhone()
-        .withMessage('PHONE_IS_NOT_VALID'),
-    (req, res, next)=>{
-    try{
-        //check password and confirm password
-        if(req.body.password !== req.body.confirmpassword){
-            return handleError(res, buildErrObject(422, 'PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME'));
-        }
-        validationResult(req).throw();
-        return next();
-    }catch(err){
-        return handleError(res, buildErrObject(422, err.array()));
-    }
-}
+	check('username')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY'),
+	check('password')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isLength({
+			min: 5
+		})
+		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+	check('confirmpassword')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isLength({
+			min: 5
+		})
+		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+	check('phone')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isMobilePhone()
+		.withMessage('PHONE_IS_NOT_VALID'),
+	(req, res, next)=>{
+		try{
+			//check password and confirm password
+			if(req.body.password !== req.body.confirmpassword){
+				return handleError(res, buildErrObject(422, 'PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME'));
+			}
+			validationResult(req).throw();
+			return next();
+		}catch(err){
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
 ];
 
 
 
 exports.verify = [
-    check('id')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY'),
-    check('verification')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY'),
-    (req, res, next) => {
-        try {
-            validationResult(req).throw()
-            return next()
-        } catch (err) {
-            return handleError(res, buildErrObject(422, err.array()))
-        }
-    }
+	check('id')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY'),
+	check('verification')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY'),
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
 ];
 
 
 exports.forgotPassword = [
-    check('phone')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY')
-        .isMobilePhone()
-        .withMessage('PHONE_IS_NOT_VALID'),
-    (req, res, next)=>{
-        try{
-            validationResult(req).throw();
-            return next();
-        }catch(err){
-            return handleError(res, buildErrObject(422, err.array()));
-        }
-    }
+	check('phone')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isMobilePhone()
+		.withMessage('PHONE_IS_NOT_VALID'),
+	(req, res, next)=>{
+		try{
+			validationResult(req).throw();
+			return next();
+		}catch(err){
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
 ];
 
 exports.login = [
-    check('phone')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY')
-        .isMobilePhone()
-        .withMessage('PHONE_IS_NOT_VALID'),
-    check('password')
-        .exists()
-        .withMessage('MISSING')
-        .not()
-        .isEmpty()
-        .withMessage('IS_EMPTY')
-        .isLength({
-            min: 5
-        })
-        .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
-    (req, res, next) => {
-        try {
-            validationResult(req).throw();
-            return next();
-        } catch (err) {
-            return handleError(res, buildErrObject(422, err.array()));
-        }
-    }
+	check('phone')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isMobilePhone()
+		.withMessage('PHONE_IS_NOT_VALID'),
+	check('password')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isLength({
+			min: 5
+		})
+		.withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
 ];

@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const dateFns = require('date-fns');
 const phoneToken = require('generate-sms-verification-code');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const randomize = require('randomatic');
 
 
@@ -28,275 +27,275 @@ const HOURS_TO_BLOCK = 5;
 
 //DELETE NOT VERIFIED USERS
 userSchema.statics.deleteNotVerifiedUsers = async () => {
-    return new Promise((resolve, reject) => {
-        User.deleteMany({
-            verified: false,
-            verificationExpires : {$lte: new Date()}
-        }).then(resolve)
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+	return new Promise((resolve, reject) => {
+		User.deleteMany({
+			verified: false,
+			verificationExpires : {$lte: new Date()}
+		}).then(resolve)
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //CHECK USERNAME
 userSchema.statics.usernameExists= async username =>{
-    return new Promise((resolve, reject)=>{
-        User.findOne({
-            username,
-        })
-            .then(result => {
+	return new Promise((resolve, reject)=>{
+		User.findOne({
+			username,
+		})
+			.then(result => {
 
-                if (!result)
-                    resolve(false);
+				if (!result)
+					resolve(false);
 
-                reject(buildErrObject(422, 'USERNAME_ALREADY_EXISTS'));
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+				reject(buildErrObject(422, 'USERNAME_ALREADY_EXISTS'));
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //CHECK IF VERIFICATION SENT
 userSchema.statics.verificationSent= async (username, phone) =>{
-    return new Promise((resolve, reject)=>{
-        User.findOne({
-            username,
-            phone,
-            verificationExpires : {$gte: new Date()}
-        })
-            .then(result => {
-                if (!result)
-                    resolve(false);
-                reject(buildErrObject(422, 'WAIT_VERIFICATION_SENT'));
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+	return new Promise((resolve, reject)=>{
+		User.findOne({
+			username,
+			phone,
+			verificationExpires : {$gte: new Date()}
+		})
+			.then(result => {
+				if (!result)
+					resolve(false);
+				reject(buildErrObject(422, 'WAIT_VERIFICATION_SENT'));
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //CHECK PHONE_REGISTER
 userSchema.statics.phoneExists_register= async phone =>{
-    return new Promise((resolve, reject)=>{
-        User.findOne({
-            phone: phone,
-            verified: true
-        })
-            .then(result => {
-                if (!result)
-                    resolve(false);
+	return new Promise((resolve, reject)=>{
+		User.findOne({
+			phone: phone,
+			verified: true
+		})
+			.then(result => {
+				if (!result)
+					resolve(false);
 
-                reject(buildErrObject(422, 'PHONE_ALREADY_EXISTS'));
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+				reject(buildErrObject(422, 'PHONE_ALREADY_EXISTS'));
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //CHECK PHONE_FORGOT
 userSchema.statics.phoneExists = async phone =>{
-    return new Promise((resolve, reject)=>{
-        User.findOne({
-            phone: phone,
-            verified: true
-        })
-            .then(result => {
-                if (result)
-                    resolve(result);
-                reject(buildErrObject(404, 'PHONE_DOES_NOT_EXISTS'));
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+	return new Promise((resolve, reject)=>{
+		User.findOne({
+			phone: phone,
+			verified: true
+		})
+			.then(result => {
+				if (result)
+					resolve(result);
+				reject(buildErrObject(404, 'PHONE_DOES_NOT_EXISTS'));
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //REGISTER
 userSchema.statics.registerUser = async req => {
-    return new Promise(async (resolve, reject) => {
-        const user = new User({
-            username: req.username,
-            password: req.password,
-            phone: req.phone,
-            verification: phoneToken(6, {type: 'string'})
-        });
+	return new Promise(async (resolve, reject) => {
+		const user = new User({
+			username: req.username,
+			password: req.password,
+			phone: req.phone,
+			verification: phoneToken(6, {type: 'string'})
+		});
 
-        await user.genSalt();
-        user.save()
-            .then(result => resolve(result))
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+		await user.genSalt();
+		user.save()
+			.then(result => resolve(result))
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //SET USER INFO
 userSchema.statics.setUserInfo = (req) => {
-    const user = {
-        _id: req._id,
-        username: req.username,
-        phone: req.phone
-    };
-    return user;
+	const user = {
+		_id: req._id,
+		username: req.username,
+		phone: req.phone
+	};
+	return user;
 };
 
 //VERIFICATION EXISTS
 userSchema.statics.verificationExists = async id => {
-    return new Promise((resolve, reject) => {
-        User.findOne({
-            _id: id,
-            verified: false
-        })
-            .then(result => {
-                if (!result)
-                    reject(buildErrObject(404, 'NOT_USER_OR_ALREADY_VERIFIED'));
-                resolve(result);
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    })
+	return new Promise((resolve, reject) => {
+		User.findOne({
+			_id: id,
+			verified: false
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_USER_OR_ALREADY_VERIFIED'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 
 //EXPIRE VERIFICATION
 userSchema.statics.expiresVerification = async (user) => {
-    return new Promise((resolve, reject) => {
-        user.verificationExpires = dateFns.addMinutes(new Date, MINUTES_TO_EXPIRE_VERIFICATION);
-        user.save()
-            .then(result => resolve(result))
-            .catch(err => reject(buildErrObject(err.code, err.message)));
-    });
+	return new Promise((resolve, reject) => {
+		user.verificationExpires = dateFns.addMinutes(new Date, MINUTES_TO_EXPIRE_VERIFICATION);
+		user.save()
+			.then(result => resolve(result))
+			.catch(err => reject(buildErrObject(err.code, err.message)));
+	});
 };
 
 
 //VERIFY USER
 userSchema.statics.verifyUser = async (req, res, user) => {
-    return new Promise((resolve, reject) => {
-        if (user.verification !== req.verification ){
-            handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
-            return;
-        }
-        if(user.verificationExpires <= new Date()){
-            handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
-            return;
-        }
-        user.verified = true;
+	return new Promise((resolve, reject) => {
+		if (user.verification !== req.verification ){
+			handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
+			return;
+		}
+		if(user.verificationExpires <= new Date()){
+			handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
+			return;
+		}
+		user.verified = true;
 
-        user.save()
-            .then(result => resolve({
-                phone: result.phone,
-                verified: result.verified
-            }))
-            .catch(err => reject(buildErrObject(422, err.message)));
+		user.save()
+			.then(result => resolve({
+				phone: result.phone,
+				verified: result.verified
+			}))
+			.catch(err => reject(buildErrObject(422, err.message)));
 
-    });
+	});
 };
 
 //GENERATE NEW PASSWORD
 userSchema.statics.generateNewPassword = async () => {
-    return randomize('Aa0', 12);
+	return randomize('Aa0', 12);
 
 };
 
 
 //UPDATE NEW PASSWORD
 userSchema.statics.updatePassword = async (res, user, newPassword) => {
-    return new Promise(async (resolve, reject) => {
-        const salt = await bcrypt.genSalt(10);
-        hashPassword = await bcrypt.hash(newPassword, salt);
+	return new Promise(async (resolve, reject) => {
+		const salt = await bcrypt.genSalt(10);
+		let hashPassword = await bcrypt.hash(newPassword, salt);
 
-        await user.update({
-            password: hashPassword
-        })
-            .then(result => resolve(result))
-            .catch(err => reject(buildErrObject(422, err.message)));
+		await user.update({
+			password: hashPassword
+		})
+			.then(result => resolve(result))
+			.catch(err => reject(buildErrObject(422, err.message)));
 
-    });
+	});
 };
 
 
 //CHECK LOGIN ATTEMTPS AND BLOCK EXPIRES
 userSchema.statics.checkLoginAttemptsAndBlockExpires = async user => {
-    return new Promise((resolve, reject) => {
-        if(blockIsExpired(user)){
-            user.loginAttempts = 0;
-            user.save()
-                .then(result => resolve(result))
-                .catch(err => buildErrObject(422, err.message));
-        }else{
-            resolve(true);
-        }
-    });
+	return new Promise((resolve, reject) => {
+		if(blockIsExpired(user)){
+			user.loginAttempts = 0;
+			user.save()
+				.then(result => resolve(result))
+				.catch(err => reject(buildErrObject(422, err.message)));
+		}else{
+			resolve(true);
+		}
+	});
 };
 
 
 //PASSWORDS DO NOT MATCH
 userSchema.statics.passwordsDoNotMatch = async user => {
-    user.loginAttempts += 1;
-    await this.saveLoginAttemptsToDB(user);
-    return new Promise(async (resolve, reject) => {
-        if (user.loginAttempts < LOGIN_ATTEMPTS) {
-            reject(buildErrObject(409, 'WRONG_PASSWORD'));
-        } else {
-            reject(await blockUser(user));
-        }
-        reject(buildErrObject(422, 'ERROR'));
-    });
+	user.loginAttempts += 1;
+	await this.saveLoginAttemptsToDB(user);
+	return new Promise(async (resolve, reject) => {
+		if (user.loginAttempts < LOGIN_ATTEMPTS) {
+			reject(buildErrObject(409, 'WRONG_PASSWORD'));
+		} else {
+			reject(await blockUser(user));
+		}
+		reject(buildErrObject(422, 'ERROR'));
+	});
 };
 
 //CHECK PASSWORD
 userSchema.statics.checkPassword = async (password, user) => {
-    return new Promise((resolve, reject) => {
-        User.comparePassword(password, user.password, (err, isMatch) => {
-            if (err) {
-                reject(buildErrObject(422, err.message))
-            }
-            if (!isMatch) {
-                resolve(false)
-            }
-            resolve(true)
-        });
-    });
+	return new Promise((resolve, reject) => {
+		User.comparePassword(password, user.password, (err, isMatch) => {
+			if (err) {
+				reject(buildErrObject(422, err.message));
+			}
+			if (!isMatch) {
+				resolve(false);
+			}
+			resolve(true);
+		});
+	});
 };
 
 //COMPARE PASSWORD
 userSchema.statics.comparePassword = (passwordAttempt, password, cb) => {
-    bcrypt.compare(passwordAttempt, password, (err, isMatch) =>
-        err ? cb(err) : cb(null, isMatch)
-    )
+	bcrypt.compare(passwordAttempt, password, (err, isMatch) =>
+		err ? cb(err) : cb(null, isMatch)
+	);
 };
 
 //USER IS BLOCKED
 userSchema.statics.userIsBlocked = async user => {
-    return new Promise((resolve, reject) => {
-        if(user.blockExpires > new Date())
-            reject(buildErrObject(409, 'BLOCKED_USER'));
-        resolve(true);
-    });
+	return new Promise((resolve, reject) => {
+		if(user.blockExpires > new Date())
+			reject(buildErrObject(409, 'BLOCKED_USER'));
+		resolve(true);
+	});
 };
 
 
 //GET PROFILE FROM DB
 userSchema.statics.getProfileFromDB = async id => {
-    return new Promise((resolve, reject) => {
-        User.findById(id, '-_id -updatedAt -createdAt')
-            .then(result => {
-                if (!result)
-                    reject(buildErrObject(404, 'NOT_FOUND'));
-                resolve(result);
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+	return new Promise((resolve, reject) => {
+		User.findById(id, '-_id -updatedAt -createdAt')
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 
 //UPDATE PROFILE IN DB
 userSchema.statics.updateProfileInDB = async (req, id) => {
-    return new Promise((resolve, reject) => {
-        if (!req.body.username && !req.body.newpassword)
-            reject(buildErrObject(422, 'THERE_IS_NO_PROPERTY'));
-        User.findById(id)
-            .then(async result => {
-                if (!result)
-                    reject(buildErrObject(404, 'NOT_FOUND'));
+	return new Promise((resolve, reject) => {
+		if (!req.body.username && !req.body.newpassword)
+			reject(buildErrObject(422, 'THERE_IS_NO_PROPERTY'));
+		User.findById(id)
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
 
-                await update_setUserInfo(req, result, reject);
-                await result.save();
-                resolve(result);
-            })
-            .then(result => resolve(result))
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+				await update_setUserInfo(req, result, reject);
+				await result.save();
+				resolve(result);
+			})
+			.then(result => resolve(result))
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 /************************
@@ -304,8 +303,8 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
  ***********************/
 //GEN SALT
 userSchema.methods.genSalt = async function() {
-    const salt = await bcrypt.genSalt(10);
-    this.password= await bcrypt.hash(this.password, salt);
+	const salt = await bcrypt.genSalt(10);
+	this.password= await bcrypt.hash(this.password, salt);
 };
 
 
@@ -313,18 +312,18 @@ userSchema.methods.genSalt = async function() {
 //RETURN REGISTRATION TOKEN
 userSchema.methods.returnRegistrationToken = (userInfo) => {
 
-    return {
-        token: generateToken(this._id),
-        user: userInfo
-    };
+	return {
+		token: generateToken(this._id),
+		user: userInfo
+	};
 };
 
 //FORGOT PASS RES
 userSchema.methods.forgotPassResponse = () => {
-    return {
-        phone: this.phone,
-        message: 'NEW_PASSWORD_SENT'
-    }
+	return {
+		phone: this.phone,
+		message: 'NEW_PASSWORD_SENT'
+	};
 };
 
 
@@ -340,44 +339,43 @@ userSchema.methods.forgotPassResponse = () => {
 
 //BLOCK IS EXPIRED
 const blockIsExpired = (user) =>
-    user.loginAttempts > LOGIN_ATTEMPTS && user.blockExpires <= new Date()
+	user.loginAttempts > LOGIN_ATTEMPTS && user.blockExpires <= new Date();
 
 
 //BLOCK USER
 const blockUser = async user => {
-    return new Promise((resolve, reject) => {
-        user.blockExpires = dateFns.addHours(new Date(), HOURS_TO_BLOCK);
-        user.save()
-            .then(result => resolve(buildErrObject(409, 'BLOCKED_USER')))
-            .catch(err => reject(buildErrObject(422, err.message)));
+	return new Promise((resolve, reject) => {
+		user.blockExpires = dateFns.addHours(new Date(), HOURS_TO_BLOCK);
+		user.save()
+			.then(() => resolve(buildErrObject(409, 'BLOCKED_USER')))
+			.catch(err => reject(buildErrObject(422, err.message)));
 
-        });
-    };
+	});
+};
 
 //SAVE LOGIN ATTEMPTS
 exports.saveLoginAttemptsToDB = async user => {
-    return new Promise((resolve, reject) => {
-        user.save()
-            .then(result => resolve(result))
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+	return new Promise((resolve, reject) => {
+		user.save()
+			.then(result => resolve(result))
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 const update_setUserInfo =async (req, user, reject) => {
-        if (req.body.username) {
-            user.username = req.body.username;
-            await User.usernameExists(user.username);
-        }
-        if (req.body.newpassword) {
-            const isPasswordMatch = await User.checkPassword(req.body.currentpassword, user);
-            console.log('IS PASS MATCH : '+isPasswordMatch);
-            if (isPasswordMatch) {
-                user.password = req.body.newpassword;
-                await user.genSalt();
-            } else {
-                reject(buildErrObject(409, 'PASSWORD_IS_WRONG'));
-            }
-        }
+	if (req.body.username) {
+		user.username = req.body.username;
+		await User.usernameExists(user.username);
+	}
+	if (req.body.newpassword) {
+		const isPasswordMatch = await User.checkPassword(req.body.currentpassword, user);
+		if (isPasswordMatch) {
+			user.password = req.body.newpassword;
+			await user.genSalt();
+		} else {
+			reject(buildErrObject(409, 'PASSWORD_IS_WRONG'));
+		}
+	}
 };
 /**************************************
     * CREATE AND EXPORT MODEL*
