@@ -37,12 +37,7 @@ const tourLeaderSchema = new Schema({
     name: {
         required: [true, 'NAME_IS_BLANK'],
         type: String,
-        maxlength: 50,
-    },
-    lastname: {
-        required: [true, 'LAST_NAME_IS_BLANK'],
-        type: String,
-        maxlength: 255,
+        maxlength: 300,
     },
     languages: [{
         required: [true, 'LANGUAGES_IS_BLANK'],
@@ -57,12 +52,12 @@ const tourLeaderSchema = new Schema({
     metto: {
         required: [true, 'METTO_IS_BLANK'],
         type: String,
-        maxlength: 70,
+        maxlength: 180,
     },
     iWillShowYou: [{
         required: [true, 'I_WILL_SHOW_YOU_IS_BLANK'],
         type: String,
-        maxlength: 50,
+        maxlength: 180,
     }],
     scanBirthCertification: {
         required: [true, 'SCAN_BIRTH_CERTIFICATION_IS_BLANK'],

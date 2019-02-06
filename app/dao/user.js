@@ -32,7 +32,7 @@ userSchema.statics.deleteNotVerifiedUsers = async () => {
         User.deleteMany({
             verified: false,
             verificationExpires : {$lte: new Date()}
-        }).then(result => resolve(result))
+        }).then(resolve)
             .catch(err => reject(buildErrObject(422, err.message)));
     });
 };
