@@ -21,7 +21,7 @@ exports.register = [
 		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
 	body('password')
 		.custom((val, {req}) => {
-			if (val !== req.body.confirmpassword)
+			if (val !== req.body.confirmPassword)
 				throw new Error('PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME');
 			return true;
 		}),

@@ -108,9 +108,9 @@ describe('  *   *   * PROFILE *   *   *', () => {
                 .put('/profile')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    currentpassword: 'admin',
-                    newpassword: '12345',
-                    confirmnewpassword: '12345'
+                    currentPassword: 'admin',
+                    newPassword: '12345',
+                    confirmNewPassword: '12345'
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -124,9 +124,9 @@ describe('  *   *   * PROFILE *   *   *', () => {
                 .set('Authorization', `Bearer ${token}`)
                 .send({
                     username: 'admin',
-                    currentpassword: '12345',
-                    newpassword: 'admin',
-                    confirmnewpassword: 'admin'
+                    currentPassword: '12345',
+                    newPassword: 'admin',
+                    confirmNewPassword: 'admin'
                 })
                 .end((err, res) => {
                     res.should.have.status(200);

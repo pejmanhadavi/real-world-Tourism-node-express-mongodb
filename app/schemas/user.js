@@ -30,10 +30,6 @@ const userSchema = new Schema({
 	verificationExpires: {
 		type: Date
 	},
-	blockPhoneExpires: {
-		type: Date,
-		default: Date.now,
-	},
 	verified: {
 		type: Boolean,
 		default: false

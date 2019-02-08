@@ -268,11 +268,15 @@ userSchema.statics.userIsBlocked = async user => {
 //GET PROFILE FROM DB
 userSchema.statics.getProfileFromDB = async id => {
 	return new Promise((resolve, reject) => {
-		User.findById(id, '-_id -updatedAt -createdAt')
+		User.findById(id)
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
-				resolve(result);
+				const user = {
+				    username: result.username,
+                    phone: result.phone
+                };
+				resolve(user);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -282,7 +286,7 @@ userSchema.statics.getProfileFromDB = async id => {
 //UPDATE PROFILE IN DB
 userSchema.statics.updateProfileInDB = async (req, id) => {
 	return new Promise((resolve, reject) => {
-		if (!req.body.username && !req.body.newpassword)
+		if (!req.body.username && !req.body.newPassword)
 			reject(buildErrObject(422, 'THERE_IS_NO_PROPERTY'));
 		User.findById(id)
 			.then(async result => {
@@ -291,7 +295,11 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 
 				await update_setUserInfo(req, result, reject);
 				await result.save();
-				resolve(result);
+				const user = {
+				    username: result.username,
+                    phone: result.phone
+                };
+				resolve(user);
 			})
 			.then(result => resolve(result))
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -368,9 +376,9 @@ const update_setUserInfo =async (req, user, reject) => {
 		await User.usernameExists(user.username);
 	}
 	if (req.body.newpassword) {
-		const isPasswordMatch = await User.checkPassword(req.body.currentpassword, user);
+		const isPasswordMatch = await User.checkPassword(req.body.currentPassword, user);
 		if (isPasswordMatch) {
-			user.password = req.body.newpassword;
+			user.password = req.body.newPassword;
 			await user.genSalt();
 		} else {
 			reject(buildErrObject(409, 'PASSWORD_IS_WRONG'));

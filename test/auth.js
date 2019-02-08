@@ -34,7 +34,7 @@ describe('  *   *   * AUTH *  *   *', () => {
                 username,
                 phone,
                 password,
-                confirmpassword: password,
+                confirmPassword: password,
             };
 
             chai
@@ -59,7 +59,7 @@ describe('  *   *   * AUTH *  *   *', () => {
                 username,
                 phone,
                 password,
-                confirmpassword: password,
+                confirmPassword: password,
             };
             chai
                 .request(server)
@@ -79,7 +79,7 @@ describe('  *   *   * AUTH *  *   *', () => {
                 username,
                 phone: faker.phone.phoneNumber('###########'),
                 password,
-                confirmpassword: password,
+                confirmPassword: password,
             };
             chai
                 .request(server)
@@ -119,7 +119,7 @@ describe('  *   *   * AUTH *  *   *', () => {
                 username: faker.internet.userName(),
                 phone,
                 password,
-                confirmpassword: password
+                confirmPassword: password
             };
 
             chai
