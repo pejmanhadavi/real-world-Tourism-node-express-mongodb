@@ -1,4 +1,4 @@
-const check = require('express-validator/check').check;
+const {check, body}= require('express-validator/check');
 const validationResult = require('express-validator/check').validationResult;
 const {buildErrObject, handleError} = require('../services/error_handler');
 
@@ -19,16 +19,12 @@ exports.register = [
 			min: 5
 		})
 		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
-	check('confirmpassword')
-		.exists()
-		.withMessage('MISSING')
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY')
-		.isLength({
-			min: 5
-		})
-		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+	body('password')
+		.custom((val, {req}) => {
+			if (val !== req.body.confirmpassword)
+				throw new Error('PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME');
+			return true;
+		}),
 	check('phone')
 		.exists()
 		.withMessage('MISSING')
@@ -39,10 +35,6 @@ exports.register = [
 		.withMessage('PHONE_IS_NOT_VALID'),
 	(req, res, next)=>{
 		try{
-			//check password and confirm password
-			if(req.body.password !== req.body.confirmpassword){
-				return handleError(res, buildErrObject(422, 'PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME'));
-			}
 			validationResult(req).throw();
 			return next();
 		}catch(err){
