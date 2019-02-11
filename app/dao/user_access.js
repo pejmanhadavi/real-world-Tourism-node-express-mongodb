@@ -14,7 +14,7 @@ const {generateToken} = require('../services/auth');
 userAccessSchema.statics.saveUserAccessAndReturnToken = async (req, user) => {
 	return new Promise((resolve, reject) => {
 		const userAccess = new UserAccess({
-			phone: user.phone,
+			email: user.email,
 			ip: getIP(req),
 			browser: getBrowserInfo(req),
 			country: getCountry(req),

@@ -13,8 +13,8 @@ const {handleError, buildErrObject}= require('../services/error_handler');
 const {generateToken} = require('../services/auth');
 
 const MINUTES_TO_EXPIRE_VERIFICATION = 2;
-const LOGIN_ATTEMPTS = 4;
-const HOURS_TO_BLOCK = 5;
+const LOGIN_ATTEMPTS = 5;
+const HOURS_TO_BLOCK = 2;
 
 
 
@@ -157,7 +157,7 @@ userSchema.statics.passwordsDoNotMatch = async user => {
 	user.loginAttempts += 1;
 	await this.saveLoginAttemptsToDB(user);
 	return new Promise(async (resolve, reject) => {
-		if (user.loginAttempts < LOGIN_ATTEMPTS) {
+		if (user.loginAttempts <= LOGIN_ATTEMPTS) {
 			reject(buildErrObject(409, 'WRONG_PASSWORD'));
 		} else {
 			reject(await blockUser(user));
@@ -287,7 +287,7 @@ const blockUser = async user => {
 	return new Promise((resolve, reject) => {
 		user.blockExpires = dateFns.addHours(new Date(), HOURS_TO_BLOCK);
 		user.save()
-			.then(() => resolve(buildErrObject(409, 'BLOCKED_USER')))
+			.then(() => reject(buildErrObject(409, 'BLOCKED_USER')))
 			.catch(err => reject(buildErrObject(422, err.message)));
 
 	});

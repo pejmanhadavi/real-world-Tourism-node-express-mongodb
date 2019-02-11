@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userAccessSchema = new mongoose.Schema(
 	{
-		phone: {
+		email: {
 			type: String,
-			required: [true, 'PHONE_REQUIRED']
+			validate: {
+				validator: validator.isEmail,
+				message: 'EMAIL_IS_NOT_VALID'
+			},
 		},
 		ip: {
 			type: String,
