@@ -1,7 +1,6 @@
 const matchedData = require('express-validator/filter').matchedData;
 
 const {User, saveLoginAttemptsToDB} = require('../dao/user');
-const PhoneStatus = require('../dao/phone_status').PhoneStatus;
 
 const {buildErrObject, handleError} = require('../services/error_handler');
 const {sendVerificationCode} = require('../services/send_sms');
@@ -42,7 +41,6 @@ exports.verify = async (req, res) => {
 		const data = matchedData(req);
 		const id = await isIDGood(data.id);
 		const user = await User.verificationExists(id);
-		await PhoneStatus.deletePhoneStatus(user.phone);
 		await User.verifyUser(data, res, user);
 		res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
 	}catch (err) {

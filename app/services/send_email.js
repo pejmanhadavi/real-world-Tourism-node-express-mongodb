@@ -44,7 +44,7 @@ exports.sendRegistrationEmailMessage = async user => {
 const sendEmail = async (data, callback) => {
 
 	const transporter = nodemailer.createTransport({
-		service: 'yahoo',
+		service: 'Gmail',
 		auth: {
 			user: process.env.EMAIL_FROM_ADDRESS,
 			pass: process.env.EMAIL_PASS
