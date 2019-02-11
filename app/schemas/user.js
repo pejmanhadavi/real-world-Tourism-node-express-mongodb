@@ -98,7 +98,7 @@ const userSchema = new Schema({
 //INDEX
 userSchema.index({
 	username: 'text',
-	phone: 'text',
+	email: 'text',
 	verification: 'text'
 });
 

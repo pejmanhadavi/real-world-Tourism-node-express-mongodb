@@ -68,14 +68,15 @@ exports.verify = [
 
 
 exports.forgotPassword = [
-	check('phone')
+	check('email')
 		.exists()
 		.withMessage('MISSING')
 		.not()
 		.isEmpty()
 		.withMessage('IS_EMPTY')
-		.isMobilePhone()
-		.withMessage('PHONE_IS_NOT_VALID'),
+		.isEmail()
+		.withMessage('EMAIL_IS_NOT_VALID')
+		.normalizeEmail(),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();

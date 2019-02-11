@@ -1,12 +1,12 @@
 const matchedData = require('express-validator/filter').matchedData;
 
 const {User, saveLoginAttemptsToDB} = require('../dao/user');
-
+const {ForgotPassword, forgotPasswordResponse} = require('../dao/forgot_password');
 const {buildErrObject, handleError} = require('../services/error_handler');
 const {sendVerificationCode} = require('../services/send_sms');
 const {UserAccess} = require('../dao/user_access');
 const {isIDGood} = require('./base');
-const {sendRegistrationEmailMessage} = require('../services/send_email');
+const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('../services/send_email');
 
 
 /**************************************
@@ -54,12 +54,10 @@ exports.verify = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
 	try{
 		const data = matchedData(req);
-		const user = await User.phoneExists(data.phone);
-		const newPassword = await User.generateNewPassword();
-		User.updatePassword(req, user, newPassword);
-		sendVerificationCode(res, user.phone, newPassword);
-		const response = user.forgotPassResponse();
-		res.status(201).json(response);
+		await User.findUserByEmail(data.email);
+		const forgotPass = await ForgotPassword.saveForgotPassword(req);
+		sendResetPasswordEmailMessage(forgotPass);
+		res.status(200).json(forgotPasswordResponse(forgotPass));
 	}catch (err) {
 		handleError(res, buildErrObject(err.code, err.message));
 	}

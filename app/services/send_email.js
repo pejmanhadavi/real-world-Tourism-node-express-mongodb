@@ -34,6 +34,35 @@ exports.sendRegistrationEmailMessage = async user => {
 
 };
 
+/**
+ * SEND RESET PASSWORD EMAIL
+ * @param user
+ * @returns {Promise<void>}
+ */
+exports.sendResetPasswordEmailMessage = async user => {
+	const subject = 'باز یابی رمز عبور';
+	const htmlMessage = `<p>برای بازیابی رمز عبور : ${
+		user.email
+	}</p> <p>بر روی لینک زیر کلیک کنید</p> <p>${process.env.FRONTEND_URL}/reset/${
+		user.verification
+	}</p> <p>اگر اشتباهی رخ داده این ایمیل را نادیده بگیرید</p> <p>باتشکر.</p>`;
+	const data = {
+		user,
+		subject,
+		htmlMessage
+	};
+	const email = {
+		subject,
+		htmlMessage,
+		verification: user.verification
+	};
+	sendEmail(data, messageSent =>
+		messageSent
+			? console.log(`Email SENT to: ${user.email}`)
+			: console.log(`Email FAILED to: ${user.email}`)
+	);
+	console.log(user.verification);
+};
 
 /**
  * SEND EMAIL

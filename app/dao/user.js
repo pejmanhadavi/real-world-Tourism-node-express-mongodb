@@ -102,6 +102,24 @@ userSchema.statics.verifyUser = async user => {
 	});
 };
 
+//FIND USER BY EMAIL
+userSchema.statics.findUserByEmail = async email => {
+	return new Promise((resolve, reject) => {
+		User.findOne(
+			{
+				email,
+				verified: true
+			},
+			'password loginAttempts blockExpires name email role verified',)
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'USER_DOES_NOT_EXISTS_OR_NOT_VERIFIED'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 
 //UPDATE NEW PASSWORD
 userSchema.statics.updatePassword = async (res, user, newPassword) => {
@@ -234,7 +252,6 @@ userSchema.methods.genSalt = async function() {
 
 //RETURN REGISTRATION TOKEN
 userSchema.methods.returnRegistrationToken = (user, userInfo) => {
-	userInfo.verification = user.verification;
 	return {
 		token: generateToken(user._id),
 		user: userInfo
