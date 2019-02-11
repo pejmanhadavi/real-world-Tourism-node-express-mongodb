@@ -3,6 +3,7 @@ const dateFns = require('date-fns');
 const phoneToken = require('generate-sms-verification-code');
 const bcrypt = require('bcrypt');
 const randomize = require('randomatic');
+const uuid = require('uuid');
 
 
 
@@ -24,93 +25,29 @@ const HOURS_TO_BLOCK = 5;
     * STATICS *
  ************************/
 
-
-//DELETE NOT VERIFIED USERS
-userSchema.statics.deleteNotVerifiedUsers = async () => {
-	return new Promise((resolve, reject) => {
-		User.deleteMany({
-			verified: false,
-			verificationExpires : {$lte: new Date()}
-		}).then(resolve)
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//CHECK USERNAME
-userSchema.statics.usernameExists= async username =>{
-	return new Promise((resolve, reject)=>{
-		User.findOne({
-			username,
-		})
-			.then(result => {
-
-				if (!result)
-					resolve(false);
-
-				reject(buildErrObject(422, 'USERNAME_ALREADY_EXISTS'));
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//CHECK IF VERIFICATION SENT
-userSchema.statics.verificationSent= async (username, phone) =>{
-	return new Promise((resolve, reject)=>{
-		User.findOne({
-			username,
-			phone,
-			verificationExpires : {$gte: new Date()}
-		})
-			.then(result => {
-				if (!result)
-					resolve(false);
-				reject(buildErrObject(422, 'WAIT_VERIFICATION_SENT'));
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//CHECK PHONE_REGISTER
-userSchema.statics.phoneExists_register= async phone =>{
-	return new Promise((resolve, reject)=>{
-		User.findOne({
-			phone: phone,
-			verified: true
-		})
-			.then(result => {
-				if (!result)
-					resolve(false);
-
-				reject(buildErrObject(422, 'PHONE_ALREADY_EXISTS'));
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
 //CHECK PHONE_FORGOT
-userSchema.statics.phoneExists = async phone =>{
+userSchema.statics.emailExists= async email=>{
 	return new Promise((resolve, reject)=>{
 		User.findOne({
-			phone: phone,
-			verified: true
+			email
 		})
 			.then(result => {
-				if (result)
+				if (!result)
 					resolve(result);
-				reject(buildErrObject(404, 'PHONE_DOES_NOT_EXISTS'));
+				reject(buildErrObject(404, 'EMAIL_ALREADY_EXISTS'));
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
 
 //REGISTER
-userSchema.statics.registerUser = async req => {
+userSchema.statics.registerUser = async data => {
 	return new Promise(async (resolve, reject) => {
 		const user = new User({
-			username: req.username,
-			password: req.password,
-			phone: req.phone,
-			verification: phoneToken(6, {type: 'string'})
+			name: data.name,
+			password: data.password,
+			email: data.email,
+			verification: uuid.v4()
 		});
 
 		await user.genSalt();
@@ -121,11 +58,12 @@ userSchema.statics.registerUser = async req => {
 };
 
 //SET USER INFO
-userSchema.statics.setUserInfo = (req) => {
+userSchema.statics.setUserInfo = data => {
 	const user = {
-		_id: req._id,
-		username: req.username,
-		phone: req.phone
+		_id: data._id,
+		name: data.name,
+		email: data.email,
+		verified: data.verified
 	};
 	return user;
 };
@@ -273,9 +211,9 @@ userSchema.statics.getProfileFromDB = async id => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				const user = {
-				    username: result.username,
-                    phone: result.phone
-                };
+					username: result.username,
+					phone: result.phone
+				};
 				resolve(user);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -296,9 +234,9 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 				await update_setUserInfo(req, result, reject);
 				await result.save();
 				const user = {
-				    username: result.username,
-                    phone: result.phone
-                };
+					username: result.username,
+					phone: result.phone
+				};
 				resolve(user);
 			})
 			.then(result => resolve(result))
@@ -318,10 +256,10 @@ userSchema.methods.genSalt = async function() {
 
 
 //RETURN REGISTRATION TOKEN
-userSchema.methods.returnRegistrationToken = (userInfo) => {
-
+userSchema.methods.returnRegistrationToken = (user, userInfo) => {
+	userInfo.verification = user.verification;
 	return {
-		token: generateToken(this._id),
+		token: generateToken(user._id),
 		user: userInfo
 	};
 };

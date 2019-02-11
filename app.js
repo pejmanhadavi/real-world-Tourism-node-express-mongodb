@@ -1,4 +1,4 @@
-require('dotenv-safe').config();
+require('dotenv-safe').config();process.env.EMAIL_FROM_NAME
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
