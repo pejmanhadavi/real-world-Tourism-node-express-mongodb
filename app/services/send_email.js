@@ -13,7 +13,7 @@ exports.sendRegistrationEmailMessage = async user => {
 		user.name
 	}.</p> <p>خوش آمدید! برای تایید ایمیل خود بر روی این لینک کلیک کنید:</p> <p>${
 		process.env.FRONTEND_URL
-	}/verify/${user.verification}</p> <p>با تشکر.</p>`;
+	}/auth/verify/${user.verification}</p> <p>با تشکر.</p>`;
 	const data = {
 		user,
 		subject,
@@ -30,7 +30,7 @@ exports.sendRegistrationEmailMessage = async user => {
 			: console.log(`Email FAILED to: ${user.email}`)
 	);
 
-	console.log(email);
+	console.log('VERIFICATION_PARAM:'+user.verification);
 
 };
 

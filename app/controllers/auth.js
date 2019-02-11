@@ -37,14 +37,11 @@ exports.register = async(req, res) => {
  * @returns {Promise<void>}
  */
 exports.verify = async (req, res) => {
-	try{
-		const data = matchedData(req);
-		const id = await isIDGood(data.id);
-		const user = await User.verificationExists(id);
-		await User.verifyUser(data, res, user);
-		res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
-	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+	try {
+		const user = await User.verificationExists(req.params.verification);
+		res.status(200).json(await User.verifyUser(user));
+	} catch (error) {
+		handleError(res, error);
 	}
 };
 

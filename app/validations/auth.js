@@ -1,4 +1,4 @@
-const {check, body}= require('express-validator/check');
+const {check, body, param}= require('express-validator/check');
 const validationResult = require('express-validator/check').validationResult;
 const {buildErrObject, handleError} = require('../services/error_handler');
 
@@ -53,18 +53,9 @@ exports.register = [
 
 
 exports.verify = [
-	check('id')
-		.exists()
-		.withMessage('MISSING')
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY'),
-	check('verification')
-		.exists()
-		.withMessage('MISSING')
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY'),
+	param('verification')
+		.isUUID()
+		.withMessage('INVALID_VERIFICATION'),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();

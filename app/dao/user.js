@@ -68,16 +68,17 @@ userSchema.statics.setUserInfo = data => {
 	return user;
 };
 
-//VERIFICATION EXISTS
-userSchema.statics.verificationExists = async id => {
+//CHECK EMAIL VERIFICATION EXISTS
+userSchema.statics.verificationExists = async verification => {
 	return new Promise((resolve, reject) => {
-		User.findOne({
-			_id: id,
-			verified: false
-		})
+		User.findOne(
+			{
+				verification,
+				verified: false
+			})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_USER_OR_ALREADY_VERIFIED'));
+					reject(buildErrObject(404, 'NOT_FOUND_OR_ALREADY_VERIFIED'));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -85,44 +86,20 @@ userSchema.statics.verificationExists = async id => {
 };
 
 
-//EXPIRE VERIFICATION
-userSchema.statics.expiresVerification = async (user) => {
-	return new Promise((resolve, reject) => {
-		user.verificationExpires = dateFns.addMinutes(new Date, MINUTES_TO_EXPIRE_VERIFICATION);
-		user.save()
-			.then(result => resolve(result))
-			.catch(err => reject(buildErrObject(err.code, err.message)));
-	});
-};
-
-
 //VERIFY USER
-userSchema.statics.verifyUser = async (req, res, user) => {
+userSchema.statics.verifyUser = async user => {
 	return new Promise((resolve, reject) => {
-		if (user.verification !== req.verification ){
-			handleError(res, buildErrObject(422, 'INVALID_VERIFICATION_CODE'));
-			return;
-		}
-		if(user.verificationExpires <= new Date()){
-			handleError(res, buildErrObject(422, 'VERIFICATION_CODE_EXPIRED'));
-			return;
-		}
 		user.verified = true;
-
 		user.save()
-			.then(result => resolve({
-				phone: result.phone,
-				verified: result.verified
-			}))
+			.then(result => {
+				const response = {
+					email: result.email,
+					verified: result.verified
+				};
+				resolve(response);
+			})
 			.catch(err => reject(buildErrObject(422, err.message)));
-
 	});
-};
-
-//GENERATE NEW PASSWORD
-userSchema.statics.generateNewPassword = async () => {
-	return randomize('Aa0', 12);
-
 };
 
 
