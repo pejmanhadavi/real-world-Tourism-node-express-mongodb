@@ -22,7 +22,7 @@ const HOURS_TO_BLOCK = 5;
 
 
 /*************************
-    * STATICS *
+ * STATICS *
  ************************/
 
 //CHECK PHONE_FORGOT
@@ -122,7 +122,7 @@ userSchema.statics.findUserByEmail = async email => {
 
 
 //UPDATE NEW PASSWORD
-userSchema.statics.updatePassword = async (res, user, newPassword) => {
+userSchema.statics.updatePassword = async (user, newPassword) => {
 	return new Promise(async (resolve, reject) => {
 		const salt = await bcrypt.genSalt(10);
 		let hashPassword = await bcrypt.hash(newPassword, salt);
@@ -240,7 +240,7 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 };
 
 /************************
-    * METHODS *
+ * METHODS *
  ***********************/
 //GEN SALT
 userSchema.methods.genSalt = async function() {
@@ -274,7 +274,7 @@ userSchema.methods.forgotPassResponse = () => {
 
 
 /********************************
-    * HELPERS *
+ * HELPERS *
  ********************************/
 
 //BLOCK IS EXPIRED
@@ -318,7 +318,7 @@ const update_setUserInfo =async (req, user, reject) => {
 	}
 };
 /**************************************
-    * CREATE AND EXPORT MODEL*
+ * CREATE AND EXPORT MODEL*
 ***************************************/
 const User = mongoose.model('User', userSchema);
 exports.User = User;

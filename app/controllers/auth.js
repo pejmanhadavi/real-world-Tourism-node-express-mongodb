@@ -10,7 +10,7 @@ const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('.
 
 
 /**************************************
-    * 1_REGISTER CONTROLLER *
+ * 1_REGISTER CONTROLLER *
  * @param req
  * @param res
  * @returns {Promise<void>}
@@ -30,7 +30,7 @@ exports.register = async(req, res) => {
 };
 
 /************************************
-    * VERIFY CONTROLLER *
+ * VERIFY CONTROLLER *
  *
  * @param req
  * @param res
@@ -46,7 +46,7 @@ exports.verify = async (req, res) => {
 };
 
 /*****************************************
-   * FORGOT_PASSWORD CONTROLLER *
+ * FORGOT_PASSWORD CONTROLLER *
  * @param req
  * @param res
  * @returns {Promise<void>}
@@ -63,8 +63,46 @@ exports.forgotPassword = async (req, res) => {
 	}
 };
 
+
+/******************************************
+ * GET REQ RESET PASSWORD
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.getResetPassword = async (req, res) => {
+	try{
+		await ForgotPassword.findForgotPassword(req.params.verification);
+		res.status(200).json({
+			msg: 'NOW_RESET_PASSWORD'
+		});
+	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
+/******************************************
+ * POST REQ RESET PASSWORD
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.postResetPassword = async (req, res) => {
+	try{
+		const data = matchedData(req);
+		const forgotPassword = await ForgotPassword.findForgotPassword(req.params.verification);
+		const user = await User.findUserByEmail(forgotPassword.email);
+		await User.updatePassword(user, data.password);
+		const result = await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
+		res.status(200).json(result);
+	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
+
 /*********************************************
-   * LOGIN CONTROLLER *
+ * LOGIN CONTROLLER *
  * @param req
  * @param res
  * @returns {Promise<void>}

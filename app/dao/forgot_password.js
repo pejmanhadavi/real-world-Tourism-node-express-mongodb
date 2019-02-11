@@ -27,6 +27,43 @@ forgotPasswordSchema.statics.saveForgotPassword = async req => {
 	});
 };
 
+//FIND FORGOT PASSWORD
+forgotPasswordSchema.statics.findForgotPassword = async verification => {
+	return new Promise((resolve, reject) => {
+		ForgotPassword.findOne(
+			{
+				verification: verification,
+				used: false
+			})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject('NOT_FOUND_OR_ALREADY_USED'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+
+forgotPasswordSchema.statics.markResetPasswordAsUsed = async (req, forgotPass) => {
+	return new Promise((resolve, reject) => {
+		forgotPass.used = true;
+		forgotPass.ipChanged = getIP(req);
+		forgotPass.browserChanged = getBrowserInfo(req);
+		forgotPass.countryChanged = getCountry(req);
+		forgotPass.save((err, item) => {
+			if (err) {
+				reject(buildErrObject(422, err.message));
+			}
+			if (!item) {
+				reject(buildErrObject(404, 'NOT_FOUND'));
+			}
+			resolve({
+				msg: 'PASSWORD_CHANGED'
+			});
+		});
+	});
+};
 
 /**************
  * HELPERS

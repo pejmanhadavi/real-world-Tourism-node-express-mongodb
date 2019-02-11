@@ -43,7 +43,7 @@ exports.sendResetPasswordEmailMessage = async user => {
 	const subject = 'باز یابی رمز عبور';
 	const htmlMessage = `<p>برای بازیابی رمز عبور : ${
 		user.email
-	}</p> <p>بر روی لینک زیر کلیک کنید</p> <p>${process.env.FRONTEND_URL}/reset/${
+	}</p> <p>بر روی لینک زیر کلیک کنید</p> <p>${process.env.FRONTEND_URL}/auth/reset/${
 		user.verification
 	}</p> <p>اگر اشتباهی رخ داده این ایمیل را نادیده بگیرید</p> <p>باتشکر.</p>`;
 	const data = {

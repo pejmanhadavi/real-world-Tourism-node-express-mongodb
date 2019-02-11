@@ -55,7 +55,7 @@ exports.register = [
 exports.verify = [
 	param('verification')
 		.isUUID()
-		.withMessage('INVALID_VERIFICATION'),
+		.withMessage('BAD_REQUEST'),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();
@@ -82,6 +82,56 @@ exports.forgotPassword = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
+];
+
+
+exports.getResetPassword = [
+	param('verification')
+		.isUUID()
+		.withMessage('BAD_REQUEST'),
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
+];
+exports.postResetPassword = [
+	param('verification')
+		.isUUID()
+		.withMessage('BAD_REQUEST'),
+	check('password')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY')
+		.isLength({
+			min: 5
+		})
+		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+	check('confirmPassword')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY'),
+	body('password')
+		.custom((val, {req}) => {
+			if (val !== req.body.confirmPassword)
+				throw new Error('PASSWORD_AND_CONFIRM_PASSWORD_ARE_NOT_THE_SAME');
+			return true;
+		}),
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
 			return handleError(res, buildErrObject(422, err.array()));
 		}
 	}
