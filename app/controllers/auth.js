@@ -112,17 +112,17 @@ exports.login = async (req, res) => {
 		const data = matchedData(req);
 		const user = await User.findUserByEmail(data.email);
 		await User.userIsBlocked(user);
-		await User.checkLoginAttemptsAndBlockExpires(user)
-		const isPasswordMatch = await User.checkPassword(data.password, user)
+		await User.checkLoginAttemptsAndBlockExpires(user);
+		const isPasswordMatch = await User.checkPassword(data.password, user);
 		if (!isPasswordMatch) {
-			handleError(res, await User.passwordsDoNotMatch(user))
+			handleError(res, await User.passwordsDoNotMatch(user));
 		} else {
 			// all ok, register access and return token
-			user.loginAttempts = 0
-			await saveLoginAttemptsToDB(user)
-			res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user))
+			user.loginAttempts = 0;
+			await saveLoginAttemptsToDB(user);
+			res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
 		}
 	} catch (err) {
-		handleError(res, err)
+		handleError(res, err);
 	}
-}
+};

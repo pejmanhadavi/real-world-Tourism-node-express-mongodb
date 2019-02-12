@@ -9,9 +9,8 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const userSchema = new Schema({
 	name: {
 		type: String,
-		match: [/^[a-zA-Z]+[a-zA-Z0-9\-_.]+[a-zA-Z0-9]$/, 'is invalid'],
 		minlength: 4,
-		maxlength: 50,
+		maxlength: 100,
 		lowercase: true,
 		index: true,
 		required: [true, 'NAME_IS_BLANK'],
@@ -66,13 +65,10 @@ const userSchema = new Schema({
 	},
 	motto: {
 		type: String,
-		maxlength: 180,
+		maxlength: 300,
 	},
-	profileImage: [{
+	profileImages: [{
 		type: String,
-		validate: [(val)=>{
-			return val.length <= 5;
-		}, 'PHOTOS_AT_MOST_5']
 	}],
 	backgroundImage: {
 		type: String

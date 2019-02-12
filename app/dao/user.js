@@ -201,15 +201,11 @@ userSchema.statics.userIsBlocked = async user => {
 //GET PROFILE FROM DB
 userSchema.statics.getProfileFromDB = async id => {
 	return new Promise((resolve, reject) => {
-		User.findById(id)
+		User.findById(id, '-_id -updatedAt -createdAt -loginAttempts -verified -blockExpires -verification -password')
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
-				const user = {
-					username: result.username,
-					phone: result.phone
-				};
-				resolve(user);
+				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -219,20 +215,25 @@ userSchema.statics.getProfileFromDB = async id => {
 //UPDATE PROFILE IN DB
 userSchema.statics.updateProfileInDB = async (req, id) => {
 	return new Promise((resolve, reject) => {
-		if (!req.body.username && !req.body.newPassword)
-			reject(buildErrObject(422, 'THERE_IS_NO_PROPERTY'));
+		delete req.body._id;
+		delete req.body.email;
 		User.findById(id)
 			.then(async result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
-
-				await update_setUserInfo(req, result, reject);
+				// Assigns new values to user
+				for (const property in req.body) {
+					result[property] = req.body[property];
+				}
+				if(req.body.newPassword){
+					const isPassMatch = await User.checkPassword(req.body.currentPassword, result);
+					if (isPassMatch)
+						await User.updatePassword(result, req.body.newPassword);
+					else
+						reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
+				}
 				await result.save();
-				const user = {
-					username: result.username,
-					phone: result.phone
-				};
-				resolve(user);
+				resolve(result);
 			})
 			.then(result => resolve(result))
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -258,7 +259,7 @@ userSchema.methods.returnRegistrationToken = (user, userInfo) => {
 	};
 };
 
-//FORGOT PASS RES
+//FORGOT PASS RESPONSE
 userSchema.methods.forgotPassResponse = () => {
 	return {
 		phone: this.phone,
