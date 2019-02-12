@@ -226,16 +226,36 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 					result[property] = req.body[property];
 				}
 				if(req.body.newPassword){
-					const isPassMatch = await User.checkPassword(req.body.currentPassword, result);
-					if (isPassMatch)
-						await User.updatePassword(result, req.body.newPassword);
-					else
+					if (req.body.currentPassword){
+						const isPassMatch = await User.checkPassword(req.body.currentPassword, result);
+						if (isPassMatch)
+							await User.updatePassword(result, req.body.newPassword);
+						else
+							reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
+					}else
 						reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
 				}
+				if (req.files.profile){
+					result.profileImages.push(req.files.profile[0].filename);
+				}
+				if (req.files.backgroundImage){
+					result.backgroundImage = req.files.backgroundImage[0].filename;
+				}
 				await result.save();
-				resolve(result);
+
+				const userObject = result.toObject();
+				delete userObject._id;
+				delete userObject.updatedAt;
+				delete userObject.createdAt;
+				delete userObject.password;
+				delete userObject.blockExpires;
+				delete userObject.verification;
+				delete userObject.verified;
+
+
+
+				resolve(userObject);
 			})
-			.then(result => resolve(result))
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };

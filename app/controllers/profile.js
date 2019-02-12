@@ -25,6 +25,8 @@ exports.getProfile = async (req, res) => {
  * @param res
  * @returns {Promise<*>}
  */
+
+const multer = require('multer');
 exports.updateProfile = async (req, res) => {
 	try {
 		const id = await isIDGood(req.user._id);

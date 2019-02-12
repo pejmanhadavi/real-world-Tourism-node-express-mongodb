@@ -67,9 +67,13 @@ const userSchema = new Schema({
 		type: String,
 		maxlength: 300,
 	},
-	profileImages: [{
-		type: String,
-	}],
+	profileImages: {
+		type: [String],
+		validate: {validator: (val) => {
+			return val.length<6;
+		},
+		message: 'PROFILE_SHOULD_BE_AT_MOST_5'}
+	},
 	backgroundImage: {
 		type: String
 	},
