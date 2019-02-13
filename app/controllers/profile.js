@@ -34,6 +34,23 @@ exports.updateProfile = async (req, res) => {
 	}
 };
 
+
+/*****************************
+ * UPDATE PASSWORD CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.updatePassword = async (req, res) => {
+	try{
+		const id = await isIDGood(req.user._id);
+		res.status(200).json(await User.updatePasswordInProfile(req, id));
+	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
+
 /***************************
  * UPDATE PROFILE IMAGE CONTROLLER
  * @param req

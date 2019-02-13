@@ -21,6 +21,8 @@ router.put('/',
 	validate.updateProfile,
 	controller.updateProfile);
 
+router.put('/password', requireAuth, validate.updatePassword, controller.updatePassword);
+
 router.put('/profileImage', requireAuth, upload.single('profileImage'), controller.updateProfileImage);
 
 router.put('/backgroundImage', requireAuth, upload.single('backgroundImage'), controller.updateBackgroundImage);

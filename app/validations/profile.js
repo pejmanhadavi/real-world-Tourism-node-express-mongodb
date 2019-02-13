@@ -50,8 +50,22 @@ exports.updateProfile = [
 	check('travelFacilities')
 		.optional()
 		.isArray(),
+	(req, res, next)=>{
+		try{
+			validationResult(req).throw();
+			return next();
+		}catch(err){
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
+];
+
+
+exports.updatePassword = [
+
 	check('currentPassword')
-		.optional()
+		.exists()
+		.withMessage('MISSING')
 		.not()
 		.isEmpty()
 		.withMessage('IS_EMPTY')
@@ -60,7 +74,8 @@ exports.updateProfile = [
 		})
 		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
 	check('newPassword')
-		.optional()
+		.exists()
+		.withMessage('MISSING')
 		.not()
 		.isEmpty()
 		.withMessage('IS_EMPTY')
@@ -77,6 +92,7 @@ exports.updateProfile = [
 		}
 	}
 ];
+
 
 exports.deleteProfileImage = [
 	param('profile')

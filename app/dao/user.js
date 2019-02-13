@@ -222,18 +222,6 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 				for (const property in req.body) {
 					result[property] = req.body[property];
 				}
-				if(req.body.newPassword){
-					if (req.body.currentPassword){
-						const isPassMatch = await User.checkPassword(req.body.currentPassword, result);
-						if (isPassMatch)
-							await User.updatePassword(result, req.body.newPassword);
-						else
-							reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
-					}else
-						reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
-				}
-
-
 				await result.save();
 				resolve({
 					msg: 'PROFILE_UPDATED'
@@ -243,11 +231,34 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 	});
 };
 
+
+userSchema.statics.updatePasswordInProfile = async (req, id) => {
+	return new Promise((resolve, reject) => {
+		User.findById(id)
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+
+				const isPassMatch = await User.checkPassword(req.body.currentPassword, result);
+				if (isPassMatch)
+					await User.updatePassword(result, req.body.newPassword);
+				else
+					reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
+
+				resolve({
+                    msg: 'PASSWORD_CHANGED'
+                });
+			})
+	});
+};
+
 //UPDATE PROFILE IMAGE
 userSchema.statics.updateProfileImage = (req, id) => {
 	return new Promise((resolve, reject) => {
 		User.findById(id)
 			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
 				result.profileImages.push(req.file.filename);
 				await result.save();
 				resolve({msg: 'PROFILE_IMAGE_UPDATED'});
@@ -261,6 +272,8 @@ userSchema.statics.updateBackgroundImage = (req, id) => {
 	return new Promise((resolve, reject) => {
 		User.findById(id)
 			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
 				result.backgroundImage = req.file.filename;
 				await result.save();
 				resolve({msg: 'BACKGROUND_IMAGE_UPDATED'});
@@ -272,7 +285,11 @@ userSchema.statics.updateBackgroundImage = (req, id) => {
 userSchema.statics.deleteProfileImage = (id, profileImage) => {
 	return new Promise((resolve, reject) => {
 		User.findByIdAndUpdate(id, {$pull:{profileImages: profileImage}})
-			.then(resolve)
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(result);
+			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
@@ -282,7 +299,11 @@ userSchema.statics.deleteProfileImage = (id, profileImage) => {
 userSchema.statics.deleteBackgroundImage = (id) => {
 	return new Promise((resolve, reject) => {
 		User.findByIdAndUpdate(id, {$unset:{backgroundImage: undefined}})
-			.then(resolve)
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(result);
+			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
