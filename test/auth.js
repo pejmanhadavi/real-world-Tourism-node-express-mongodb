@@ -142,7 +142,10 @@ describe('*********** AUTH ***********', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.include.keys('msg');
-                    ForgotPassword.findOne({email}, (err, result) => {
+                    ForgotPassword.findOne({
+                        email,
+                        used: false
+                    }, (err, result) => {
                         verificationForgot = result.verification;
                     })
                     done();
@@ -170,7 +173,7 @@ describe('*********** AUTH ***********', () => {
                 .request(server)
                 .post('/auth/reset/'+verificationForgot)
                 .send({
-                    password: '12345'
+                    password: 'admin'
                 })
                 .end((err, res) => {
                     res.should.have.status(200);

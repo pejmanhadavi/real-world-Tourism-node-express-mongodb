@@ -159,7 +159,7 @@ userSchema.statics.passwordsDoNotMatch = async user => {
 		} else {
 			reject(await blockUser(user));
 		}
-		reject(buildErrObject(422, 'ERROR'));
+		reject(err => buildErrObject(422, err.message));
 	});
 };
 
@@ -232,11 +232,12 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 					}else
 						reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
 				}
-				if (req.files.profile){
-					result.profileImages.push(req.files.profile[0].filename);
-				}
-				if (req.files.backgroundImage){
-					result.backgroundImage = req.files.backgroundImage[0].filename;
+				if (req.files){
+				    if (req.files.profile)
+					    result.profileImages.push(req.files.profile[0].filename);
+
+                    if (req.files.backgroundImage)
+                        result.backgroundImage = req.files.backgroundImage[0].filename;
 				}
 				await result.save();
 
@@ -251,9 +252,11 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 
 
 
-				resolve(userObject);
+				resolve({
+					msg: 'PROFILE_UPDATED'
+				});
 			})
-			.catch(err => reject(buildErrObject(422, err.message)));
+			.catch(err => console.log(err));
 	});
 };
 
