@@ -56,11 +56,11 @@ exports.sendResetPasswordEmailMessage = async user => {
 		htmlMessage,
 		verification: user.verification
 	};
-	sendEmail(data, messageSent =>
-		messageSent
-			? console.log(`Email SENT to: ${user.email}`)
-			: console.log(`Email FAILED to: ${user.email}`)
-	);
+	// sendEmail(data, messageSent =>
+	// 	messageSent
+	// 		? console.log(`Email SENT to: ${user.email}`)
+	// 		: console.log(`Email FAILED to: ${user.email}`)
+	// );
 	console.log(user.verification);
 };
 

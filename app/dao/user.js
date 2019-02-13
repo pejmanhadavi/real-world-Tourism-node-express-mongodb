@@ -31,7 +31,7 @@ userSchema.statics.emailExists= async email=>{
 			.then(result => {
 				if (!result)
 					resolve(result);
-				reject(buildErrObject(404, 'EMAIL_ALREADY_EXISTS'));
+				reject(buildErrObject(422, 'EMAIL_ALREADY_EXISTS'));
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});

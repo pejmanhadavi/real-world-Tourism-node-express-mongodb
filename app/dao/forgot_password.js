@@ -37,7 +37,7 @@ forgotPasswordSchema.statics.findForgotPassword = async verification => {
 			})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject('NOT_FOUND_OR_ALREADY_USED'));
+					reject(buildErrObject(404,'NOT_FOUND_OR_ALREADY_USED'));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
