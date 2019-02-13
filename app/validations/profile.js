@@ -41,16 +41,6 @@ exports.updateProfile = [
 		.isLength({
 			max: 300
 		}),
-	check('backgroundImage')
-		.optional()
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY'),
-	check('profile')
-		.optional()
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY'),
 	check('languages')
 		.optional()
 		.isArray(),

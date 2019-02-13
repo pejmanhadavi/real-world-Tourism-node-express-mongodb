@@ -232,35 +232,42 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 					}else
 						reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
 				}
-				if (req.files){
-				    if (req.files.profile)
-					    result.profileImages.push(req.files.profile[0].filename);
 
-                    if (req.files.backgroundImage)
-                        result.backgroundImage = req.files.backgroundImage[0].filename;
-				}
+
 				await result.save();
-
-				const userObject = result.toObject();
-				delete userObject._id;
-				delete userObject.updatedAt;
-				delete userObject.createdAt;
-				delete userObject.password;
-				delete userObject.blockExpires;
-				delete userObject.verification;
-				delete userObject.verified;
-
-
-
 				resolve({
 					msg: 'PROFILE_UPDATED'
 				});
 			})
-			.catch(err => console.log(err));
+			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
 
+//UPDATE PROFILE IMAGE
+userSchema.statics.updateProfileImage = (req, id) => {
+	return new Promise((resolve, reject) => {
+		User.findById(id)
+			.then(async result => {
+				result.profileImages.push(req.file.filename);
+				await result.save();
+				resolve({msg: 'PROFILE_IMAGE_UPDATED'});
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
 
+//UPDATE BACKGROUND IMAGE
+userSchema.statics.updateBackgroundImage = (req, id) => {
+	return new Promise((resolve, reject) => {
+		User.findById(id)
+			.then(async result => {
+				result.backgroundImage = req.file.filename;
+				await result.save();
+				resolve({msg: 'BACKGROUND_IMAGE_UPDATED'});
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
 //DELETE PROFILE IMAGE
 userSchema.statics.deleteProfileImage = (id, profileImage) => {
 	return new Promise((resolve, reject) => {

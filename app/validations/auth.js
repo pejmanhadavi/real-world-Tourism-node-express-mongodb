@@ -1,4 +1,4 @@
-const {check, body, param}= require('express-validator/check');
+const {check, param}= require('express-validator/check');
 const validationResult = require('express-validator/check').validationResult;
 const {buildErrObject, handleError} = require('../services/error_handler');
 

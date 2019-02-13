@@ -19,8 +19,11 @@ router.get('/', requireAuth, controller.getProfile);
 router.put('/',
 	requireAuth,
 	validate.updateProfile,
-	upload.fields([{ name: 'profile', maxCount: 1 }, { name: 'backgroundImage', maxCount: 1 }]),
 	controller.updateProfile);
+
+router.put('/profileImage', requireAuth, upload.single('profileImage'), controller.updateProfileImage);
+
+router.put('/backgroundImage', requireAuth, upload.single('backgroundImage'), controller.updateBackgroundImage);
 
 router.delete('/profileImage/:profile', requireAuth, validate.deleteProfileImage, controller.deleteProfileImage);
 

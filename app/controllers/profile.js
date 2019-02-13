@@ -34,6 +34,37 @@ exports.updateProfile = async (req, res) => {
 	}
 };
 
+/***************************
+ * UPDATE PROFILE IMAGE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.updateProfileImage = async (req, res) => {
+	try{
+		const id = await isIDGood(req.user._id);
+		res.status(200).json(await User.updateProfileImage(req, id));
+	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
+
+/***************************
+ * UPDATE BACKGROUND IMAGE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.updateBackgroundImage = async (req, res) => {
+	try{
+		const id = await isIDGood(req.user._id);
+		res.status(200).json(await User.updateBackgroundImage(req, id));
+	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
 /********************************
  * DELETE PROFILE IMAGE CONTROLLER
  * @param req
