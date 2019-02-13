@@ -22,5 +22,8 @@ router.put('/',
 	upload.fields([{ name: 'profile', maxCount: 1 }, { name: 'backgroundImage', maxCount: 1 }]),
 	controller.updateProfile);
 
+router.delete('/profileImage/:profile', requireAuth, validate.deleteProfileImage, controller.deleteProfileImage);
+
+router.delete('/backgroundImage', requireAuth, controller.deleteBackgroundImage);
 
 module.exports = router;

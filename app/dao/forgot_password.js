@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {forgotPasswordSchema} = require('../schemas/forgot_password');
-const {handleError, buildErrObject} = require('../services/error_handler');
+const {buildErrObject} = require('../services/error_handler');
 
 const uuid = require('uuid');
 const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access');
@@ -69,7 +69,7 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = async (req, forgotPass) =
  * HELPERS
  */
 
-exports.forgotPasswordResponse = forgotPass => {
+exports.forgotPasswordResponse = () => {
 	return {
 		msg: 'RESET_EMAIL_SENT'
 	};

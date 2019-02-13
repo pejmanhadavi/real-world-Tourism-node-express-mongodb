@@ -1,4 +1,4 @@
-const {check, body} = require('express-validator/check');
+const {check, param} = require('express-validator/check');
 const validationResult = require('express-validator/check').validationResult;
 const {buildErrObject, handleError} = require('../services/error_handler');
 
@@ -83,6 +83,20 @@ exports.updateProfile = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
+];
+
+exports.deleteProfileImage = [
+	param('profile')
+		.exists()
+		.withMessage('MISSING'),
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
 			return handleError(res, buildErrObject(422, err.array()));
 		}
 	}

@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 const dateFns = require('date-fns');
-const phoneToken = require('generate-sms-verification-code');
 const bcrypt = require('bcrypt');
-const randomize = require('randomatic');
 const uuid = require('uuid');
 
 
 
 
 const userSchema = require('../schemas/user').userSchema;
-const {handleError, buildErrObject}= require('../services/error_handler');
+const {buildErrObject}= require('../services/error_handler');
 const {generateToken} = require('../services/auth');
 
-const MINUTES_TO_EXPIRE_VERIFICATION = 2;
 const LOGIN_ATTEMPTS = 5;
 const HOURS_TO_BLOCK = 2;
 
@@ -260,6 +257,26 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 	});
 };
 
+
+//DELETE PROFILE IMAGE
+userSchema.statics.deleteProfileImage = (id, profileImage) => {
+	return new Promise((resolve, reject) => {
+		User.findByIdAndUpdate(id, {$pull:{profileImages: profileImage}})
+			.then(resolve)
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+
+//DELETE BACKGROUND IMAGE
+userSchema.statics.deleteBackgroundImage = (id) => {
+	return new Promise((resolve, reject) => {
+		User.findByIdAndUpdate(id, {$unset:{backgroundImage: undefined}})
+			.then(resolve)
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 /************************
  * METHODS *
  ***********************/
@@ -322,26 +339,8 @@ exports.saveLoginAttemptsToDB = async user => {
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
-
-const update_setUserInfo =async (req, user, reject) => {
-	if (req.body.username) {
-		user.username = req.body.username;
-		await User.usernameExists(user.username);
-	}
-	if (req.body.newpassword) {
-		const isPasswordMatch = await User.checkPassword(req.body.currentPassword, user);
-		if (isPasswordMatch) {
-			user.password = req.body.newPassword;
-			await user.genSalt();
-		} else {
-			reject(buildErrObject(409, 'PASSWORD_IS_WRONG'));
-		}
-	}
-};
 /**************************************
  * CREATE AND EXPORT MODEL*
 ***************************************/
 const User = mongoose.model('User', userSchema);
 exports.User = User;
-
-
