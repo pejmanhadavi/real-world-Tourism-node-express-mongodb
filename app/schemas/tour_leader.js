@@ -10,32 +10,26 @@ const tourLeaderSchema = new Schema({
 		type: ObjectId,
 		ref: 'User',
 	},
-
 	scanBirthCertification: {
-		required: [true, 'SCAN_BIRTH_CERTIFICATION_IS_BLANK'],
 		type: String
-	},
-	birthCertificationVerified: {
-		type: Boolean,
-		default: false
 	},
 	scanTourLeaderCertification: {
 		type: String
 	},
-	tourLeaderCertificationVerified: {
+	costPerDay:{
+		required: [true, 'COST_PER_DAY_IS_BLANK'],
+		type: Number,
+		default: 0
+	},
+	costPerHalfDay:{
+		required: [true, 'COST_PER_DAY_IS_BLANK'],
+		type: Number,
+		default: 0
+	},
+	verified: {
 		type: Boolean,
 		default: false
-	},
-	constPerDay:{
-		required: [true, 'COST_PER_DAY_IS_BLANK'],
-		type: Number,
-		default: 0
-	},
-	constPerHalfDay:{
-		required: [true, 'COST_PER_DAY_IS_BLANK'],
-		type: Number,
-		default: 0
-	},
+	}
 }, {
 	timestamps: true
 });

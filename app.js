@@ -8,6 +8,7 @@ const indexRouter = require('./app/routes/index');
 const usersRouter = require('./app/routes/users');
 const authRouter = require('./app/routes/auth');
 const profileRouter = require('./app/routes/profile');
+const tourLeaderRouter = require('./app/routes/tour_leader');
 const initMongo = require('./init/mongo');
 const config = require('config');
 
@@ -34,6 +35,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
+app.use('/tourLeader', tourLeaderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
