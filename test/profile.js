@@ -1,13 +1,7 @@
 process.env.NODE_ENV = 'test';
 
-const faker = require('faker');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const {User} = require('../app/dao/user');
-const {ForgotPassword} = require('../app/dao/forgot_password');
-const mongoose = require('mongoose');
-const uuid = require('uuid');
-const should = chai.should();
 
 
 const loginDetails = {
@@ -17,14 +11,6 @@ const loginDetails = {
 
 const server = require('../bin/www').server;
 
-const name = faker.random.words();
-const email = 'pejmanhadaviph@yahoo.com';
-const password = faker.internet.password();
-
-
-let createdID;
-let verification;
-let verificationForgot;
 let token;
 
 chai.use(chaiHttp);
