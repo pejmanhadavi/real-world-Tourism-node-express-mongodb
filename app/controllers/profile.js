@@ -99,7 +99,12 @@ exports.deleteProfileImage = async (req, res) => {
 };
 
 
-
+/**************************
+ * DELETE BACKGROUND IMAGE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.deleteBackgroundImage = async (req, res) => {
 	try{
 		const id = await isIDGood(req.user._id);

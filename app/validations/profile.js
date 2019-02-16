@@ -1,5 +1,4 @@
-const {check, param} = require('express-validator/check');
-const validationResult = require('express-validator/check').validationResult;
+const {check, param, validationResult} = require('express-validator/check');
 const {buildErrObject, handleError} = require('../services/error_handler');
 
 exports.updateProfile = [

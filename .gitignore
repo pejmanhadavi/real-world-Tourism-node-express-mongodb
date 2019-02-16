@@ -43,7 +43,7 @@ node_modules/
 jspm_packages/
 
 #uploads
-upload/
+public/uploads/
 
 # Typescript v1 declaration files
 typings/

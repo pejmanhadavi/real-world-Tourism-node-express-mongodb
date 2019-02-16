@@ -6,7 +6,7 @@ const uuid = require('uuid');
 
 
 
-const userSchema = require('../schemas/user').userSchema;
+const {userSchema} = require('../schemas/user');
 const {buildErrObject}= require('../services/error_handler');
 const {generateToken} = require('../services/auth');
 
@@ -21,9 +21,8 @@ const HOURS_TO_BLOCK = 2;
 /*************************
  * STATICS *
  ************************/
-
-//CHECK PHONE_FORGOT
-userSchema.statics.emailExists= async email=>{
+//EMAIL EXISTS
+userSchema.statics.emailExists= email=>{
 	return new Promise((resolve, reject)=>{
 		User.findOne({
 			email
@@ -38,7 +37,7 @@ userSchema.statics.emailExists= async email=>{
 };
 
 //REGISTER
-userSchema.statics.registerUser = async data => {
+userSchema.statics.registerUser = data => {
 	return new Promise(async (resolve, reject) => {
 		const user = new User({
 			name: data.name,
@@ -246,9 +245,9 @@ userSchema.statics.updatePasswordInProfile = async (req, id) => {
 					reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
 
 				resolve({
-                    msg: 'PASSWORD_CHANGED'
-                });
-			})
+					msg: 'PASSWORD_CHANGED'
+				});
+			});
 	});
 };
 
