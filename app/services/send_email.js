@@ -56,11 +56,11 @@ exports.sendResetPasswordEmailMessage = async user => {
 		htmlMessage,
 		verification: user.verification
 	};
-	// sendEmail(data, messageSent =>
-	// 	messageSent
-	// 		? console.log(`Email SENT to: ${user.email}`)
-	// 		: console.log(`Email FAILED to: ${user.email}`)
-	// );
+	sendEmail(data, messageSent =>
+		messageSent
+			? console.log(`Email SENT to: ${user.email}`)
+			: console.log(`Email FAILED to: ${user.email}`)
+	);
 	console.log(user.verification);
 };
 
@@ -85,11 +85,11 @@ const sendEmail = async (data, callback) => {
 		subject: data.subject,
 		html: data.htmlMessage
 	};
-	transporter.sendMail(mailOptions, err => {
-		if (err) {
-			console.log('ERR IS: '+err);
-			return callback(false);
-		}
-		return callback(true);
-	});
+	// transporter.sendMail(mailOptions, err => {
+	// 	if (err) {
+	// 		console.log('ERR IS: '+err);
+	// 		return callback(false);
+	// 	}
+	// 	return callback(true);
+	// });
 };
