@@ -87,8 +87,9 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 				tourLeader.scanBirthCertification = req.files.scanBirthCertification[0].filename;
 		};
 		tourLeader.save()
-			.then(() => {
+			.then(result => {
 				resolve({
+					id: result._id,
 					msg: 'TOUR_LEADER_REGISTERED_WAITE_UNTIL_VERIFY'
 				});
 			})
