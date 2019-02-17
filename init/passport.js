@@ -1,6 +1,7 @@
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const User = require('../app/dao/user').User;
+const {decrypt} = require('../app/services/auth');
 
 const jwtExtractor = req => {
 	let token = null;
@@ -10,6 +11,9 @@ const jwtExtractor = req => {
 		token = req.body.token.replace(' ', '');
 	if (req.query.token)
 		token = req.body.token.replace(' ', '');
+
+	if (token)
+		token = decrypt(token);
 
 	return token;
 };
