@@ -4,27 +4,39 @@ const Schema = mongoose.Schema;
 
 //REQUEST SCHEMA
 const requestSchema = new Schema({
-	from: {
+	user: {
 		type: ObjectId,
 		ref: 'User',
 		required: true
 	},
-	to: {
+	tourLeader: {
 		type: ObjectId,
-		ref: 'User',
+		ref: 'TourLeader',
 		required: true
 	},
-	maxHourOccupancy: {
+	maxDayOccupancy: {
 		type:Number,
 		required: true
 	},
-	Verification: {
-		type: Boolean,
-		default: false,
+	maxHalfDayOccupancy: {
+		type:Number,
+		required: true
 	},
 	description: {
 		type: String,
 		maxlength: 500
+	},
+	tourLeaderFirstVerified: {
+		type: Boolean,
+		default: false
+	},
+	userFinalVerified: {
+		type: Boolean,
+		default: false
+	},
+	tourLeaderFinalVerified: {
+		type: Boolean,
+		default: false
 	}
 }, {
 	timestamps: true
