@@ -1,5 +1,4 @@
 const {check, validationResult} = require('express-validator/check');
-const validator = require('express-validator');
 const {buildErrObject, handleError} = require('../services/error_handler');
 
 exports.registerTourLeader = [

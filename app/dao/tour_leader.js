@@ -42,8 +42,8 @@ tourLeaderSchema.statics.userDoesNotExists= id=>{
 tourLeaderSchema.statics.edit = (req, id) => {
 	return new Promise((resolve, reject) => {
 
-	if (!req.body.costPerDay && !req.body.costPerHalfDay)
-		reject(buildErrObject(422,'BAD_REQUEST'));
+		if (!req.body.costPerDay && !req.body.costPerHalfDay)
+			reject(buildErrObject(422,'BAD_REQUEST'));
 
 
 
@@ -54,7 +54,6 @@ tourLeaderSchema.statics.edit = (req, id) => {
 				if (!result)
 					reject(buildErrObject(404, 'USER_NOT_FOUND'));
 				if (req.body.costPerDay) {
-					console.log(req.body.costPerDay);
 					result.costPerDay = req.body.costPerDay;
 				}
 				if (req.body.costPerHalfDay) {
@@ -85,7 +84,7 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 				tourLeader.scanTourLeaderCertification = req.files.scanTourLeaderCertification[0].filename;
 			if (req.files.scanBirthCertification)
 				tourLeader.scanBirthCertification = req.files.scanBirthCertification[0].filename;
-		};
+		}
 		tourLeader.save()
 			.then(result => {
 				resolve({
