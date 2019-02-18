@@ -23,8 +23,9 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// routes
+
 require('./init/routes')(app);
+require('./init/production')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
