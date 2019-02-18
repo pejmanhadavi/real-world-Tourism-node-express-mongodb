@@ -4,11 +4,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const indexRouter = require('./app/routes/index');
-const usersRouter = require('./app/routes/users');
-const authRouter = require('./app/routes/auth');
-const profileRouter = require('./app/routes/profile');
-const tourLeaderRouter = require('./app/routes/tour_leader');
 const initMongo = require('./init/mongo');
 const config = require('config');
 
@@ -25,17 +20,11 @@ app.set('view engine', 'ejs');
 
 // use middleware
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/auth', authRouter);
-app.use('/profile', profileRouter);
-app.use('/tourLeader', tourLeaderRouter);
+require('./init/routes')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
