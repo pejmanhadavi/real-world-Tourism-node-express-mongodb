@@ -48,7 +48,7 @@ tourLeaderSchema.statics.tourLeaderCheckForRequest = id => {
 			.then(result => {
 				if(!result)
 					reject(buildErrObject(404, 'TOUR_lEADER_NOT_FOUND_OR_NOT_VERIFIED'));
-				resolve(true)
+				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -109,6 +109,21 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+//GET TOUR LEADER ID
+tourLeaderSchema.statics.getTourLeaderId = userId => {
+	return new Promise((resolve, reject) => {
+		TourLeader.findOne({
+			user: userId
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'TOUR_LEADER_NOT_FOUND'));
+				resolve(result._id);
+			})
+			.catch(err => reject(422, err.message));
 	});
 };
 

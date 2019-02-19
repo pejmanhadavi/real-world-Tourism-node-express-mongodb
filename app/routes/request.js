@@ -3,7 +3,7 @@ const router = express.Router();
 require('../../init/passport');
 const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', {
-    session: false
+	session: false
 });
 
 const validate = require('../validations/request');
@@ -14,7 +14,7 @@ ROUTES
 //SEND REQUEST
 router.post('/', requireAuth, validate.sendRequest, controller.sendRequest);
 
-router.get('/tourLeaderFirstValidate/:requestId', validate.tourLeaderFirstValidate, controller.tourLeaderFirstValidate);
+router.get('/tourLeaderFirstValidate/:requestId', requireAuth, validate.tourLeaderFirstValidate, controller.tourLeaderFirstValidate);
 
 // router.post('/tourLeaderFinalValidate', validate.tourLeaderFinalValidate, controller.tourLeaderFinalValidate);
 //
