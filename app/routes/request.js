@@ -14,10 +14,10 @@ ROUTES
 //SEND REQUEST
 router.post('/', requireAuth, validate.sendRequest, controller.sendRequest);
 
-router.get('/tourLeaderFirstValidate/:requestId', requireAuth, validate.tourLeaderFirstValidate, controller.tourLeaderFirstValidate);
+router.get('/tourLeaderFirstValidate/:requestId', requireAuth, validate.tourLeaderValidate, controller.tourLeaderFirstValidate);
 
-// router.post('/tourLeaderFinalValidate', validate.tourLeaderFinalValidate, controller.tourLeaderFinalValidate);
-//
+router.get('/tourLeaderFinalValidate/:requestId', requireAuth, validate.tourLeaderValidate, controller.tourLeaderFinalValidate);
+
 // router.post('/userFinalValidate', validate.userFinalValidate, controller.userFinalValidate);
 //
 // router.post('/pay', validate.pay, controller.pay);

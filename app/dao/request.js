@@ -58,6 +58,23 @@ requestSchema.statics.tourLeaderFirstValidate = requestId => {
 	});
 };
 
+//TOUR LEADER FINAL VALIDATE
+requestSchema.statics.tourLeaderFinalValidate = requestId => {
+    return new Promise((resolve, reject) => {
+        Request.findById(requestId)
+            .then(async result => {
+                if (!result)
+                    reject(buildErrObject(404, 'NOT_FOUND'));
+                result.tourLeaderFinalValidate = true;
+                await result.save();
+                resolve({
+                    msg: 'TOUR_LEADER_FINAL_VALIDATE'
+                });
+            })
+            .catch(err => reject(buildErrObject(422, err.message)));
+    });
+};
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

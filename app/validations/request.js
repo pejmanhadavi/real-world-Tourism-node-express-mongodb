@@ -43,7 +43,7 @@ exports.sendRequest = [
 
 
 
-exports.tourLeaderFirstValidate = [
+exports.tourLeaderValidate = [
 	param('requestId')
 		.exists()
 		.withMessage('MISSING')

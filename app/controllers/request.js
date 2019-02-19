@@ -42,3 +42,26 @@ exports.tourLeaderFirstValidate = async (req, res) => {
 		handleError(res, buildErrObject(err.code, err.message))
 	}
 };
+
+
+
+/***************************
+ * TOUR LEADER FINAL VALIDATE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.tourLeaderFinalValidate = async (req, res) => {
+    try{
+        const userId = await isIDGood(req.user._id);
+        const requestId = await isIDGood(req.params.requestId);
+        await TourLeader.tourLeaderDoesNotExists(userId);
+        const tourLeaderId = await TourLeader.getTourLeaderId(userId);
+        await Request.checkTourLeaderForRequest(requestId, tourLeaderId);
+        const response = await Request.tourLeaderFinalValidate(requestId);
+        res.status(200).json(response);
+    }catch (err) {
+        // handleError(res, buildErrObject(err.code, err.message))
+        console.log(err);
+    }
+};
