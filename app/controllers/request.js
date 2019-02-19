@@ -6,7 +6,12 @@ const {User} = require('../dao/user');
 const {TourLeader} = require('../dao/tour_leader');
 
 
-
+/****************************
+ * SEND REQUEST
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.sendRequest = async (req, res) => {
   try {
       const userId = await isIDGood(req.user._id);
