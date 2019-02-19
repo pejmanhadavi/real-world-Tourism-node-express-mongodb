@@ -26,15 +26,19 @@ const requestSchema = new Schema({
 		type: String,
 		maxlength: 500
 	},
-	tourLeaderFirstVerified: {
+	tourLeaderFirstValidate: {
 		type: Boolean,
 		default: false
 	},
-	userFinalVerified: {
+	userFinalValidate: {
 		type: Boolean,
 		default: false
 	},
-	tourLeaderFinalVerified: {
+	tourLeaderFinalValidate: {
+		type: Boolean,
+		default: false
+	},
+	paid: {
 		type: Boolean,
 		default: false
 	}
