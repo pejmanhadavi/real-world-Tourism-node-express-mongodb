@@ -38,6 +38,22 @@ tourLeaderSchema.statics.tourLeaderDoesNotExists= id=>{
 	});
 };
 
+//CHECK TOUR LEADER AND VALIDATION
+tourLeaderSchema.statics.tourLeaderCheckForRequest = id => {
+	return new Promise((resolve, reject) => {
+		TourLeader.findOne({
+			_id: id,
+			verified: true
+		})
+			.then(result => {
+				if(!result)
+					reject(buildErrObject(404, 'TOUR_lEADER_NOT_FOUND_OR_NOT_VERIFIED'));
+				resolve(true)
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 //EDIT
 tourLeaderSchema.statics.edit = (req, id) => {
 	return new Promise((resolve, reject) => {

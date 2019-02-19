@@ -13,13 +13,17 @@ exports.sendRequest = [
         .withMessage('MISSING')
         .not()
         .isEmpty()
-        .withMessage('IS_EMPTY'),
+        .withMessage('IS_EMPTY')
+        .isNumeric()
+        .withMessage('IS_NOT_NUMBERIC'),
     check('maxHalfDayOccupancy')
         .exists()
         .withMessage('MISSING')
         .not()
         .isEmpty()
-        .withMessage('IS_EMPTY'),
+        .withMessage('IS_EMPTY')
+        .isNumeric()
+        .withMessage('IS_NOT_NUMBERIC'),
     check('description')
         .optional()
         .not()

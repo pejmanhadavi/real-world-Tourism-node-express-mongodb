@@ -4,6 +4,7 @@ const usersRouter = require('../app/routes/users');
 const authRouter = require('../app/routes/auth');
 const profileRouter = require('../app/routes/profile');
 const tourLeaderRouter = require('../app/routes/tour_leader');
+const requestRoute = require('../app/routes/request');
 
 
 module.exports = app => {
@@ -15,4 +16,5 @@ module.exports = app => {
     app.use('/auth', authRouter);
     app.use('/profile', profileRouter);
     app.use('/tourLeader', tourLeaderRouter);
+    app.use('/request', requestRoute);
 };

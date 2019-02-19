@@ -23,4 +23,7 @@ router.post('/', requireAuth, validate.sendRequest, controller.sendRequest);
 // router.post('/pay', validate.pay, controller.pay);
 
 
+module.exports = router;
+
+
 
