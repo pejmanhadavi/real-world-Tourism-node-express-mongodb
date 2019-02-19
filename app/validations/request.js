@@ -7,7 +7,9 @@ exports.sendRequest = [
         .withMessage('MISSING')
         .not()
         .isEmpty()
-        .withMessage('IS_EMPTY'),
+        .withMessage('IS_EMPTY')
+        .isMongoId()
+        .withMessage('ID_IS_NOT_VALID'),
     check('maxDayOccupancy')
         .exists()
         .withMessage('MISSING')
@@ -29,6 +31,23 @@ exports.sendRequest = [
         .not()
         .isEmpty()
         .withMessage('IS_EMPTY'),
+    (req, res, next)=>{
+        try{
+            validationResult(req).throw();
+            return next();
+        }catch(err){
+            return handleError(res, buildErrObject(422, err.array()));
+        }
+    }
+];
+
+
+
+exports.tourLeaderFirstValidate = [
+    param('requestId')
+        .exists()
+        .isMongoId()
+        .withMessage('ID_IS_NOT_VALID'),
     (req, res, next)=>{
         try{
             validationResult(req).throw();

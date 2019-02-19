@@ -7,7 +7,7 @@ const {TourLeader} = require('../dao/tour_leader');
 
 
 /****************************
- * SEND REQUEST
+ * SEND REQUEST CONTROLLER
  * @param req
  * @param res
  * @returns {Promise<void>}
@@ -19,6 +19,22 @@ exports.sendRequest = async (req, res) => {
       await TourLeader.tourLeaderCheckForRequest(tourLeaderId);
       const response = await Request.saveRequest(req, userId, tourLeaderId);
       res.status(200).json(response);
+  }catch (err) {
+      handleError(res, buildErrObject(err.code, err.message));
+  }
+};
+
+/***************************
+ * TOUR LEADER FIRST VALIDATE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.tourLeaderFirstValidate = async (req, res) => {
+  try{
+      //is user a tour leader
+      //is tour leader for this request
+      //set the first validate to true and save it
   }catch (err) {
       handleError(res, buildErrObject(err.code, err.message));
   }

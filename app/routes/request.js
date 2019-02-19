@@ -14,8 +14,8 @@ ROUTES
 //SEND REQUEST
 router.post('/', requireAuth, validate.sendRequest, controller.sendRequest);
 
-// router.post('/tourLeaderFirstValidate', validate.tourLeaderFirstValidate, controller.tourLeaderFirstValidate);
-//
+router.get('/tourLeaderFirstValidate/:requestId', validate.tourLeaderFirstValidate, controller.tourLeaderFirstValidate);
+
 // router.post('/tourLeaderFinalValidate', validate.tourLeaderFinalValidate, controller.tourLeaderFinalValidate);
 //
 // router.post('/userFinalValidate', validate.userFinalValidate, controller.userFinalValidate);
