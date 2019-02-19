@@ -11,7 +11,7 @@ const {TourLeader} = require('../dao/tour_leader');
 exports.registerTourLeader = async (req, res) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		await TourLeader.userExists(id);		
+		await TourLeader.tourLeaderExists(id);
 		res.status(200).json(await TourLeader.registerTourLeader(req, id));
 	}catch (err) {
 		handleError(res, buildErrObject(err.code, err.message));
@@ -23,7 +23,7 @@ exports.registerTourLeader = async (req, res) => {
 exports.edit = async (req, res) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		await TourLeader.userDoesNotExists(id);
+		await TourLeader.tourLeaderDoesNotExists(id);
 		res.status(200).json(await TourLeader.edit(req, id));
 	}catch (err) {
 		handleError(res, buildErrObject(err.code, err.message));

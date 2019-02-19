@@ -9,7 +9,7 @@ const {buildErrObject}= require('../services/error_handler');
  *************************/
 
 //USER EXISTS
-tourLeaderSchema.statics.userExists= id=>{
+tourLeaderSchema.statics.tourLeaderExists= id=>{
 	return new Promise((resolve, reject)=>{
 		TourLeader.findOne({
 			user: id
@@ -24,7 +24,7 @@ tourLeaderSchema.statics.userExists= id=>{
 };
 
 //USER DOES NOT EXITS
-tourLeaderSchema.statics.userDoesNotExists= id=>{
+tourLeaderSchema.statics.tourLeaderDoesNotExists= id=>{
 	return new Promise((resolve, reject)=>{
 		TourLeader.findOne({
 			user: id
