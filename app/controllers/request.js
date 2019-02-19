@@ -65,3 +65,21 @@ exports.tourLeaderFinalValidate = async (req, res) => {
         console.log(err);
     }
 };
+
+/******************************
+ * USER FINAL VALIDATE
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.userFinalValidate = async (req, res) => {
+	try{
+		const userId = await isIDGood(req.user._id);
+		const requestId = await isIDGood(req.params.requestId);
+		const response = await Request.userFinalValidate(requestId, userId);
+		res.status(200).json(response);
+	}catch (err) {
+		console.log(err);
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};

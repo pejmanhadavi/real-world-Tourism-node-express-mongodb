@@ -75,6 +75,26 @@ requestSchema.statics.tourLeaderFinalValidate = requestId => {
     });
 };
 
+//USER FINAL VALIDATE
+requestSchema.statics.userFinalValidate = (requestId, userId) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			user: userId
+		})
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				result.userFinalValidate = true;
+				await result.save();
+				resolve({
+					msg: 'USER_FINAL_VALIDATE'
+				});
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

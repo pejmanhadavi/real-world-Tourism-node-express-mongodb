@@ -18,7 +18,8 @@ router.get('/tourLeaderFirstValidate/:requestId', requireAuth, validate.tourLead
 
 router.get('/tourLeaderFinalValidate/:requestId', requireAuth, validate.tourLeaderValidate, controller.tourLeaderFinalValidate);
 
-// router.post('/userFinalValidate', validate.userFinalValidate, controller.userFinalValidate);
+router.get('/userFinalValidate/:requestId', requireAuth, validate.tourLeaderValidate, controller.userFinalValidate);
+
 //
 // router.post('/pay', validate.pay, controller.pay);
 
