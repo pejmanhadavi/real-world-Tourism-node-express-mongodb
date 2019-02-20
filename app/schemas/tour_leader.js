@@ -29,7 +29,14 @@ const tourLeaderSchema = new Schema({
 	verified: {
 		type: Boolean,
 		default: false
-	}
+	},
+	comments: [{
+		type: String,
+		maxlength: 500,
+	}],
+	starts: [{
+		type: Number
+	}]
 }, {
 	timestamps: true
 });
