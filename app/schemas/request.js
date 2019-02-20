@@ -41,6 +41,12 @@ const requestSchema = new Schema({
 	paid: {
 		type: Boolean,
 		default: false
+	},
+	userSatisfaction: {
+		type: Boolean
+	},
+	tourLeaderSatisfaction: {
+		type: Boolean
 	}
 }, {
 	timestamps: true
