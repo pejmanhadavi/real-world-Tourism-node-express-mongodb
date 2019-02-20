@@ -39,7 +39,7 @@ exports.tourLeaderFirstValidate = async (req, res) => {
 		const response = await Request.tourLeaderFirstValidate(requestId);
 		res.status(200).json(response);
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message))
+		handleError(res, buildErrObject(err.code, err.message));
 	}
 };
 
@@ -52,18 +52,17 @@ exports.tourLeaderFirstValidate = async (req, res) => {
  * @returns {Promise<void>}
  */
 exports.tourLeaderFinalValidate = async (req, res) => {
-    try{
-        const userId = await isIDGood(req.user._id);
-        const requestId = await isIDGood(req.params.requestId);
-        await TourLeader.tourLeaderDoesNotExists(userId);
-        const tourLeaderId = await TourLeader.getTourLeaderId(userId);
-        await Request.checkTourLeaderForRequest(requestId, tourLeaderId);
-        const response = await Request.tourLeaderFinalValidate(requestId);
-        res.status(200).json(response);
-    }catch (err) {
-        // handleError(res, buildErrObject(err.code, err.message))
-        console.log(err);
-    }
+	try{
+		const userId = await isIDGood(req.user._id);
+		const requestId = await isIDGood(req.params.requestId);
+		await TourLeader.tourLeaderDoesNotExists(userId);
+		const tourLeaderId = await TourLeader.getTourLeaderId(userId);
+		await Request.checkTourLeaderForRequest(requestId, tourLeaderId);
+		const response = await Request.tourLeaderFinalValidate(requestId);
+		res.status(200).json(response);
+	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
 };
 
 /******************************
@@ -79,7 +78,18 @@ exports.userFinalValidate = async (req, res) => {
 		const response = await Request.userFinalValidate(requestId, userId);
 		res.status(200).json(response);
 	}catch (err) {
-		console.log(err);
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
+
+exports.userSatisfaction = async (req, res) => {
+	try {
+		const userId = await isIDGood(req.user._id);
+		const requestId = await isIDGood(req.params.requestId);
+		const response = await Request.userSatisfaction(requestId, userId, req.body.satisfaction);
+		res.status(200).json(response);
+	}catch (err) {
 		handleError(res, buildErrObject(err.code, err.message));
 	}
 };

@@ -58,3 +58,28 @@ exports.tourLeaderValidate = [
 		}
 	}
 ];
+
+
+
+
+
+exports.satisfaction = [
+	param('requestId')
+		.exists()
+		.withMessage('MISSING')
+		.isMongoId()
+		.withMessage('ID_IS_NOT_VALID'),
+	check('satisfaction')
+		.exists()
+		.withMessage('MISSING')
+		.isBoolean()
+		.withMessage('MALFORMED'),
+	(req, res, next)=>{
+		try{
+			validationResult(req).throw();
+			return next();
+		}catch(err){
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
+];

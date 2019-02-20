@@ -60,19 +60,19 @@ requestSchema.statics.tourLeaderFirstValidate = requestId => {
 
 //TOUR LEADER FINAL VALIDATE
 requestSchema.statics.tourLeaderFinalValidate = requestId => {
-    return new Promise((resolve, reject) => {
-        Request.findById(requestId)
-            .then(async result => {
-                if (!result)
-                    reject(buildErrObject(404, 'NOT_FOUND'));
-                result.tourLeaderFinalValidate = true;
-                await result.save();
-                resolve({
-                    msg: 'TOUR_LEADER_FINAL_VALIDATE'
-                });
-            })
-            .catch(err => reject(buildErrObject(422, err.message)));
-    });
+	return new Promise((resolve, reject) => {
+		Request.findById(requestId)
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				result.tourLeaderFinalValidate = true;
+				await result.save();
+				resolve({
+					msg: 'TOUR_LEADER_FINAL_VALIDATE'
+				});
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
 };
 
 //USER FINAL VALIDATE
@@ -89,6 +89,27 @@ requestSchema.statics.userFinalValidate = (requestId, userId) => {
 				await result.save();
 				resolve({
 					msg: 'USER_FINAL_VALIDATE'
+				});
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+
+//USER SATISFACTION
+requestSchema.statics.userSatisfaction= (requestId, userId, satisfaction) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			user: userId
+		})
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				result.userSatisfaction = satisfaction;
+				await result.save();
+				resolve({
+					msg: 'USER_SATISFACTION'
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

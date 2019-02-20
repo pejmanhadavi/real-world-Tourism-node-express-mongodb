@@ -20,6 +20,10 @@ router.get('/tourLeaderFinalValidate/:requestId', requireAuth, validate.tourLead
 
 router.get('/userFinalValidate/:requestId', requireAuth, validate.tourLeaderValidate, controller.userFinalValidate);
 
+router.post('/userSatisfaction/:requestId', requireAuth, validate.satisfaction, controller.userSatisfaction);
+
+// router.get('/tourLeaderSatisfaction/:requestId', requireAuth, validate.tourLeaderValidate, controller.tourLeaderSatisfaction);
+
 //
 // router.post('/pay', validate.pay, controller.pay);
 
