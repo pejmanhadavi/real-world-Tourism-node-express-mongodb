@@ -102,7 +102,10 @@ requestSchema.statics.userSatisfaction= (requestId, userId, satisfaction) => {
 	return new Promise((resolve, reject) => {
 		Request.findOne({
 			_id: requestId,
-			user: userId
+			user: userId,
+			tourLeaderFirstValidate: true,
+			tourLeaderFinalValidate: true,
+			userFinalValidate: true
 		})
 			.then(async result => {
 				if (!result)
@@ -125,7 +128,10 @@ requestSchema.statics.tourLeaderSatisfaction= (requestId, tourLeaderId, satisfac
 	return new Promise((resolve, reject) => {
 		Request.findOne({
 			_id: requestId,
-			tourLeader: tourLeaderId
+			tourLeader: tourLeaderId,
+			tourLeaderFirstValidate: true,
+			tourLeaderFinalValidate: true,
+			userFinalValidate: true
 		})
 			.then(async result => {
 				if (!result)
