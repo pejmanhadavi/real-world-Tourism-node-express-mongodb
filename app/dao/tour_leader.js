@@ -116,7 +116,8 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 tourLeaderSchema.statics.getTourLeaderId = userId => {
 	return new Promise((resolve, reject) => {
 		TourLeader.findOne({
-			user: userId
+			user: userId,
+			verified: true
 		})
 			.then(result => {
 				if (!result)
