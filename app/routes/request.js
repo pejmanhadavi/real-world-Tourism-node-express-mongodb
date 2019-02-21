@@ -22,7 +22,7 @@ router.get('/userFinalValidate/:requestId', requireAuth, validate.tourLeaderVali
 
 router.post('/userSatisfaction/:requestId', requireAuth, validate.satisfaction, controller.userSatisfaction);
 
-router.get('/tourLeaderSatisfaction/:requestId', requireAuth, validate.tourLeaderValidate, controller.tourLeaderSatisfaction);
+router.get('/tourLeaderSatisfaction/:requestId', requireAuth, validate.satisfaction, controller.tourLeaderSatisfaction);
 
 //
 // router.post('/pay', validate.pay, controller.pay);
