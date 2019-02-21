@@ -66,7 +66,7 @@ exports.tourLeaderFinalValidate = async (req, res) => {
 };
 
 /******************************
- * USER FINAL VALIDATE
+ * USER FINAL VALIDATE CONTROLLER
  * @param req
  * @param res
  * @returns {Promise<void>}
@@ -82,7 +82,12 @@ exports.userFinalValidate = async (req, res) => {
 	}
 };
 
-
+/****************************
+ * USER SATISFACTION CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.userSatisfaction = async (req, res) => {
 	try {
 		const userId = await isIDGood(req.user._id);
@@ -90,6 +95,20 @@ exports.userSatisfaction = async (req, res) => {
 		const response = await Request.userSatisfaction(requestId, userId, req.body.satisfaction);
 		res.status(200).json(response);
 	}catch (err) {
+		handleError(res, buildErrObject(err.code, err.message));
+	}
+};
+
+
+exports.tourLeaderSatisfaction = async (req, res) => {
+	try{
+		const userId = await isIDGood(req.user._id);
+		const requestId = await isIDGood(req.params.requestId);
+		const tourLeaderId = await TourLeader.getTourLeaderId(userId);
+		const response = await Request.tourLeaderSatisfaction(requestId, tourLeaderId, req.body.satisfaction);
+		res.status(200).json(response);
+	}catch (err) {
+		console.log(err);
 		handleError(res, buildErrObject(err.code, err.message));
 	}
 };

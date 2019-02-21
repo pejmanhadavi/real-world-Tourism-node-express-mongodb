@@ -106,10 +106,35 @@ requestSchema.statics.userSatisfaction= (requestId, userId, satisfaction) => {
 			.then(async result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
+				if (result.userSatisfaction)
+					reject(buildErrObject(409, 'ALREADY_EXISTS'));
 				result.userSatisfaction = satisfaction;
 				await result.save();
 				resolve({
 					msg: 'USER_SATISFACTION'
+				});
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+
+//TOUR LEADER SATISFACTION
+requestSchema.statics.tourLeaderSatisfaction= (requestId, tourLeaderId, satisfaction) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			tourLeader: tourLeaderId
+		})
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				if (result.tourLeaderSatisfaction)
+					reject(buildErrObject(409, 'ALREADY_EXISTS'));
+				result.tourLeaderSatisfaction= satisfaction;
+				await result.save();
+				resolve({
+					msg: 'TOUR_LEADER_SATISFACTION'
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
