@@ -18,8 +18,9 @@ requestSchema.statics.saveRequest = (req, userId, tourLeaderId) => {
 			description: req.body.description
 		});
 		request.save()
-			.then(() => resolve({
-				msg: 'REQUEST_SAVED'
+			.then(result => resolve({
+				msg: 'REQUEST_SAVED',
+				id: result._id
 			}))
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
