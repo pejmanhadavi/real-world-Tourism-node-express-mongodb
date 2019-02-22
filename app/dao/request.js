@@ -25,7 +25,14 @@ requestSchema.statics.saveRequest = (req, userId, tourLeaderId) => {
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
-
+//CHECK IF THE REQUEST EXISTS
+requestSchema.statics.requestExists = (requestId) => {
+	return new Promise((resolve, reject) => {
+		Request.findById(requestId)
+			.then(resolve)
+			.catch(err => reject(buildErrObject(422, err.messageSchema)));
+	});
+};
 //IS TOUR LEADER FOR THIS REQUEST
 requestSchema.statics.checkTourLeaderForRequest = (requestId, tourLeaderId) => {
 	return new Promise((resolve, reject) => {

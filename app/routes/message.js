@@ -11,13 +11,7 @@ const controller = require('../controllers/message');
 /*
 ROUTES
  */
-
-
-
-
-
-
-
+router.post('/:requestId', requireAuth, validate.sendMessage, controller.sendMessage);
 
 
 

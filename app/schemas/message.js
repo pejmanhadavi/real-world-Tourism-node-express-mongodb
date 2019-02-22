@@ -12,7 +12,7 @@ const messageSchema = new Schema({
 	body: {
 		type: String,
 		required: true,
-		maxlength: 500,
+		maxlength: 1024,
 	},
 	author: {
 		type: ObjectId,
