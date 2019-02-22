@@ -5,14 +5,9 @@ const ObjectId = mongoose.Types.ObjectId;
 
 //MESSAGE SCHEMA
 const messageSchema = new Schema({
-	participants: {
-		type:  [{
-			ObjectId,
-			ref: 'User'
-		}],
-		validate: [(val)=>{
-			return val.length>1 && val.length<3;
-		}, 'MOST_BE_2_PARTICIPANTS']
+	requestId: {
+		type: ObjectId,
+		ref: 'Request'
 	},
 	body: {
 		type: String,
@@ -30,5 +25,3 @@ const messageSchema = new Schema({
 
 //EXPORT SCHEMA
 module.exports.messageSchema = messageSchema;
-
-  

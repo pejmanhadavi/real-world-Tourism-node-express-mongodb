@@ -5,6 +5,7 @@ const authRouter = require('../app/routes/auth');
 const profileRouter = require('../app/routes/profile');
 const tourLeaderRouter = require('../app/routes/tour_leader');
 const requestRoute = require('../app/routes/request');
+const messageRoute = require('../app/routes/message');
 
 
 module.exports = app => {
@@ -17,4 +18,5 @@ module.exports = app => {
     app.use('/profile', profileRouter);
     app.use('/tourLeader', tourLeaderRouter);
     app.use('/request', requestRoute);
+    app.use('/message', messageRoute);
 };
