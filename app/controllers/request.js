@@ -99,7 +99,12 @@ exports.userSatisfaction = async (req, res) => {
 	}
 };
 
-
+/***********************************
+ * TOUR LEADER SATISFACTION CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.tourLeaderSatisfaction = async (req, res) => {
 	try{
 		const userId = await isIDGood(req.user._id);
