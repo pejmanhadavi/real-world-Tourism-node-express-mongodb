@@ -155,6 +155,38 @@ requestSchema.statics.tourLeaderSatisfaction= (requestId, tourLeaderId, satisfac
 	});
 };
 
+//FIND REQUEST BY USER ID
+requestSchema.statics.findRequestByUserId = (requestId, userId) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			user: userId
+		})
+			.then(result => {
+				if (!result)
+					resolve(false);
+				resolve(true);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+//FIND REQUEST BY TOUR LEADER ID
+requestSchema.statics.findRequestByTourLeaderId = (requestId, tourLeaderId) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			tourLeader: tourLeaderId
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(true);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

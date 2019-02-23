@@ -124,7 +124,7 @@ tourLeaderSchema.statics.getTourLeaderId = userId => {
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				resolve(result._id);
 			})
-			.catch(err => reject(422, err.message));
+			.catch(err => reject(buildErrObject(422,err.message)));
 	});
 };
 
