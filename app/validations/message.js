@@ -23,3 +23,20 @@ exports.sendMessage = [
         }
     }
 ];
+
+
+exports.readMessage = [
+    param('messageId')
+        .exists()
+        .withMessage('MISSING')
+        .isMongoId()
+        .withMessage('ID_IS_NOT_VALID'),
+    (req, res, next)=>{
+        try{
+            validationResult(req).throw();
+            return next();
+        }catch(err){
+            return handleError(res, buildErrObject(422, err.array()));
+        }
+    }
+];

@@ -13,6 +13,8 @@ ROUTES
  */
 router.post('/:requestId', requireAuth, validate.sendMessage, controller.sendMessage);
 
+router.put('/:Message', requireAuth, validate.readMessage, controller.readMessage);
+
 
 
 module.exports = router;

@@ -31,3 +31,23 @@ exports.sendMessage = async (req, res) => {
       handleError(res, buildErrObject(err.code, err.message));
   }
 };
+
+/***************************
+ * READ MESSAGE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.readMessage = async (req, res) => {
+    try {
+        //check the message id
+        const messageId = isIDGood(req.params.messageId);
+        //check if user is the receiver
+        //check if the message id exists
+        //update message id
+        //response the user
+    }catch (err) {
+        console.log(err);
+        handleError(res, buildErrObject(err.code, err.message));
+    }
+};
