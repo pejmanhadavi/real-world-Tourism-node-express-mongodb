@@ -54,6 +54,22 @@ tourLeaderSchema.statics.tourLeaderCheckForRequest = id => {
 	});
 };
 
+//GET TOUR LEADER USER ID
+tourLeaderSchema.statics.getTourLeaderUserId = id => {
+	return new Promise((resolve, reject) => {
+		TourLeader.findOne({
+			_id: id,
+			verified: true
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(result.user);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 //EDIT
 tourLeaderSchema.statics.edit = (req, id) => {
 	return new Promise((resolve, reject) => {

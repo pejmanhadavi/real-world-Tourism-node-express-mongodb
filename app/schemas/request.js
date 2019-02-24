@@ -14,6 +14,10 @@ const requestSchema = new Schema({
 		ref: 'TourLeader',
 		required: true
 	},
+	tourLeaderUserId: {
+		type :ObjectId,
+		required: true
+	},
 	maxDayOccupancy: {
 		type:Number,
 		required: true

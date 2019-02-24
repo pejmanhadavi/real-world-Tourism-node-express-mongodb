@@ -8,11 +8,12 @@ const {buildErrObject} = require('../services/error_handler');
  * STATICS
  ********************/
 //SAVE REQUEST
-requestSchema.statics.saveRequest = (req, userId, tourLeaderId) => {
+requestSchema.statics.saveRequest = (req, userId, tourLeaderId, tourLeaderUserId) => {
 	return new Promise((resolve, reject) => {
 		const request = new Request({
 			user: userId,
 			tourLeader: tourLeaderId,
+			tourLeaderUserId: tourLeaderUserId,
 			maxDayOccupancy: req.body.maxDayOccupancy,
 			maxHalfDayOccupancy: req.body.maxHalfDayOccupancy,
 			description: req.body.description
