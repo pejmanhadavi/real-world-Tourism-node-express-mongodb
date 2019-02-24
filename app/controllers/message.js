@@ -42,6 +42,7 @@ exports.readMessage = async (req, res) => {
     try {
         //check the message id
         const messageId = isIDGood(req.params.messageId);
+        const userId = isIDGood(req.user._id);
         //check if user is the receiver
         //check if the message id exists
         //update message id
