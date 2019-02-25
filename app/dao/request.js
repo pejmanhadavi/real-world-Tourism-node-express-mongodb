@@ -188,6 +188,18 @@ requestSchema.statics.findRequestByTourLeaderId = (requestId, tourLeaderId) => {
 	});
 };
 
+//GET REQUEST BY ID
+requestSchema.statics.getRequestById = id => {
+	return new Promise((resolve, reject) => {
+		Request.findById(id)
+			.then(result => {
+				if(!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

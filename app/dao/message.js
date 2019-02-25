@@ -24,6 +24,52 @@ messageSchema.statics.saveMessage = (requestId, userId, body) => {
             .catch(err => reject(buildErrObject(422, err.message)));
     });
 };
+//GET MESSAGE BY ID
+messageSchema.statics.getMessageById = id => {
+    return new Promise((resolve, reject) => {
+        Message.findById(id)
+            .then(result => {
+                if (!result)
+                    reject(buildErrObject(404, 'NOT_FOUND'));
+                resolve(result);
+            })
+            .catch(err => reject(buildErrObject(422, err.message)));
+    });
+};
+
+//CHECK THE MESSAGE AUTHOR
+messageSchema.statics.checkMessageAuthor = (messageId, userId) => {
+    return new Promise((resolve, reject) => {
+       Message.findOne({
+           _id: messageId,
+           author: userId
+       })
+           .then(result => {
+               if (!result)
+                   resolve(true);
+               reject(buildErrObject(409, 'BAD_REQUEST'));
+           })
+           .catch(err => buildErrObject(422, err.message));
+    });
+};
+
+//UPDATE READ MESSAGE
+messageSchema.statics.updateMessageToRead = messageId => {
+    return new Promise((resolve, reject) => {
+        Message.findById(messageId)
+            .then(async result => {
+                if (!result)
+                    reject(buildErrObject(404, 'NOT_FOUND'));
+                result.read = true;
+                await result.save();
+                resolve({
+                    message: result._id,
+                    read: result.read
+                });
+            })
+            .catch(err => reject(buildErrObject(422, err.message)));
+    });
+} ;
 
 
 

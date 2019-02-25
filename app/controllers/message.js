@@ -15,17 +15,13 @@ exports.sendMessage = async (req, res) => {
   try {
       const userId = await isIDGood(req.user._id);
       const requestId = await isIDGood(req.params.requestId);
-      //find the request
       await Request.requestExists(requestId);
-      //check if the user id is the request user or is the tourLeader
       const doesRequestExistsWithUserId = await Request.findRequestByUserId(requestId, userId);
       if (!doesRequestExistsWithUserId){
           const tourLeaderId = await TourLeader.getTourLeaderId(userId);
           await Request.findRequestByTourLeaderId(requestId, tourLeaderId);
       }
-      //save the message
       const response = await Message.saveMessage(requestId, userId, req.body.body);
-      //response
       res.status(200).json(response);
   }  catch (err) {
       handleError(res, buildErrObject(err.code, err.message));
@@ -40,15 +36,19 @@ exports.sendMessage = async (req, res) => {
  */
 exports.readMessage = async (req, res) => {
     try {
-        //check the message id
-        const messageId = isIDGood(req.params.messageId);
-        const userId = isIDGood(req.user._id);
-        //check if user is the receiver
-        //check if the message id exists
-        //update message id
-        //response the user
+        const messageId = await isIDGood(req.params.messageId);
+        const userId = await isIDGood(req.user._id);
+        const message = await Message.getMessageById(messageId);
+        const request = await Request.getRequestById(message.requestId);
+        await Message.checkMessageAuthor(messageId, userId);
+        const doesRequestExistsWithUserId = await Request.findRequestByUserId(request._id, userId);
+        if (!doesRequestExistsWithUserId){
+            const tourLeaderId = await TourLeader.getTourLeaderId(userId);
+            await Request.findRequestByTourLeaderId(requestId, tourLeaderId);
+        }
+        const response = await Message.updateMessageToRead(messageId);
+        res.status(200).json(response);
     }catch (err) {
-        console.log(err);
         handleError(res, buildErrObject(err.code, err.message));
     }
 };
