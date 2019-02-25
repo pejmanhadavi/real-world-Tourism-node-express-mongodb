@@ -30,13 +30,6 @@ const tourLeaderSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
-	comments: [{
-		type: String,
-		maxlength: 500,
-	}],
-	starts: [{
-		type: Number
-	}]
 }, {
 	timestamps: true
 });
