@@ -51,6 +51,10 @@ const requestSchema = new Schema({
 	},
 	tourLeaderSatisfaction: {
 		type: Boolean
+	},
+	rated: {
+		type: Boolean,
+		default: false
 	}
 }, {
 	timestamps: true

@@ -8,7 +8,17 @@ exports.rateTourLeader = [
         .withMessage('MISSING')
         .not()
         .isEmpty()
-        .withMessage('IS_EMPTY'),
+        .withMessage('IS_EMPTY')
+        .isMongoId()
+        .withMessage('ID_IS_NOT_VALID'),
+    check('requestId')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('IS_EMPTY')
+        .isMongoId()
+        .withMessage('ID_IS_NOT_VALID'),
     check('star')
         .not()
         .isEmpty()

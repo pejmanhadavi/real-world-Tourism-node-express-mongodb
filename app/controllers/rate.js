@@ -11,7 +11,7 @@ const {Rate} = require('../dao/rate');
  */
 exports.rateTourLeader = (req, res) => {
     try{
-
+        //check the request with this user and
     } catch (err) {
         console.log(err);
         handleError(res, buildErrObject(err.code, err._message));
