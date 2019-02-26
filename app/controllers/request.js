@@ -114,7 +114,6 @@ exports.tourLeaderSatisfaction = async (req, res) => {
 		const response = await Request.tourLeaderSatisfaction(requestId, tourLeaderId, req.body.satisfaction);
 		res.status(200).json(response);
 	}catch (err) {
-		console.log(err);
 		handleError(res, buildErrObject(err.code, err.message));
 	}
 };
