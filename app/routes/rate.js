@@ -7,6 +7,11 @@ const requireAuth = passport.authenticate('jwt', {
 });
 
 
-const controller = require('../controllers/rate_schema');
-const validate = require('../validations/rate_schema');
+const controller = require('../controllers/rate');
+const validate = require('../validations/rate');
 
+/*
+ROUTES
+ */
+
+router.post('/', requireAuth, validate.rateTourLeader, controller.rateTourLeader);

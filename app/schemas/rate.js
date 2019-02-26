@@ -15,7 +15,7 @@ const rateSchema = new Schema({
 		type: ObjectId,
 		ref: 'User',
 	},
-	stars: {
+	star: {
 		type: Number,
 		validate: {
 			validator: (value) => {
