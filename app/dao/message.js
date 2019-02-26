@@ -16,8 +16,9 @@ messageSchema.statics.saveMessage = (requestId, userId, body) => {
 			author: userId
 		});
 		message.save()
-			.then(() => {
+			.then(result => {
 				resolve({
+					id: result ._id,
 					msg: 'MESSAGE_SAVED'
 				});
 			})

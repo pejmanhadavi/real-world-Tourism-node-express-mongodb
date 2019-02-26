@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 
 const {Request} = require('../app/dao/request');
+const {Message} = require('../app/dao/message');
 
 const tourLeader = {
     email: 'tourLeader@gmail.com',
@@ -22,6 +23,7 @@ const server = require('../bin/www').server;
 let userToken;
 let tourLeaderToken;
 let requestId;
+let messageId;
 
 const request = {
     tourLeader: "5c6e5b4a8266be5fd8dbad7c",
@@ -156,11 +158,37 @@ describe('*********** REQUEST ***********', () => {
 });
 
 
+describe('*********** MESSAGE ***********', () => {
+    describe('POST request', () => {
+        it('should POST request', done => {
+            chai
+                .request(server)
+                .post('/message/'+requestId)
+                .send({
+                    body: 'test message *******'
+                })
+                .set('Authorization', `Bearer ${userToken}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    messageId = res.body.id;
+                   done();
+                });
+
+        });
+    });
+});
+
 after(() => {
     Request.deleteOne(
         {
             _id: requestId
         })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
+
+    Message.deleteOne({
+        _id: messageId
+    })
         .then(result => console.log(result))
         .catch(err => console.log(err));
 });
