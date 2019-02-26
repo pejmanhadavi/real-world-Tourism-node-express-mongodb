@@ -11,7 +11,6 @@ const controller = require('../controllers/request');
 /*
 ROUTES
  */
-//SEND REQUEST
 router.post('/', requireAuth, validate.sendRequest, controller.sendRequest);
 
 router.get('/tourLeaderFirstValidate/:requestId', requireAuth, validate.tourLeaderValidate, controller.tourLeaderFirstValidate);
@@ -24,7 +23,6 @@ router.post('/userSatisfaction/:requestId', requireAuth, validate.satisfaction, 
 
 router.post('/tourLeaderSatisfaction/:requestId', requireAuth, validate.satisfaction, controller.tourLeaderSatisfaction);
 
-//
 // router.post('/pay', validate.pay, controller.pay);
 
 
