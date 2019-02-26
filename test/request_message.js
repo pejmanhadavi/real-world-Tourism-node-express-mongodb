@@ -159,7 +159,7 @@ describe('*********** REQUEST ***********', () => {
 
 
 describe('*********** MESSAGE ***********', () => {
-    describe('POST request', () => {
+    describe('POST message', () => {
         it('should POST request', done => {
             chai
                 .request(server)
@@ -174,6 +174,19 @@ describe('*********** MESSAGE ***********', () => {
                    done();
                 });
 
+        });
+    });
+
+    describe('PUT message', () => {
+        it('should PUT read message', done => {
+            chai
+                .request(server)
+                .put('/message/'+messageId)
+                .set('Authorization', `Bearer ${tourLeaderToken}`)
+                .end((err, res) => {
+                   res.should.have.status(200);
+                   done()
+                });
         });
     });
 });
