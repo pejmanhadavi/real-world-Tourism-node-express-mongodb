@@ -200,6 +200,45 @@ requestSchema.statics.getRequestById = id => {
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
+
+//IS REQUEST RATED
+requestSchema.statics.isRequestRated = (requestId) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			tourLeaderFirstValidate: true,
+			userFinalValidate: true,
+			tourLeaderFinalValidate: true,
+			paid: true,
+			userSatisfaction: true,
+			tourLeaderSatisfaction: true,
+			rated: false
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND_OR_BAD_REQUEST'));
+				resolve(true);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+//SET RATE  TO TRUE
+requestSchema.statics.setRate = requestId => {
+	return new Promise((resolve, reject) => {
+		Request.findById(requestId)
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				result.rated= true;
+				await result.save();
+				resolve({
+					msg: 'REQUEST_RATED'
+				});
+			})
+			.catch(err => reject(buildErrObject(422, 'NOT_FOUND')));
+	});
+};
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

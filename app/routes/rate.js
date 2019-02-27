@@ -15,3 +15,6 @@ ROUTES
  */
 
 router.post('/', requireAuth, validate.rateTourLeader, controller.rateTourLeader);
+
+
+module.exports = router;
