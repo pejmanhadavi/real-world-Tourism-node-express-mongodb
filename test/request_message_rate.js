@@ -5,12 +5,13 @@ const chaiHttp = require('chai-http');
 
 const {Request} = require('../app/dao/request');
 const {Message} = require('../app/dao/message');
+const {Rate} = require('../app/dao/rate');
 
 const tourLeader = {
     email: 'tourLeader@gmail.com',
     password: 'admin'
 };
-
+const tourLeaderId = '5c6e5b4a8266be5fd8dbad7c';
 const user = {
     email: 'user@gmail.com',
     password: 'admin'
@@ -24,6 +25,7 @@ let userToken;
 let tourLeaderToken;
 let requestId;
 let messageId;
+let rateId;
 
 const request = {
     tourLeader: "5c6e5b4a8266be5fd8dbad7c",
@@ -191,6 +193,29 @@ describe('*********** MESSAGE ***********', () => {
     });
 });
 
+
+describe('*********** RATE ***********', () => {
+   describe('POST rate', () => {
+       it('should POST rate', done => {
+           chai
+               .request(server)
+               .post('/rate')
+               .send({
+                   tourLeaderId: tourLeaderId,
+                   requestId: requestId,
+                   star: 2,
+                   comment: 'this is some comment'
+               })
+               .set('Authorization', `Bearer ${userToken}`)
+               .end((err, res) => {
+                  res.should.have.status(200);
+                  rateId = res.body.id;
+                  done();
+               });
+       });
+   }) ;
+});
+
 after(() => {
     Request.deleteOne(
         {
@@ -201,6 +226,11 @@ after(() => {
 
     Message.deleteOne({
         _id: messageId
+    })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
+    Rate.deleteOne({
+        _id: rateId
     })
         .then(result => console.log(result))
         .catch(err => console.log(err));

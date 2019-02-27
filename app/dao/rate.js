@@ -15,8 +15,9 @@ rateSchema.statics.saveRate = (req, tourLeaderId, userId) => {
             star: req.body.star
         });
         rate.save()
-            .then(() => {
+            .then(result => {
                resolve({
+                   id: result._id,
                    msg: 'RATED'
                });
             })
