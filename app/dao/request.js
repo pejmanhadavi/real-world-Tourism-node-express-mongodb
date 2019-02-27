@@ -202,10 +202,11 @@ requestSchema.statics.getRequestById = id => {
 };
 
 //IS REQUEST RATED
-requestSchema.statics.isRequestRated = (requestId) => {
+requestSchema.statics.isRequestRated = (requestId, userId) => {
 	return new Promise((resolve, reject) => {
 		Request.findOne({
 			_id: requestId,
+			user: userId,
 			tourLeaderFirstValidate: true,
 			userFinalValidate: true,
 			tourLeaderFinalValidate: true,
