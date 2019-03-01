@@ -3,7 +3,7 @@ const matchedData = require('express-validator/filter').matchedData;
 const {User, saveLoginAttemptsToDB} = require('../dao/user');
 const {ForgotPassword, forgotPasswordResponse} = require('../dao/forgot_password');
 const {buildErrObject, handleError} = require('../services/error_handler');
-const {UserAccess} = require('../dao/user_access');
+const {UserRefresh} = require('../dao/user_refresh');
 const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('../services/send_email');
 
 
@@ -118,7 +118,8 @@ exports.login = async (req, res) => {
 			// all ok, register access and return token
 			user.loginAttempts = 0;
 			await saveLoginAttemptsToDB(user);
-			res.status(200).json(await UserAccess.saveUserAccessAndReturnToken(req, user));
+			const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
+			res.status(200).json(response);
 		}
 	} catch (err) {
 		handleError(res, err);
