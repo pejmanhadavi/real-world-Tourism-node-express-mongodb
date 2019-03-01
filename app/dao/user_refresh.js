@@ -26,12 +26,27 @@ userRefreshSchema.statics.saveUserRefreshAndReturnToken = async (req, user) => {
                 const userInfo = User.setUserInfo(user);
                 //RETURN DATA WITH ACCESS TOKEN
                 resolve({
-                    AccessToken: generateToken(user._id),
+                    token: generateToken(user._id),
                     refreshToken: refreshToken,
                     user: userInfo
                 });
             })
             .catch(err => reject(buildErrObject(422, err.message)));
+    });
+};
+
+//FIND REFRESH TOKEN AND RETURN USER ID
+userRefreshSchema.statics.findRefreshAndReturnUserId = async refreshToken => {
+    return new Promise((resolve, reject) => {
+       UserRefresh.findOne({
+           refreshToken: refreshToken
+       })
+           .then(result => {
+               if (!result)
+                   reject(buildErrObject(401, 'NO_REFRESH_TOKEN'));
+               resolve(result.userId);
+           })
+           .catch(err => reject(buildErrObject(422, err.message)));
     });
 };
 

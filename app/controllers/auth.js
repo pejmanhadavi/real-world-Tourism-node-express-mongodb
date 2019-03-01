@@ -5,6 +5,7 @@ const {ForgotPassword, forgotPasswordResponse} = require('../dao/forgot_password
 const {buildErrObject, handleError} = require('../services/error_handler');
 const {UserRefresh} = require('../dao/user_refresh');
 const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('../services/send_email');
+const {generateToken} = require('../services/auth');
 
 
 /**************************************
@@ -123,5 +124,21 @@ exports.login = async (req, res) => {
 		}
 	} catch (err) {
 		handleError(res, err);
+	}
+};
+
+
+exports.token = async (req, res) => {
+	try{
+		const refreshToken = req.body.refreshToken;
+		const userId = await UserRefresh.findRefreshAndReturnUserId(refreshToken);
+		const response = {
+			token: generateToken(userId),
+		};
+		res.status(200).json(response);
+
+	}catch (err) {
+		console.log(err);
+		handleError(res, buildErrObject(err.code, err.message));
 	}
 };

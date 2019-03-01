@@ -142,3 +142,22 @@ exports.login = [
 		}
 	}
 ];
+
+
+exports.token = [
+	check('refreshToken')
+		.exists()
+		.withMessage('MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('IS_EMPTY'),
+	//here we can add also is it uuid or not...
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
+			return handleError(res, buildErrObject(422, err.array()));
+		}
+	}
+];
