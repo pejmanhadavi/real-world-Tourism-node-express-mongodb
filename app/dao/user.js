@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const dateFns = require('date-fns');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
-
+const fs = require('fs');
 
 
 
@@ -287,6 +287,12 @@ userSchema.statics.deleteProfileImage = (id, profileImage) => {
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
+
+				fs.unlink('../../public/uploads'+profileImage, (err => {
+					if (err)
+						reject(buildErrObject(422, 'SOME_THING_FAILED'));
+					console.log('FILE_DELETED');
+				}));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
