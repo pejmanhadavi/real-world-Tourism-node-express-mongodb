@@ -287,13 +287,17 @@ userSchema.statics.deleteProfileImage = (id, profileImage) => {
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
-
-				fs.unlink('../../public/uploads'+profileImage, (err => {
-					if (err)
-						reject(buildErrObject(422, 'SOME_THING_FAILED'));
+				console.log(__dirname);
+				try {
+					const path = './public/uploads/'+profileImage;
+					fs.unlinkSync(path);
 					console.log('FILE_DELETED');
-				}));
-				resolve(result);
+				} catch(err) {
+					console.error(err);
+				}
+				resolve({
+					msg: 'PROFILE_IMAGE_DELETED'
+				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
