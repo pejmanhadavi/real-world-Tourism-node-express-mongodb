@@ -93,6 +93,7 @@ exports.postResetPassword = async (req, res) => {
 		const user = await User.findUserByEmail(forgotPassword.email);
 		await User.updatePassword(user, data.password);
 		const result = await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
+		await ForgotPassword.deleteUnusedForgotPasswords(forgotPassword.email);
 		res.status(200).json(result);
 	}catch (err) {
 		handleError(res, buildErrObject(err.code, err.message));
@@ -127,7 +128,12 @@ exports.login = async (req, res) => {
 	}
 };
 
-
+/****************************
+ * GENERATE ACCESS TOKEN CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.token = async (req, res) => {
 	try{
 		const refreshToken = req.body.refreshToken;

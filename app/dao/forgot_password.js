@@ -51,20 +51,33 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = async (req, forgotPass) =
 		forgotPass.ipChanged = getIP(req);
 		forgotPass.browserChanged = getBrowserInfo(req);
 		forgotPass.countryChanged = getCountry(req);
-		forgotPass.save((err, item) => {
-			if (err) {
-				reject(buildErrObject(422, err.message));
-			}
-			if (!item) {
-				reject(buildErrObject(404, 'NOT_FOUND'));
-			}
-			resolve({
-				msg: 'PASSWORD_CHANGED'
-			});
-		});
+		forgotPass.save()
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve({
+					msg: 'PASSWORD_CHANGED'
+				})
+			})
+			.catch(err =>reject(buildErrObject(422, err.message)));
 	});
 };
 
+
+forgotPasswordSchema.statics.deleteUnusedForgotPasswords = email => {
+	return new Promise((resolve, reject) => {
+		ForgotPassword.deleteMany({
+			email: email,
+			used: false
+		})
+			.then(result => {
+				if (!result)
+					console.log('THERE_IS_NO_FORGOT_PASSWORD');
+				resolve(true);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
 /**************
  * HELPERS
  */

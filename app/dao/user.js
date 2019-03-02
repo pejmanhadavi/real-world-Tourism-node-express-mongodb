@@ -11,7 +11,7 @@ const {buildErrObject}= require('../services/error_handler');
 const {generateToken} = require('../services/auth');
 
 const LOGIN_ATTEMPTS = 5;
-const HOURS_TO_BLOCK = 2;
+const HOURS_TO_BLOCK = 12;
 
 
 
