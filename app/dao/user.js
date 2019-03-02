@@ -260,7 +260,10 @@ userSchema.statics.updateProfileImage = (req, id) => {
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				result.profileImages.push(req.file.filename);
 				await result.save();
-				resolve({msg: 'PROFILE_IMAGE_UPDATED'});
+				resolve({
+					msg: 'PROFILE_IMAGE_UPDATED',
+					profile: req.file.filename
+				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});

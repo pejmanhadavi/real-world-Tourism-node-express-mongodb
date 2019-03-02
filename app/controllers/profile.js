@@ -1,5 +1,6 @@
 const {isIDGood} = require('./base');
 const {buildErrObject, handleError} = require('../services/error_handler');
+const {resizeImage} = require('../services/resize_image');
 const {User} = require('../dao/user');
 
 
@@ -60,7 +61,9 @@ exports.updatePassword = async (req, res) => {
 exports.updateProfileImage = async (req, res) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		res.status(200).json(await User.updateProfileImage(req, id));
+		const response = await User.updateProfileImage(req, id);
+		resizeImage(response.profile);
+		res.status(200).json(response);
 	}catch (err) {
 		handleError(res, buildErrObject(err.code, err.message));
 	}
