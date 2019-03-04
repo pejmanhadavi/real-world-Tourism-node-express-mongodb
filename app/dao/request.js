@@ -260,6 +260,24 @@ requestSchema.statics.findRequestForPay = (requestId, userId) => {
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
+
+
+//FIND REQUEST BY FACTOR NUMBER
+requestSchema.statics.findRequestByFactorNumber = factorNumber => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			factorNumber: factorNumber,
+			paid: false
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

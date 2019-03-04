@@ -31,15 +31,26 @@ exports.pay = async (req, res) => {
 };
 
 
-exports.verifyPay = async (req, res) => {
+exports.verifyPay = (req, res) => {
   try{
       gateway.verify(req.body)
-          .then(data => {
-              console.log(typeof data.factorNumber);
-              console.log(typeof data.transactionId);
-              console.log(typeof data.amount);
-              console.log(typeof data.cardNumber);
-              res.end('Payment was successful.')})
+          .then(async adata => {
+              // console.log(typeof data.factorNumber);
+              // console.log(typeof data.transactionId);
+              // console.log(typeof data.amount);
+              // console.log(typeof data.cardNumber);
+              // res.end('Payment was successful.')
+
+              //find req
+              const request = await Request.findRequestByFactorNumber(req.body.factorNumber);
+              //set it to paid
+              request.paid = true;
+              //save pay
+              await request.save();
+              res.status(200).json({
+                  msg: 'PAYMENT_WAS_SUCCESSFULLY'
+              });
+              })
           .catch(error => res.end("<head><meta charset='utf8'></head>" + error));
   }  catch (err) {
       console.log(err);
