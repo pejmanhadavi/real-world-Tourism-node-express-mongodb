@@ -6,6 +6,7 @@ const gateway = new Payir('test');
 
 const {Request} = require('../dao/request');
 const {TourLeader} = require('../dao/tour_leader');
+const {Pay} = require('../dao/pay');
 
 /*****************************
  * PAY CONTROLLER
@@ -34,7 +35,7 @@ exports.pay = async (req, res) => {
 exports.verifyPay = (req, res) => {
   try{
       gateway.verify(req.body)
-          .then(async adata => {
+          .then(async data => {
               // console.log(typeof data.factorNumber);
               // console.log(typeof data.transactionId);
               // console.log(typeof data.amount);
@@ -42,16 +43,16 @@ exports.verifyPay = (req, res) => {
               // res.end('Payment was successful.')
 
               //find req
-              const request = await Request.findRequestByFactorNumber(req.body.factorNumber);
+              const request = await Request.findRequestByFactorNumber(data.factorNumber);
               //set it to paid
               request.paid = true;
               //save pay
               await request.save();
+              await Pay.savePayment(data);
               res.status(200).json({
                   msg: 'PAYMENT_WAS_SUCCESSFULLY'
               });
-              })
-          .catch(error => res.end("<head><meta charset='utf8'></head>" + error));
+              });
   }  catch (err) {
       console.log(err);
       handleError(res, buildErrObject(err.code, err.message));
