@@ -4,6 +4,9 @@ const {buildErrObject, handleError} = require('../services/error_handler');
 const Payir = require('payir');
 const gateway = new Payir('test');
 
+const {Request} = require('../dao/request');
+const {TourLeader} = require('../dao/tour_leader');
+
 /*****************************
  * PAY CONTROLLER
  * @param req
@@ -12,11 +15,16 @@ const gateway = new Payir('test');
  */
 exports.pay = async (req, res) => {
   try{
-
-      gateway.send(1000, 'http:/127.0.0.1:3000/request/pay/verify', '65412311')
-          .then(link => res.redirect(link))
-          .catch(error => res.end("<head><meta charset='utf8'></head>" + error));
-
+      const userId = await isIDGood(req.user._id);
+      const requestId = await isIDGood(req.params.requestId);
+      const request = await Request.findRequestForPay(requestId, userId);
+      const tourLeaderId = request.tourLeader;
+      const costPerDay = await TourLeader.getTourLeaderCostPerDay(tourLeaderId);
+      const maxDayOccupancy = request.maxDayOccupancy;
+      const amount = costPerDay * maxDayOccupancy;
+      console.log(amount);
+      const link = await gateway.send(amount, 'http:/127.0.0.1:3000/request/pay/verify');
+      res.redirect(link);
   } catch(err) {
       console.log(err);
       handleError(res, buildErrObject(err.code, err.message));

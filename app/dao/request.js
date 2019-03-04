@@ -166,7 +166,7 @@ requestSchema.statics.findRequestByUserId = (requestId, userId) => {
 			.then(result => {
 				if (!result)
 					resolve(false);
-				resolve(true);
+				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -238,6 +238,26 @@ requestSchema.statics.setRate = requestId => {
 				});
 			})
 			.catch(err => reject(buildErrObject(422, 'NOT_FOUND')));
+	});
+};
+
+//FIND REQUEST FOR PAY
+requestSchema.statics.findRequestForPay = (requestId, userId) => {
+	return new Promise((resolve, reject) => {
+		Request.findOne({
+			_id: requestId,
+			user: userId,
+			tourLeaderFirstValidate: true,
+			userFinalValidate: true,
+			tourLeaderFinalValidate: true,
+			paid: false
+		})
+			.then(result => {
+				if (!result)
+					resolve(false);
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
 /**************************
