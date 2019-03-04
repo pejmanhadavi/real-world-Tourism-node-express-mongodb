@@ -7,6 +7,7 @@ const tourLeaderRouter = require('../app/routes/tour_leader');
 const requestRoute = require('../app/routes/request');
 const messageRoute = require('../app/routes/message');
 const rateRoute = require('../app/routes/rate');
+const payRoute = require('../app/routes/pay');
 
 
 module.exports = app => {
@@ -21,4 +22,5 @@ module.exports = app => {
     app.use('/request', requestRoute);
     app.use('/message', messageRoute);
     app.use('/rate', rateRoute);
+    app.use('/pay', payRoute);
 };

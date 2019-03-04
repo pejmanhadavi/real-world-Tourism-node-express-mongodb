@@ -5,9 +5,10 @@ const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', {
 	session: false
 });
-
 const validate = require('../validations/request');
 const controller = require('../controllers/request');
+
+
 /*
 ROUTES
  */
@@ -22,9 +23,6 @@ router.get('/userFinalValidate/:requestId', requireAuth, validate.tourLeaderVali
 router.post('/userSatisfaction/:requestId', requireAuth, validate.satisfaction, controller.userSatisfaction);
 
 router.post('/tourLeaderSatisfaction/:requestId', requireAuth, validate.satisfaction, controller.tourLeaderSatisfaction);
-
-// router.post('/pay', validate.pay, controller.pay);
-
 
 module.exports = router;
 
