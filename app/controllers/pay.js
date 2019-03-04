@@ -36,17 +36,8 @@ exports.verifyPay = (req, res) => {
   try{
       gateway.verify(req.body)
           .then(async data => {
-              // console.log(typeof data.factorNumber);
-              // console.log(typeof data.transactionId);
-              // console.log(typeof data.amount);
-              // console.log(typeof data.cardNumber);
-              // res.end('Payment was successful.')
-
-              //find req
               const request = await Request.findRequestByFactorNumber(data.factorNumber);
-              //set it to paid
               request.paid = true;
-              //save pay
               await request.save();
               await Pay.savePayment(data);
               res.status(200).json({
