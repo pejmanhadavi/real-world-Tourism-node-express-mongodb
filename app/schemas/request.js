@@ -55,6 +55,10 @@ const requestSchema = new Schema({
 	rated: {
 		type: Boolean,
 		default: false
+	},
+	factorNumber: {
+		type: Number,
+		default: Date.now
 	}
 }, {
 	timestamps: true

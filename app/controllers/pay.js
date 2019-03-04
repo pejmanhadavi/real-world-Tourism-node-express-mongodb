@@ -22,8 +22,7 @@ exports.pay = async (req, res) => {
       const costPerDay = await TourLeader.getTourLeaderCostPerDay(tourLeaderId);
       const maxDayOccupancy = request.maxDayOccupancy;
       const amount = costPerDay * maxDayOccupancy;
-      console.log(amount);
-      const link = await gateway.send(amount, 'http:/127.0.0.1:3000/request/pay/verify');
+      const link = await gateway.send(amount, 'http:/127.0.0.1:3000/pay/verify', request.factorNumber);
       res.redirect(link);
   } catch(err) {
       console.log(err);
@@ -36,10 +35,10 @@ exports.verifyPay = async (req, res) => {
   try{
       gateway.verify(req.body)
           .then(data => {
-              console.log(data.factorNumber);
-              console.log(data.transactionId);
-              console.log(data.amount);
-              console.log(data.cardNumber);
+              console.log(typeof data.factorNumber);
+              console.log(typeof data.transactionId);
+              console.log(typeof data.amount);
+              console.log(typeof data.cardNumber);
               res.end('Payment was successful.')})
           .catch(error => res.end("<head><meta charset='utf8'></head>" + error));
   }  catch (err) {

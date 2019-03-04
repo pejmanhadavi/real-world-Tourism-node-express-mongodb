@@ -11,9 +11,9 @@ const valdiate = require('../validations/pay');
 
 
 
-router.post('/:requestId', requireAuth, controller.pay);
+router.get('/:requestId', requireAuth, controller.pay);
 
-router.post('/verify', requireAuth, controller.verifyPay);
+router.post('/verify' , controller.verifyPay);
 
 
 module.exports = router;
