@@ -57,7 +57,7 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = async (req, forgotPass) =
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				resolve({
 					msg: 'PASSWORD_CHANGED'
-				})
+				});
 			})
 			.catch(err =>reject(buildErrObject(422, err.message)));
 	});
@@ -72,7 +72,7 @@ forgotPasswordSchema.statics.deleteUnusedForgotPasswords = email => {
 		})
 			.then(result => {
 				if (!result)
-					console.log('THERE_IS_NO_FORGOT_PASSWORD');
+					reject(buildErrObject(404 , 'NOT_FOUND'));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

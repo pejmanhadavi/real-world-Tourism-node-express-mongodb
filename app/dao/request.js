@@ -237,7 +237,7 @@ requestSchema.statics.setRate = requestId => {
 					msg: 'REQUEST_RATED'
 				});
 			})
-			.catch(err => reject(buildErrObject(422, 'NOT_FOUND')));
+			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
 

@@ -144,7 +144,6 @@ exports.token = async (req, res) => {
 		res.status(200).json(response);
 
 	}catch (err) {
-		console.log(err);
 		handleError(res, buildErrObject(err.code, err.message));
 	}
 };
