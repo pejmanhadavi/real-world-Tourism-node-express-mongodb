@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res) {
-	res.render('index', { title: 'Express' });
+require('../../init/passport');
+const passport = require('passport');
+const requireAuth = passport.authenticate('jwt', {
+	session: false
 });
+
+const controller = require('../controllers/index');
+/*
+ROUTES
+ */
+router.get('/',controller.mainPage);
+
 
 module.exports = router;

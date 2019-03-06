@@ -156,6 +156,7 @@ tourLeaderSchema.statics.getTourLeaderCostPerDay = id => {
 	});
 };
 
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/
