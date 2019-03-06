@@ -1,4 +1,6 @@
 const {buildErrObject, handleError} = require('../services/error_handler');
+const {isIDGood} = require('./base');
+
 const {TourLeader}  = require('../dao/tour_leader');
 const {Rate} = require('../dao/rate');
 const {User} = require('../dao/user');
@@ -28,14 +30,22 @@ exports.mainPage  = async (req, res) => {
 };
 
 
-
+/***********************
+ *  LOGGED IN CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.loggedIn = async (req, res) => {
   try{
-      const userId = req.user._id;
+      const userId = await isIDGood(req.user._id);
+
       const tourLeaders = await TourLeader.find({verified: true},'costPerDay _id user')
           .populate('user', '_id name city motto profileImages');
+
       const rates = await Rate.find({},'tourLeader user comment star');
       const userInfo = await User.findById(userId, 'name profileImages');
+
       const unreadMessages = await Message.count({author: {$ne: userId}})
           .populate({
               path: 'Request',
@@ -50,6 +60,32 @@ exports.loggedIn = async (req, res) => {
       });
 
   }  catch (err) {
+      handleError(res, buildErrObject(err.code, err.message));
+  }
+};
+
+/***************************
+ * ME CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.me = async (req, res) => {
+  try{
+      const userId = await isIDGood(req.user._id)
+      const userInfo = await User.findById(userId, 'profileImages name motto languages');
+      const tourLeaderInfo = await TourLeader.findOne({user: userId}, 'const _id');
+      let rate = null;
+      if (tourLeaderInfo)
+         rate = await Rate.find({tourLeader: tourLeaderInfo._id}, 'star comment');
+
+      res.status(200).json({
+         userInfo: userInfo,
+         tourLeaderInfo: tourLeaderInfo,
+         rate: rate
+      });
+  }  catch (err) {
       console.log(err);
+      handleError(res, buildErrObject(err.code, err.message));
   }
 };
