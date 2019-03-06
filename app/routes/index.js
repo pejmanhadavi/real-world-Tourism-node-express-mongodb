@@ -12,5 +12,6 @@ ROUTES
  */
 router.get('/',controller.mainPage);
 
+router.get('/loggedIn', requireAuth, controller.loggedIn);
 
 module.exports = router;
