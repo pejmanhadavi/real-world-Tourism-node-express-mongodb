@@ -72,7 +72,7 @@ exports.loggedIn = async (req, res) => {
  */
 exports.me = async (req, res) => {
   try{
-      const userId = await isIDGood(req.user._id)
+      const userId = await isIDGood(req.user._id);
       const userInfo = await User.findById(userId, 'profileImages name motto languages');
       const tourLeaderInfo = await TourLeader.findOne({user: userId}, 'const _id');
       let rate = null;
@@ -83,6 +83,26 @@ exports.me = async (req, res) => {
          userInfo: userInfo,
          tourLeaderInfo: tourLeaderInfo,
          rate: rate
+      });
+  }  catch (err) {
+      handleError(res, buildErrObject(err.code, err.message));
+  }
+};
+
+/**************************
+ * PROFILE CONTROLLER
+ * @param req
+ * @param res
+ */
+exports.profileSetting = async (req, res) => {
+  try{
+      const userId = await isIDGood(req.user._id);
+      const userInfo = await User.findById(userId, 'profileImages name motto languages city aboutMe iWillShowYou email phone');
+      const tourLeaderInfo = await TourLeader.findOne({user: userId}, 'const _id');
+
+      res.status(200).json({
+          userInfo: userInfo,
+          tourLeaderInfo: tourLeaderInfo
       });
   }  catch (err) {
       console.log(err);

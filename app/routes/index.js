@@ -16,4 +16,6 @@ router.get('/loggedIn', requireAuth, controller.loggedIn);
 
 router.get('/me', requireAuth, controller.me);
 
+router.get('/profileSetting', requireAuth, controller.profileSetting);
+
 module.exports = router;
