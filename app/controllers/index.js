@@ -105,6 +105,30 @@ exports.profileSetting = async (req, res) => {
           tourLeaderInfo: tourLeaderInfo
       });
   }  catch (err) {
+      handleError(res, buildErrObject(err.code, err.message));
+  }
+};
+
+/****************************
+ * TOUR LEADER PAGE CONTROLLER
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+exports.tourLeaderPage = async (req, res) => {
+  try{
+      const id = await isIDGood(req.params.userId);
+      const tourLeader = await TourLeader.findOne({user: id}, '_id cost');
+      if (tourLeader === null)
+          res.status(404).json({error: {code: 404, message: 'NOT_FOUND'}}).end();
+      const userInfo = await User.findById(id, 'name city motto profileImages iWillShowYou aboutMe languages travelFacilities');
+      const rate = await Rate.find({tourLeader: tourLeader._id}, '-updatedAt');
+      res.status(200).json({
+         tourLeaderInfo: tourLeader,
+         userInfo : userInfo,
+          rate: rate
+      });
+  }  catch (err) {
       console.log(err);
       handleError(res, buildErrObject(err.code, err.message));
   }

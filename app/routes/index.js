@@ -18,4 +18,6 @@ router.get('/me', requireAuth, controller.me);
 
 router.get('/profileSetting', requireAuth, controller.profileSetting);
 
+router.get('/tourLeader/:userId', requireAuth, controller.tourLeaderPage);
+
 module.exports = router;
