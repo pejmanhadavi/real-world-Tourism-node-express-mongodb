@@ -11,7 +11,7 @@ const {generateToken} = require('../services/auth');
  * STATICS *
  ******************/
 //SAVE USER REFRESH TOKEN
-userRefreshSchema.statics.saveUserRefreshAndReturnToken = async (req, user) => {
+userRefreshSchema.statics.saveUserRefreshAndReturnToken = (req, user) => {
 	return new Promise((resolve, reject) => {
 		const refreshToken = randToken.uid(256);
 		const userRefresh = new UserRefresh({

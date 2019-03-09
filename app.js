@@ -1,4 +1,5 @@
-require('dotenv-safe').config();process.env.EMAIL_FROM_NAME;
+require('dotenv-safe').config();
+const {handleError, buildErrObject} = require('./app/services/error_handler');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -34,13 +35,15 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-	// set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-	// render the error page
-	res.status(err.status || 500);
-	res.render('error');
+	// // set locals, only providing error in development
+	// res.locals.message = err.message;
+	// res.locals.error = req.app.get('env') === 'development' ? err : {};
+	//
+	// // render the error page
+	// res.status(err.status || 500);
+	// res.render('error');
+	// console.log(err);
+	handleError(res, buildErrObject(err.code, err.message));
 });
 
 module.exports = app;

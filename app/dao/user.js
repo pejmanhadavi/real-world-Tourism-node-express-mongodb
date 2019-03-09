@@ -65,7 +65,7 @@ userSchema.statics.setUserInfo = data => {
 };
 
 //CHECK EMAIL VERIFICATION EXISTS
-userSchema.statics.verificationExists = async verification => {
+userSchema.statics.verificationExists = verification => {
 	return new Promise((resolve, reject) => {
 		User.findOne(
 			{
@@ -83,7 +83,7 @@ userSchema.statics.verificationExists = async verification => {
 
 
 //VERIFY USER
-userSchema.statics.verifyUser = async user => {
+userSchema.statics.verifyUser = user => {
 	return new Promise((resolve, reject) => {
 		user.verified = true;
 		user.save()
@@ -99,7 +99,7 @@ userSchema.statics.verifyUser = async user => {
 };
 
 //FIND USER BY EMAIL
-userSchema.statics.findUserByEmail = async email => {
+userSchema.statics.findUserByEmail = email => {
 	return new Promise((resolve, reject) => {
 		User.findOne(
 			{
@@ -118,7 +118,7 @@ userSchema.statics.findUserByEmail = async email => {
 
 
 //UPDATE NEW PASSWORD
-userSchema.statics.updatePassword = async (user, newPassword) => {
+userSchema.statics.updatePassword = (user, newPassword) => {
 	return new Promise(async (resolve, reject) => {
 		const salt = await bcrypt.genSalt(10);
 		let hashPassword = await bcrypt.hash(newPassword, salt);
@@ -134,7 +134,7 @@ userSchema.statics.updatePassword = async (user, newPassword) => {
 
 
 //CHECK LOGIN ATTEMTPS AND BLOCK EXPIRES
-userSchema.statics.checkLoginAttemptsAndBlockExpires = async user => {
+userSchema.statics.checkLoginAttemptsAndBlockExpires = user => {
 	return new Promise((resolve, reject) => {
 		if(blockIsExpired(user)){
 			user.loginAttempts = 0;
@@ -149,21 +149,21 @@ userSchema.statics.checkLoginAttemptsAndBlockExpires = async user => {
 
 
 //PASSWORDS DO NOT MATCH
-userSchema.statics.passwordsDoNotMatch = async user => {
-	user.loginAttempts += 1;
-	await this.saveLoginAttemptsToDB(user);
-	return new Promise(async (resolve, reject) => {
+userSchema.statics.passwordsDoNotMatch = user => {
+	return new Promise( async (resolve, reject) => {
+        user.loginAttempts += 1;
+        await saveLoginAttemptsToDB(user);
 		if (user.loginAttempts <= LOGIN_ATTEMPTS) {
 			reject(buildErrObject(409, 'WRONG_PASSWORD'));
 		} else {
-			reject(await blockUser(user));
+			reject(buildErrObject(409, await blockUser(user)));
 		}
-		reject(err => buildErrObject(422, err.message));
+		reject(buildErrObject(422, 'ERROR'));
 	});
 };
 
 //CHECK PASSWORD
-userSchema.statics.checkPassword = async (password, user) => {
+userSchema.statics.checkPassword = (password, user) => {
 	return new Promise((resolve, reject) => {
 		User.comparePassword(password, user.password, (err, isMatch) => {
 			if (err) {
@@ -185,7 +185,7 @@ userSchema.statics.comparePassword = (passwordAttempt, password, cb) => {
 };
 
 //USER IS BLOCKED
-userSchema.statics.userIsBlocked = async user => {
+userSchema.statics.userIsBlocked = user => {
 	return new Promise((resolve, reject) => {
 		if(user.blockExpires > new Date())
 			reject(buildErrObject(409, 'BLOCKED_USER'));
@@ -195,7 +195,7 @@ userSchema.statics.userIsBlocked = async user => {
 
 
 //GET PROFILE FROM DB
-userSchema.statics.getProfileFromDB = async id => {
+userSchema.statics.getProfileFromDB = id => {
 	return new Promise((resolve, reject) => {
 		User.findById(id, '-_id -updatedAt -createdAt -loginAttempts -verified -blockExpires -verification -password')
 			.then(result => {
@@ -209,7 +209,7 @@ userSchema.statics.getProfileFromDB = async id => {
 
 
 //UPDATE PROFILE IN DB
-userSchema.statics.updateProfileInDB = async (req, id) => {
+userSchema.statics.updateProfileInDB = (req, id) => {
 	return new Promise((resolve, reject) => {
 		delete req.body._id;
 		delete req.body.email;
@@ -231,7 +231,7 @@ userSchema.statics.updateProfileInDB = async (req, id) => {
 };
 
 
-userSchema.statics.updatePasswordInProfile = async (req, id) => {
+userSchema.statics.updatePasswordInProfile = (req, id) => {
 	return new Promise((resolve, reject) => {
 		User.findById(id)
 			.then(async result => {
@@ -362,18 +362,17 @@ const blockIsExpired = (user) =>
 
 
 //BLOCK USER
-const blockUser = async user => {
+const blockUser = user => {
 	return new Promise((resolve, reject) => {
 		user.blockExpires = dateFns.addHours(new Date(), HOURS_TO_BLOCK);
 		user.save()
-			.then(() => reject(buildErrObject(409, 'BLOCKED_USER')))
+			.then(() => resolve('USER_BLOCKED'))
 			.catch(err => reject(buildErrObject(422, err.message)));
-
 	});
 };
 
 //SAVE LOGIN ATTEMPTS
-exports.saveLoginAttemptsToDB = async user => {
+const saveLoginAttemptsToDB = user => {
 	return new Promise((resolve, reject) => {
 		user.save()
 			.then(result => resolve(result))

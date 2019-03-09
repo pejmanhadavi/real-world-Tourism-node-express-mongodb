@@ -1,0 +1,4 @@
+-delete async from dao files
+-block user
+-edit handle error
+-edit response pattern

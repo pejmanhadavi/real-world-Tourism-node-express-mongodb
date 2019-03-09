@@ -11,7 +11,7 @@ const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access
  */
 
 //SAVE FORGOT PASSWORD
-forgotPasswordSchema.statics.saveForgotPassword = async req => {
+forgotPasswordSchema.statics.saveForgotPassword = req => {
 	return new Promise((resolve, reject) => {
 		const forgot = new ForgotPassword({
 			email: req.body.email,
@@ -28,7 +28,7 @@ forgotPasswordSchema.statics.saveForgotPassword = async req => {
 };
 
 //FIND FORGOT PASSWORD
-forgotPasswordSchema.statics.findForgotPassword = async verification => {
+forgotPasswordSchema.statics.findForgotPassword = verification => {
 	return new Promise((resolve, reject) => {
 		ForgotPassword.findOne(
 			{
@@ -45,7 +45,7 @@ forgotPasswordSchema.statics.findForgotPassword = async verification => {
 };
 
 
-forgotPasswordSchema.statics.markResetPasswordAsUsed = async (req, forgotPass) => {
+forgotPasswordSchema.statics.markResetPasswordAsUsed = (req, forgotPass) => {
 	return new Promise((resolve, reject) => {
 		forgotPass.used = true;
 		forgotPass.ipChanged = getIP(req);
