@@ -25,7 +25,7 @@ exports.mainPage  = async (req, res, next) => {
 			tourLeaders: tourLeaders,
 			rates: rates
 		};
-		handleResponse(res, 200, 'DONE', data);
+		handleResponse(res, 200, 'MAIN_PAGE', data);
 
 	}  catch (err) {
 		next(err);
@@ -56,12 +56,13 @@ exports.loggedIn = async (req, res, next) => {
 				match: {$or: [{user: userId}, {tourLeaderUserId: userId}]}
 			});
 
-		res.status(200).json({
+		const data = {
 			tourLeaders: tourLeaders,
 			rates: rates,
 			userInfo: userInfo,
 			unreadMessages: unreadMessages
-		});
+		};
+		handleResponse(res, 200, 'LOGGED_IN_MAIN_PAGE', data);
 
 	}  catch (err) {
 		next(err);
@@ -84,11 +85,12 @@ exports.me = async (req, res, next) => {
 		if (tourLeaderInfo)
 			rate = await Rate.find({tourLeader: tourLeaderInfo._id}, 'star comment');
 
-		res.status(200).json({
+		const data = {
 			userInfo: userInfo,
 			tourLeaderInfo: tourLeaderInfo,
 			rate: rate
-		});
+		};
+		handleResponse(res, 200, 'ME_PAGE', data);
 	}  catch (err) {
 		next(err);
 	}
@@ -106,10 +108,11 @@ exports.profileSetting = async (req, res, next) => {
 		const userInfo = await User.findById(userId, 'profileImages name motto languages city aboutMe iWillShowYou email phone');
 		const tourLeaderInfo = await TourLeader.findOne({user: userId}, 'const _id');
 
-		res.status(200).json({
+		const data = {
 			userInfo: userInfo,
 			tourLeaderInfo: tourLeaderInfo
-		});
+		};
+		handleResponse(res, 200, 'PROFILE_PAGE', data);
 	}  catch (err) {
 		next(err);
 	}
@@ -130,11 +133,13 @@ exports.tourLeaderPage = async (req, res, next) => {
 			res.status(404).json({error: {code: 404, message: 'NOT_FOUND'}}).end();
 		const userInfo = await User.findById(id, 'name city motto profileImages iWillShowYou aboutMe languages travelFacilities');
 		const rate = await Rate.find({tourLeader: tourLeader._id}, '-updatedAt');
-		res.status(200).json({
+		const data = {
 			tourLeaderInfo: tourLeader,
 			userInfo : userInfo,
 			rate: rate
-		});
+		};
+
+		handleResponse(res, 200, 'TOUR_LEADER_PAGE', data);
 	}  catch (err) {
 		next(err);
 	}
