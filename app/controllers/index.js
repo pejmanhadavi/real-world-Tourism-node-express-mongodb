@@ -4,6 +4,7 @@ const {TourLeader}  = require('../dao/tour_leader');
 const {Rate} = require('../dao/rate');
 const {User} = require('../dao/user');
 const {Message} = require('../dao/message');
+const {handleResponse}  = require('../services/response_handler');
 
 
 /************************
@@ -19,10 +20,13 @@ exports.mainPage  = async (req, res, next) => {
 		const tourLeaders = await TourLeader.find({verified: true},'costPerDay _id user')
 			.populate('user', '_id name city motto profileImages');
 		const rates = await Rate.find({},'tourLeader user comment star');
-		res.status(200).json({
+
+		const data =  {
 			tourLeaders: tourLeaders,
 			rates: rates
-		});
+		};
+		handleResponse(res, 200, 'DONE', data);
+
 	}  catch (err) {
 		next(err);
 	}
