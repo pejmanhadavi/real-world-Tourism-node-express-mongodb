@@ -36,7 +36,7 @@ userRefreshSchema.statics.saveUserRefreshAndReturnToken = (req, user) => {
 };
 
 //FIND REFRESH TOKEN AND RETURN USER ID
-userRefreshSchema.statics.findRefreshAndReturnUserId = async refreshToken => {
+userRefreshSchema.statics.findRefreshAndReturnUserId = refreshToken => {
 	return new Promise((resolve, reject) => {
 		UserRefresh.findOne({
 			refreshToken: refreshToken

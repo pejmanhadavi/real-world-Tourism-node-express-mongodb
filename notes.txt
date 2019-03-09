@@ -1,4 +1,4 @@
--delete async from dao files
--block user
+-delete async from dao files => done
+-block user => done
 -edit handle error
 -edit response pattern
