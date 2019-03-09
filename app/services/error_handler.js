@@ -3,13 +3,12 @@
 exports.handleError = (res, err)=>{
 	//send errors to user
 	res.status(err.code).json({
-		errors: {
-			msg: err.message
-		}
+		success: false,
+		message: err.message,
+		data: null,
+		time: new Date(Date.now()),
+		code: err.code
 	});
-
-	//errors in console
-	console.log(err);
 };
 
 //BUILD ERROR
