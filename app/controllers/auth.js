@@ -5,6 +5,7 @@ const {ForgotPassword, forgotPasswordResponse} = require('../dao/forgot_password
 const {UserRefresh} = require('../dao/user_refresh');
 const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('../services/send_email');
 const {generateToken} = require('../services/auth');
+const {handleResponse} = require('../services/response_handler');
 
 
 /**************************************
@@ -22,7 +23,7 @@ exports.register = async(req, res, next) => {
 		const userInfo = User.setUserInfo(user);
 		const response = user.returnRegistrationToken(user, userInfo);
 		sendRegistrationEmailMessage(user);
-		res.status(201).json(response);
+		handleResponse(res, 201, 'USER_REGISTERED_VERIFY_EMAIL', response);
 	}catch(err){
 		next(err);
 	}
@@ -40,7 +41,7 @@ exports.verify = async (req, res, next) => {
 	try {
 		const user = await User.verificationExists(req.params.verification);
 		const response = await User.verifyUser(user);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'EMAIL_VERIFIED_NOW_LOGIN', response);
 	} catch (err) {
 		next(err);
 	}
@@ -59,8 +60,7 @@ exports.forgotPassword = async (req, res, next) => {
 		await User.findUserByEmail(data.email);
 		const forgotPass = await ForgotPassword.saveForgotPassword(req);
 		sendResetPasswordEmailMessage(forgotPass);
-		const response = forgotPasswordResponse();
-		res.status(200).json(response);
+		handleResponse(res, 200, 'RESET_EMAIL_SENT', data.email);
 	}catch (err) {
 		next(err);
 	}
@@ -77,8 +77,8 @@ exports.forgotPassword = async (req, res, next) => {
 exports.getResetPassword = async (req, res, next) => {
 	try{
 		await ForgotPassword.findForgotPassword(req.params.verification);
-		res.status(200).json({
-			msg: 'NOW_RESET_PASSWORD'
+		handleResponse(res, 200, 'RESET_PASSWORD_PAGE', {
+			msg:'RESET_PASSWORD'
 		});
 	}catch (err) {
 		next(err);
@@ -100,7 +100,7 @@ exports.postResetPassword = async (req, res, next) => {
 		await User.updatePassword(user, data.password);
 		const result = await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
 		await ForgotPassword.deleteUnusedForgotPasswords(forgotPassword.email);
-		res.status(200).json(result);
+		handleResponse(res, 200, 'PASSWORD_CHANGED', result);
 	}catch (err) {
 		next(err);
 	}
@@ -128,7 +128,7 @@ exports.login = async (req, res, next) => {
 			user.loginAttempts = 0;
 			await saveLoginAttemptsToDB(user);
 			const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
-			res.status(200).json(response);
+			handleResponse(res, 200, 'LOGGED_IN', response);
 		}
 	} catch (err) {
 		next(err);
@@ -149,7 +149,7 @@ exports.token = async (req, res, next) => {
 		const response = {
 			token: generateToken(userId),
 		};
-		res.status(200).json(response);
+		handleResponse(res, 200, 'TOKEN_REFRESHED', response);
 
 	}catch (err) {
 		next(err);

@@ -56,7 +56,7 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = (req, forgotPass) => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				resolve({
-					msg: 'PASSWORD_CHANGED'
+					email: result.email
 				});
 			})
 			.catch(err =>reject(buildErrObject(422, err.message)));
