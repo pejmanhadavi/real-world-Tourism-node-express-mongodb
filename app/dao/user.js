@@ -151,8 +151,8 @@ userSchema.statics.checkLoginAttemptsAndBlockExpires = user => {
 //PASSWORDS DO NOT MATCH
 userSchema.statics.passwordsDoNotMatch = user => {
 	return new Promise( async (resolve, reject) => {
-        user.loginAttempts += 1;
-        await saveLoginAttemptsToDB(user);
+		user.loginAttempts += 1;
+		await this.saveLoginAttemptsToDB(user);
 		if (user.loginAttempts <= LOGIN_ATTEMPTS) {
 			reject(buildErrObject(409, 'WRONG_PASSWORD'));
 		} else {
@@ -372,7 +372,7 @@ const blockUser = user => {
 };
 
 //SAVE LOGIN ATTEMPTS
-const saveLoginAttemptsToDB = user => {
+exports.saveLoginAttemptsToDB = user => {
 	return new Promise((resolve, reject) => {
 		user.save()
 			.then(result => resolve(result))

@@ -1,5 +1,4 @@
 const {isIDGood} = require('./base');
-const {buildErrObject, handleError} = require('../services/error_handler');
 
 const {Message} = require('../dao/message');
 const {TourLeader} = require('../dao/tour_leader');
@@ -9,9 +8,10 @@ const {Request} = require('../dao/request');
  * SEND MESSAGE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res, next) => {
 	try {
 		const userId = await isIDGood(req.user._id);
 		const requestId = await isIDGood(req.params.requestId);
@@ -24,7 +24,7 @@ exports.sendMessage = async (req, res) => {
 		const response = await Message.saveMessage(requestId, userId, req.body.body);
 		res.status(200).json(response);
 	}  catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -32,9 +32,10 @@ exports.sendMessage = async (req, res) => {
  * READ MESSAGE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.readMessage = async (req, res) => {
+exports.readMessage = async (req, res, next) => {
 	try {
 		const messageId = await isIDGood(req.params.messageId);
 		const userId = await isIDGood(req.user._id);
@@ -49,6 +50,6 @@ exports.readMessage = async (req, res) => {
 		const response = await Message.updateMessageToRead(messageId);
 		res.status(200).json(response);
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };

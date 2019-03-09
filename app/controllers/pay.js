@@ -1,5 +1,4 @@
 const {isIDGood} = require('./base');
-const {buildErrObject, handleError} = require('../services/error_handler');
 
 const Payir = require('payir');
 const gateway = new Payir('test');
@@ -12,9 +11,10 @@ const {Pay} = require('../dao/pay');
  * PAY CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.pay = async (req, res) => {
+exports.pay = async (req, res, next) => {
 	try{
 		const userId = await isIDGood(req.user._id);
 		const requestId = await isIDGood(req.params.requestId);
@@ -26,12 +26,17 @@ exports.pay = async (req, res) => {
 		const link = await gateway.send(amount, 'http:/127.0.0.1:3000/pay/verify', request.factorNumber);
 		res.redirect(link);
 	} catch(err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
-
-exports.verifyPay = (req, res) => {
+/*****************************
+ * VERIFY PAY
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.verifyPay = (req, res, next) => {
 	try{
 		gateway.verify(req.body)
 			.then(async data => {
@@ -44,6 +49,6 @@ exports.verifyPay = (req, res) => {
 				});
 			});
 	}  catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };

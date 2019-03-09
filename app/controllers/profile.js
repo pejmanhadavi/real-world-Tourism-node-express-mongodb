@@ -1,5 +1,4 @@
 const {isIDGood} = require('./base');
-const {buildErrObject, handleError} = require('../services/error_handler');
 const {resizeImage} = require('../services/resize_image');
 const {User} = require('../dao/user');
 
@@ -8,14 +7,15 @@ const {User} = require('../dao/user');
  * GET_PROFILE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.getProfile = async (req, res) => {
+exports.getProfile = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		res.status(200).json(await User.getProfileFromDB(id));
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -24,14 +24,15 @@ exports.getProfile = async (req, res) => {
  * UPDATE_PROFILE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<*>}
  */
-exports.updateProfile = async (req, res) => {
+exports.updateProfile = async (req, res, next) => {
 	try {
 		const id = await isIDGood(req.user._id);
 		res.status(200).json(await User.updateProfileInDB(req, id));
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -40,14 +41,15 @@ exports.updateProfile = async (req, res) => {
  * UPDATE PASSWORD CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.updatePassword = async (req, res) => {
+exports.updatePassword = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		res.status(200).json(await User.updatePasswordInProfile(req, id));
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -56,16 +58,17 @@ exports.updatePassword = async (req, res) => {
  * UPDATE PROFILE IMAGE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.updateProfileImage = async (req, res) => {
+exports.updateProfileImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		const response = await User.updateProfileImage(req, id);
 		resizeImage(response.profile);
 		res.status(200).json(response);
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -74,14 +77,15 @@ exports.updateProfileImage = async (req, res) => {
  * UPDATE BACKGROUND IMAGE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.updateBackgroundImage = async (req, res) => {
+exports.updateBackgroundImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		res.status(200).json(await User.updateBackgroundImage(req, id));
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -89,15 +93,16 @@ exports.updateBackgroundImage = async (req, res) => {
  * DELETE PROFILE IMAGE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.deleteProfileImage = async (req, res) => {
+exports.deleteProfileImage = async (req, res, next) => {
 	try {
 		const id = await isIDGood(req.user._id);
 		const result = await User.deleteProfileImage(id, req.params.profile);
 		res.status(200).json(result);
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
@@ -106,15 +111,16 @@ exports.deleteProfileImage = async (req, res) => {
  * DELETE BACKGROUND IMAGE CONTROLLER
  * @param req
  * @param res
+ * @param next
  * @returns {Promise<void>}
  */
-exports.deleteBackgroundImage = async (req, res) => {
+exports.deleteBackgroundImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		const result = await User.deleteBackgroundImage(id);
 		res.status(200).json(result);
 	}catch (err) {
-		handleError(res, buildErrObject(err.code, err.message));
+		next(err);
 	}
 };
 
