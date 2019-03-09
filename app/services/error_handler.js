@@ -1,5 +1,5 @@
 
-//HADNLE ERROR
+//HANDLE ERROR
 exports.handleError = (res, err)=>{
 	//send errors to user
 	res.status(err.code).json({
