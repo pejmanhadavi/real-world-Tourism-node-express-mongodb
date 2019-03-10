@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 
 const {Request} = require('../app/dao/request');
-const {Message} = require('../app/dao/message');
 const {Rate} = require('../app/dao/rate');
 
 const tourLeader = {
@@ -24,7 +23,6 @@ const server = require('../bin/www').server;
 let userToken;
 let tourLeaderToken;
 let requestId;
-let messageId;
 let rateId;
 
 const request = {
@@ -160,40 +158,6 @@ describe('*********** REQUEST ***********', () => {
 });
 
 
-describe('*********** MESSAGE ***********', () => {
-    describe('POST message', () => {
-        it('should POST request', done => {
-            chai
-                .request(server)
-                .post('/message/'+requestId)
-                .send({
-                    body: 'test message *******'
-                })
-                .set('Authorization', `Bearer ${userToken}`)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    messageId = res.body.id;
-                   done();
-                });
-
-        });
-    });
-
-    describe('PUT message', () => {
-        it('should PUT read message', done => {
-            chai
-                .request(server)
-                .put('/message/'+messageId)
-                .set('Authorization', `Bearer ${tourLeaderToken}`)
-                .end((err, res) => {
-                   res.should.have.status(200);
-                   done()
-                });
-        });
-    });
-});
-
-
 describe('*********** RATE ***********', () => {
    describe('POST rate', () => {
        it('should POST rate', done => {
@@ -221,12 +185,6 @@ after(() => {
         {
             _id: requestId
         })
-        .then(result => console.log(result))
-        .catch(err => console.log(err));
-
-    Message.deleteOne({
-        _id: messageId
-    })
         .then(result => console.log(result))
         .catch(err => console.log(err));
     Rate.deleteOne({

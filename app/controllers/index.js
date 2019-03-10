@@ -3,7 +3,6 @@ const {isIDGood} = require('./base');
 const {TourLeader}  = require('../dao/tour_leader');
 const {Rate} = require('../dao/rate');
 const {User} = require('../dao/user');
-const {Message} = require('../dao/message');
 const {handleResponse}  = require('../services/response_handler');
 
 
@@ -50,17 +49,11 @@ exports.loggedIn = async (req, res, next) => {
 		const rates = await Rate.find({},'tourLeader user comment star');
 		const userInfo = await User.findById(userId, 'name profileImages');
 
-		const unreadMessages = await Message.count({author: {$ne: userId}})
-			.populate({
-				path: 'Request',
-				match: {$or: [{user: userId}, {tourLeaderUserId: userId}]}
-			});
 
 		const data = {
 			tourLeaders: tourLeaders,
 			rates: rates,
 			userInfo: userInfo,
-			unreadMessages: unreadMessages
 		};
 		handleResponse(res, 200, 'LOGGED_IN_MAIN_PAGE', data);
 
