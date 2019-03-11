@@ -20,8 +20,9 @@ requestSchema.statics.saveRequest = (req, userId, tourLeaderId, tourLeaderUserId
 		});
 		request.save()
 			.then(result => resolve({
-				msg: 'REQUEST_SAVED',
-				id: result._id
+				id: result._id,
+				user: userId,
+				tourLeader: tourLeaderId
 			}))
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -60,7 +61,7 @@ requestSchema.statics.tourLeaderFirstValidate = requestId => {
 				result.tourLeaderFirstValidate = true;
 				await result.save();
 				resolve({
-					msg: 'TOUR_LEADER_FIRST_VALIDATE'
+					id: result._id,
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -77,7 +78,7 @@ requestSchema.statics.tourLeaderFinalValidate = requestId => {
 				result.tourLeaderFinalValidate = true;
 				await result.save();
 				resolve({
-					msg: 'TOUR_LEADER_FINAL_VALIDATE'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -97,7 +98,7 @@ requestSchema.statics.userFinalValidate = (requestId, userId) => {
 				result.userFinalValidate = true;
 				await result.save();
 				resolve({
-					msg: 'USER_FINAL_VALIDATE'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -123,7 +124,7 @@ requestSchema.statics.userSatisfaction= (requestId, userId, satisfaction) => {
 				result.userSatisfaction = satisfaction;
 				await result.save();
 				resolve({
-					msg: 'USER_SATISFACTION'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -149,7 +150,7 @@ requestSchema.statics.tourLeaderSatisfaction= (requestId, tourLeaderId, satisfac
 				result.tourLeaderSatisfaction= satisfaction;
 				await result.save();
 				resolve({
-					msg: 'TOUR_LEADER_SATISFACTION'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

@@ -2,6 +2,7 @@ const {isIDGood} = require('./base');
 
 const {Request} = require('../dao/request');
 const {TourLeader} = require('../dao/tour_leader');
+const {handleResponse} = require('../services/response_handler');
 
 
 /****************************
@@ -18,7 +19,7 @@ exports.sendRequest = async (req, res, next) => {
 		await TourLeader.tourLeaderCheckForRequest(tourLeaderId);
 		const tourLeaderUserId = await TourLeader.getTourLeaderUserId(tourLeaderId);
 		const response = await Request.saveRequest(req, userId, tourLeaderId, tourLeaderUserId);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'MESSAGE_SENT', response);
 	}catch (err) {
 		next(err);
 	}
@@ -39,7 +40,7 @@ exports.tourLeaderFirstValidate = async (req, res, next) => {
 		const tourLeaderId = await TourLeader.getTourLeaderId(userId);
 		await Request.checkTourLeaderForRequest(requestId, tourLeaderId);
 		const response = await Request.tourLeaderFirstValidate(requestId);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'TOUR_LEADER_FIRST_VALIDATE', response);
 	}catch (err) {
 		next(err);
 	}
@@ -62,7 +63,7 @@ exports.tourLeaderFinalValidate = async (req, res, next) => {
 		const tourLeaderId = await TourLeader.getTourLeaderId(userId);
 		await Request.checkTourLeaderForRequest(requestId, tourLeaderId);
 		const response = await Request.tourLeaderFinalValidate(requestId);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'TOUR_LEADER_FINAL_VALIDATE', response);
 	}catch (err) {
 		next(err);
 	}
@@ -80,7 +81,7 @@ exports.userFinalValidate = async (req, res, next) => {
 		const userId = await isIDGood(req.user._id);
 		const requestId = await isIDGood(req.params.requestId);
 		const response = await Request.userFinalValidate(requestId, userId);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'USER_FINAL_VALIDATE', response);
 	}catch (err) {
 		next(err);
 	}
@@ -98,7 +99,7 @@ exports.userSatisfaction = async (req, res, next) => {
 		const userId = await isIDGood(req.user._id);
 		const requestId = await isIDGood(req.params.requestId);
 		const response = await Request.userSatisfaction(requestId, userId, req.body.satisfaction);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'USER_SATISFACTION', response);
 	}catch (err) {
 		next(err);
 	}
@@ -117,7 +118,7 @@ exports.tourLeaderSatisfaction = async (req, res, next) => {
 		const requestId = await isIDGood(req.params.requestId);
 		const tourLeaderId = await TourLeader.getTourLeaderId(userId);
 		const response = await Request.tourLeaderSatisfaction(requestId, tourLeaderId, req.body.satisfaction);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'TOUR_LEADER_SATISFACTION', response);
 	}catch (err) {
 		next(err);
 	}

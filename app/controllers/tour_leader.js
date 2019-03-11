@@ -1,5 +1,6 @@
 const {isIDGood} = require('./base');
 const {TourLeader} = require('../dao/tour_leader');
+const {handleResponse} = require('../services/response_handler');
 
 /****************
  * REGISTER TOUR LEADER
@@ -12,7 +13,8 @@ exports.registerTourLeader = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		await TourLeader.tourLeaderExists(id);
-		res.status(200).json(await TourLeader.registerTourLeader(req, id));
+		const response = await TourLeader.registerTourLeader(req, id);
+		handleResponse(res, 201, 'TOUR_LEADER_REGISTER_WAIT_UNTIL_VERIFY', response);
 	}catch (err) {
 		next(err);
 	}
@@ -30,7 +32,8 @@ exports.edit = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		await TourLeader.tourLeaderDoesNotExists(id);
-		res.status(200).json(await TourLeader.edit(req, id));
+		const response = await TourLeader.edit(req, id);
+		handleResponse(res, 200, 'TOUR_LEADER_EDITED', response);
 	}catch (err) {
 		next(err);
 	}

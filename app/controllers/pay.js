@@ -6,6 +6,7 @@ const gateway = new Payir('test');
 const {Request} = require('../dao/request');
 const {TourLeader} = require('../dao/tour_leader');
 const {Pay} = require('../dao/pay');
+const {handleResponse} = require('../services/response_handler');
 
 /*****************************
  * PAY CONTROLLER
@@ -43,10 +44,8 @@ exports.verifyPay = (req, res, next) => {
 				const request = await Request.findRequestByFactorNumber(data.factorNumber);
 				request.paid = true;
 				await request.save();
-				await Pay.savePayment(data);
-				res.status(200).json({
-					msg: 'PAYMENT_WAS_SUCCESSFULLY'
-				});
+				const response = await Pay.savePayment(data);
+				handleResponse(res, 200, 'SUCCESS_FULL_PAYMENT', response);
 			});
 	}  catch (err) {
 		next(err);

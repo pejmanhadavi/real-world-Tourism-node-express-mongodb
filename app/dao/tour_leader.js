@@ -72,12 +72,8 @@ tourLeaderSchema.statics.getTourLeaderUserId = id => {
 //EDIT
 tourLeaderSchema.statics.edit = (req, id) => {
 	return new Promise((resolve, reject) => {
-
 		if (!req.body.costPerDay && !req.body.costPerHalfDay)
 			reject(buildErrObject(422,'BAD_REQUEST'));
-
-
-
 		TourLeader.findOne({
 			user: id
 		})
@@ -93,7 +89,7 @@ tourLeaderSchema.statics.edit = (req, id) => {
 				await result.save();
 
 				resolve({
-					msg: 'UPDATED'
+					id: result._id
 				});
 			})
 			.catch(err =>
@@ -120,7 +116,6 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 			.then(result => {
 				resolve({
 					id: result._id,
-					msg: 'TOUR_LEADER_REGISTERED_WAITE_UNTIL_VERIFY'
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

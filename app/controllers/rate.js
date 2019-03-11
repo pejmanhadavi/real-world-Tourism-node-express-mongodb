@@ -2,6 +2,7 @@ const {isIDGood} = require('./base');
 
 const {Rate} = require('../dao/rate');
 const {Request} = require('../dao/request');
+const {handleResponse} = require('../services/response_handler');
 
 
 /**************************
@@ -18,7 +19,7 @@ exports.rateTourLeader = async (req, res, next) => {
 		await Request.isRequestRated(requestId, userId);
 		await Request.setRate(requestId);
 		const response = await Rate.saveRate(req, tourLeaderId, userId);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'RATED', response);
 	} catch (err) {
 		next(err);
 	}

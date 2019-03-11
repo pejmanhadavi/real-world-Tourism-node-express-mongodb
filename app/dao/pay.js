@@ -17,8 +17,11 @@ paySchema.statics.savePayment = data => {
 			cardNumber: data.cardNumber
 		});
 		pay.save()
-			.then(() => resolve({
-				msg: 'PAYMENT_SAVED'
+			.then(result => resolve({
+				id: result._id,
+				transactionId: result.transactionId,
+				factorNumber: result.factorNumber,
+				amount: result.amount
 			}))
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});

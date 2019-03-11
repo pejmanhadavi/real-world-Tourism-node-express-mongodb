@@ -223,7 +223,7 @@ userSchema.statics.updateProfileInDB = (req, id) => {
 				}
 				await result.save();
 				resolve({
-					msg: 'PROFILE_UPDATED'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -245,7 +245,7 @@ userSchema.statics.updatePasswordInProfile = (req, id) => {
 					reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
 
 				resolve({
-					msg: 'PASSWORD_CHANGED'
+					id: result._id
 				});
 			});
 	});
@@ -261,7 +261,7 @@ userSchema.statics.updateProfileImage = (req, id) => {
 				result.profileImages.push(req.file.filename);
 				await result.save();
 				resolve({
-					msg: 'PROFILE_IMAGE_UPDATED',
+					id: result._id,
 					profile: req.file.filename
 				});
 			})
@@ -278,7 +278,10 @@ userSchema.statics.updateBackgroundImage = (req, id) => {
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				result.backgroundImage = req.file.filename;
 				await result.save();
-				resolve({msg: 'BACKGROUND_IMAGE_UPDATED'});
+				resolve({
+					id: result._id,
+					backgroundImage: result.backgroundImage
+				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -297,7 +300,7 @@ userSchema.statics.deleteProfileImage = (id, profileImage) => {
 					console.error(err);
 				}
 				resolve({
-					msg: 'PROFILE_IMAGE_DELETED'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -312,7 +315,9 @@ userSchema.statics.deleteBackgroundImage = (id) => {
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
-				resolve(result);
+				resolve({
+					id: result._id
+				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});

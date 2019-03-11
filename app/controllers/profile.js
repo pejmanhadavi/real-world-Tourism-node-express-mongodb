@@ -1,7 +1,7 @@
 const {isIDGood} = require('./base');
 const {resizeImage} = require('../services/resize_image');
 const {User} = require('../dao/user');
-
+const {handleResponse} = require('../services/response_handler');
 
 /**************************
  * GET_PROFILE CONTROLLER
@@ -13,7 +13,8 @@ const {User} = require('../dao/user');
 exports.getProfile = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		res.status(200).json(await User.getProfileFromDB(id));
+		const response = await User.getProfileFromDB(id);
+		handleResponse(res, 200, 'DONE', response);
 	}catch (err) {
 		next(err);
 	}
@@ -30,7 +31,8 @@ exports.getProfile = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
 	try {
 		const id = await isIDGood(req.user._id);
-		res.status(200).json(await User.updateProfileInDB(req, id));
+		const response = await User.updateProfileInDB(req, id);
+		handleResponse(res, 200, 'PROFILE_UPDATED', response);
 	}catch (err) {
 		next(err);
 	}
@@ -47,7 +49,8 @@ exports.updateProfile = async (req, res, next) => {
 exports.updatePassword = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		res.status(200).json(await User.updatePasswordInProfile(req, id));
+		const response = await User.updatePasswordInProfile(req, id);
+		handleResponse(res, 200, 'PASSWORD_UPDATED', response);
 	}catch (err) {
 		next(err);
 	}
@@ -66,7 +69,7 @@ exports.updateProfileImage = async (req, res, next) => {
 		const id = await isIDGood(req.user._id);
 		const response = await User.updateProfileImage(req, id);
 		resizeImage(response.profile);
-		res.status(200).json(response);
+		handleResponse(res, 200, 'PROFILE_IMAGE_UPDATED', response);
 	}catch (err) {
 		next(err);
 	}
@@ -83,7 +86,8 @@ exports.updateProfileImage = async (req, res, next) => {
 exports.updateBackgroundImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		res.status(200).json(await User.updateBackgroundImage(req, id));
+		const response = await User.updateBackgroundImage(req, id);
+		handleResponse(res, 200, 'BACKGROUND_IMAGE_UPDATED', response);
 	}catch (err) {
 		next(err);
 	}
@@ -99,8 +103,8 @@ exports.updateBackgroundImage = async (req, res, next) => {
 exports.deleteProfileImage = async (req, res, next) => {
 	try {
 		const id = await isIDGood(req.user._id);
-		const result = await User.deleteProfileImage(id, req.params.profile);
-		res.status(200).json(result);
+		const response = await User.deleteProfileImage(id, req.params.profile);
+		handleResponse(res, 200, 'PROFILE_IMAGE_DELETED', response);
 	}catch (err) {
 		next(err);
 	}
@@ -117,8 +121,8 @@ exports.deleteProfileImage = async (req, res, next) => {
 exports.deleteBackgroundImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
-		const result = await User.deleteBackgroundImage(id);
-		res.status(200).json(result);
+		const response = await User.deleteBackgroundImage(id);
+		handleResponse(res, 200, 'BACKGROUND_IMAGE_DELETED', response);
 	}catch (err) {
 		next(err);
 	}
