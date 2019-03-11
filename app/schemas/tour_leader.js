@@ -30,6 +30,10 @@ const tourLeaderSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
+	experiences: [{
+		type: ObjectId,
+		ref: 'Experience'
+	}]
 }, {
 	timestamps: true
 });

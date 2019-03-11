@@ -14,21 +14,13 @@ const requestSchema = new Schema({
 		ref: 'TourLeader',
 		required: true
 	},
+	experiences: [{
+		type: ObjectId,
+		ref: 'Experience'
+	}],
 	tourLeaderUserId: {
 		type :ObjectId,
 		required: true
-	},
-	maxDayOccupancy: {
-		type:Number,
-		required: true
-	},
-	maxHalfDayOccupancy: {
-		type:Number,
-		required: true
-	},
-	description: {
-		type: String,
-		maxlength: 500
 	},
 	tourLeaderFirstValidate: {
 		type: Boolean,
