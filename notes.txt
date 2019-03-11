@@ -3,4 +3,5 @@
 -edit handle error => done
 -edit response pattern => done
 -index
--
+-send request with experiences
+-calculate amount of request

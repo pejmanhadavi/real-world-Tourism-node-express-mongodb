@@ -10,27 +10,14 @@ exports.sendRequest = [
 		.withMessage('IS_EMPTY')
 		.isMongoId()
 		.withMessage('ID_IS_NOT_VALID'),
-	check('maxDayOccupancy')
+	check('experiences')
 		.exists()
 		.withMessage('MISSING')
 		.not()
 		.isEmpty()
 		.withMessage('IS_EMPTY')
-		.isNumeric()
-		.withMessage('IS_NOT_NUMBERIC'),
-	check('maxHalfDayOccupancy')
-		.exists()
-		.withMessage('MISSING')
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY')
-		.isNumeric()
-		.withMessage('IS_NOT_NUMBERIC'),
-	check('description')
-		.optional()
-		.not()
-		.isEmpty()
-		.withMessage('IS_EMPTY'),
+		.isArray()
+		.withMessage('MOST_BE_ARRAY'),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();

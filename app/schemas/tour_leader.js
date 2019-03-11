@@ -16,16 +16,6 @@ const tourLeaderSchema = new Schema({
 	scanTourLeaderCertification: {
 		type: String
 	},
-	costPerDay:{
-		required: [true, 'COST_PER_DAY_IS_BLANK'],
-		type: Number,
-		default: 0
-	},
-	costPerHalfDay:{
-		required: [true, 'COST_PER_DAY_IS_BLANK'],
-		type: Number,
-		default: 0
-	},
 	verified: {
 		type: Boolean,
 		default: false
