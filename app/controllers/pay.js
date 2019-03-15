@@ -4,7 +4,6 @@ const Payir = require('payir');
 const gateway = new Payir('test');
 
 const {Request} = require('../dao/request');
-const {TourLeader} = require('../dao/tour_leader');
 const {Pay} = require('../dao/pay');
 const {handleResponse} = require('../services/response_handler');
 const {Experience} = require('../dao/experience');

@@ -1,7 +1,7 @@
 const matchedData = require('express-validator/filter').matchedData;
 
 const {User, saveLoginAttemptsToDB} = require('../dao/user');
-const {ForgotPassword, forgotPasswordResponse} = require('../dao/forgot_password');
+const {ForgotPassword} = require('../dao/forgot_password');
 const {UserRefresh} = require('../dao/user_refresh');
 const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('../services/send_email');
 const {generateToken} = require('../services/auth');
