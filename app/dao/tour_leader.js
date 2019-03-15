@@ -80,14 +80,10 @@ tourLeaderSchema.statics.edit = (req, id) => {
 			.then(async result => {
 				if (!result)
 					reject(buildErrObject(404, 'USER_NOT_FOUND'));
-				if (req.body.costPerDay) {
-					result.costPerDay = req.body.costPerDay;
+				if (req.body.experiences) {
+					result.experiences = req.body.experiences;
+					await result.save();
 				}
-				if (req.body.costPerHalfDay) {
-					result.costPerHalfDay = req.body.costPerHalfDay;
-				}
-				await result.save();
-
 				resolve({
 					id: result._id
 				});
