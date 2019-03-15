@@ -14,9 +14,7 @@ requestSchema.statics.saveRequest = (req, userId, tourLeaderId, tourLeaderUserId
 			user: userId,
 			tourLeader: tourLeaderId,
 			tourLeaderUserId: tourLeaderUserId,
-			maxDayOccupancy: req.body.maxDayOccupancy,
-			maxHalfDayOccupancy: req.body.maxHalfDayOccupancy,
-			description: req.body.description
+			experiences: req.body.experiences
 		});
 		request.save()
 			.then(result => resolve({

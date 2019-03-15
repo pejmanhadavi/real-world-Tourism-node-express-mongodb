@@ -19,7 +19,7 @@ exports.sendRequest = async (req, res, next) => {
 		await TourLeader.tourLeaderCheckForRequest(tourLeaderId);
 		const tourLeaderUserId = await TourLeader.getTourLeaderUserId(tourLeaderId);
 		const response = await Request.saveRequest(req, userId, tourLeaderId, tourLeaderUserId);
-		handleResponse(res, 200, 'MESSAGE_SENT', response);
+		handleResponse(res, 200, 'REQUEST_SENT', response);
 	}catch (err) {
 		next(err);
 	}

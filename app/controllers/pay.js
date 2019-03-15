@@ -7,7 +7,7 @@ const {Request} = require('../dao/request');
 const {TourLeader} = require('../dao/tour_leader');
 const {Pay} = require('../dao/pay');
 const {handleResponse} = require('../services/response_handler');
-
+const {Experience} = require('../dao/experience');
 /*****************************
  * PAY CONTROLLER
  * @param req
@@ -20,10 +20,8 @@ exports.pay = async (req, res, next) => {
 		const userId = await isIDGood(req.user._id);
 		const requestId = await isIDGood(req.params.requestId);
 		const request = await Request.findRequestForPay(requestId, userId);
-		const tourLeaderId = request.tourLeader;
-		const costPerDay = await TourLeader.getTourLeaderCostPerDay(tourLeaderId);
-		const maxDayOccupancy = request.maxDayOccupancy;
-		const amount = costPerDay * maxDayOccupancy;
+		const experiences = request.experiences;
+		const amount = await Experience.calculateAmount(experiences);
 		const link = await gateway.send(amount, 'http:/127.0.0.1:3000/pay/verify', request.factorNumber);
 		res.redirect(link);
 	} catch(err) {
