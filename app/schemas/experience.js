@@ -21,10 +21,11 @@ const experienceSchema = new Schema({
 	images: {
 		type: [String],
 	}
+}, {
+	versionKey: false
 });
 
 
 experienceSchema.plugin(mongoosePaginate);
 
 exports.experienceSchema = experienceSchema;
-
