@@ -1,12 +1,10 @@
 require('dotenv-safe').config();
 const {handleError, buildErrObject} = require('./app/services/error_handler');
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const initMongo = require('./init/mongo');
-const config = require('config');
 
 
 //INIT MONGO
