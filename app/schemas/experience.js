@@ -20,6 +20,7 @@ const experienceSchema = new Schema({
 	},
 	images: {
 		type: [String],
+		required: true
 	}
 }, {
 	versionKey: false
