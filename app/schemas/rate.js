@@ -30,6 +30,7 @@ const rateSchema = new Schema({
 	}
 
 }, {
+	versionKey: false,
 	timestamps: true
 });
 //PAGINATE PLUGIN

@@ -12,7 +12,6 @@ const facilitySchema = new Schema(
 	},
 	{
 		versionKey: false,
-		timestamps: true
 	}
 );
 facilitySchema.index({

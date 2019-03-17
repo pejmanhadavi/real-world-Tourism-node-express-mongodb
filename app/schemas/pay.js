@@ -21,6 +21,7 @@ const paySchema = new Schema({
 		required: true
 	}
 }, {
+	versionKey: false,
 	timestamps: true
 });
 

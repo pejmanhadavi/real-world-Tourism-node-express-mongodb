@@ -53,6 +53,7 @@ const requestSchema = new Schema({
 		default: Date.now
 	}
 }, {
+	versionKey: false,
 	timestamps: true
 });
 
