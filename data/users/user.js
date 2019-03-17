@@ -1,5 +1,5 @@
 const faker = require('faker');
-const ObjectId = require('mongoose').Schema.Types.ObjectId;
+const ObjectId = require('mongoose').Types.ObjectId;
 const uuid = require('uuid');
 
 module.exports = [
