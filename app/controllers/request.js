@@ -17,8 +17,9 @@ exports.sendRequest = async (req, res, next) => {
 		const userId = await isIDGood(req.user._id);
 		const tourLeaderId = await isIDGood(req.body.tourLeader);
 		await TourLeader.tourLeaderCheckForRequest(tourLeaderId);
-		const tourLeaderUserId = await TourLeader.getTourLeaderUserId(tourLeaderId);
-		const response = await Request.saveRequest(req, userId, tourLeaderId, tourLeaderUserId);
+		const tourLeader= await TourLeader.getTourLeaderById(tourLeaderId);
+		await TourLeader.checkTheExperiences(tourLeaderId, req.body.experiences);
+		const response = await Request.saveRequest(req, userId, tourLeaderId, tourLeader.user);
 		handleResponse(res, 200, 'REQUEST_SENT', response);
 	}catch (err) {
 		next(err);

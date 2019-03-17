@@ -54,7 +54,7 @@ tourLeaderSchema.statics.tourLeaderCheckForRequest = id => {
 };
 
 //GET TOUR LEADER USER ID
-tourLeaderSchema.statics.getTourLeaderUserId = id => {
+tourLeaderSchema.statics.getTourLeaderById = id => {
 	return new Promise((resolve, reject) => {
 		TourLeader.findOne({
 			_id: id,
@@ -63,7 +63,23 @@ tourLeaderSchema.statics.getTourLeaderUserId = id => {
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
-				resolve(result.user);
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+//CHECK IF THE TOUR LEADER HAS THE EXPERIENCES
+tourLeaderSchema.statics.checkTheExperiences = (id, experiences )=> {
+	return new Promise((resolve, reject) => {
+		TourLeader.findById(id)
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+				experiences.forEach(item => {
+					if (!result.experiences.includes(item))
+						reject(buildErrObject(422, 'BAD_REQUEST'))
+				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
