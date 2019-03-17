@@ -25,6 +25,7 @@ const tourLeaderSchema = new Schema({
 		ref: 'Experience'
 	}]
 }, {
+	versionKey: false,
 	timestamps: true
 });
 //PAGINATE PLUGIN
