@@ -11,8 +11,13 @@ const should = chai.should();
 
 
 const loginDetails = {
-	email: 'pejmanhadavi77@gmail.com',
+	email: 'admin@admin.com',
 	password: 'admin'
+};
+
+const wrongLoginDetails = {
+	email: 'admin@admin.com',
+	password: 'wrongPass'
 };
 
 const server = require('../bin/www').server;
@@ -37,6 +42,18 @@ before(done => {
 
 describe('*********** AUTH ***********', () => {
 	describe('/POST login', () => {
+
+		it('it should NOT GET token when password is wrong', done => {
+			chai
+				.request(server)
+				.post('/auth/login')
+				.send(wrongLoginDetails)
+				.end((err, res) => {
+					res.should.have.status(409);
+					done();
+				});
+		});
+
 		it('it should GET token', done => {
 			chai
 				.request(server)
@@ -44,6 +61,9 @@ describe('*********** AUTH ***********', () => {
 				.send(loginDetails)
 				.end((err, res) => {
 					res.should.have.status(200);
+					res.body.data.should.have.property('token');
+					res.body.data.should.have.property('refreshToken');
+					res.body.data.should.have.property('user');
 					done();
 				});
 		});
@@ -55,7 +75,7 @@ describe('*********** AUTH ***********', () => {
 			const user = {
 				name: faker.random.words(),
 				email,
-				password: faker.random.words()
+				password: faker.internet.password()
 			};
 			chai
 				.request(server)
@@ -63,9 +83,8 @@ describe('*********** AUTH ***********', () => {
 				.send(user)
 				.end(async (err, res) => {
 					res.should.have.status(201);
-
-					createdID = res.body.user._id;
-					const user = User.findById(createdID, (err, result) => {
+					createdID = res.body.data.user._id;
+					User.findById(createdID, (err, result) => {
 						verification = result.verification;
 					});
 					done();
