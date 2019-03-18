@@ -5,7 +5,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const {User} = require('../app/dao/user');
 const {ForgotPassword} = require('../app/dao/forgot_password');
-const mongoose = require('mongoose');
 const uuid = require('uuid');
 const should = chai.should();
 
@@ -20,7 +19,7 @@ const wrongLoginDetails = {
 	password: 'wrongPass'
 };
 
-const registerDetalis = {
+const registerDetails = {
 	name: faker.random.words(),
 	email : 'pejmanhadaviph@yahoo.com',
 	password : faker.internet.password()
@@ -76,7 +75,7 @@ describe('*********** AUTH ***********', () => {
 			chai
 				.request(server)
 				.post('/auth/register')
-				.send(registerDetalis)
+				.send(registerDetails)
 				.end(async (err, res) => {
 					res.should.have.status(201);
 					createdID = res.body.data.user._id;
@@ -91,7 +90,7 @@ describe('*********** AUTH ***********', () => {
 			chai
 				.request(server)
 				.post('/auth/register')
-				.send(registerDetalis)
+				.send(registerDetails)
 				.end((err, res) => {
 					res.should.have.status(409);
 					done();
@@ -122,8 +121,7 @@ describe('*********** AUTH ***********', () => {
 				.get('/auth/verify/'+verification)
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.include.keys('email', 'verified');
-					res.body.verified.should.equal(true);
+					res.body.data.verified.should.equal(true);
 					done();
 				});
 		});
@@ -134,8 +132,6 @@ describe('*********** AUTH ***********', () => {
 				.get('/auth/verify/'+uuid.v4())
 				.end((err, res) => {
 					res.should.have.status(404);
-					res.body.should.be.a('object');
-					res.body.should.have.property('errors');
 					done();
 				});
 		});
@@ -144,9 +140,7 @@ describe('*********** AUTH ***********', () => {
 				.request(server)
 				.get('/auth/verify/'+faker.random.words())
 				.end((err, res) => {
-					res.should.have.status(422);
-					res.body.should.be.a('object');
-					res.body.should.have.property('errors');
+					res.should.have.status(400);
 					done();
 				});
 		});
@@ -154,6 +148,7 @@ describe('*********** AUTH ***********', () => {
 
 	describe('/POST forgotPassword', () => {
 		it('it should POST forgotPassword', done => {
+			const email = registerDetails.email;
 			chai
 				.request(server)
 				.post('/auth/forgot')
@@ -162,7 +157,6 @@ describe('*********** AUTH ***********', () => {
 				})
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.include.keys('msg');
 					ForgotPassword.findOne({
 						email,
 						used: false
@@ -181,8 +175,6 @@ describe('*********** AUTH ***********', () => {
 				})
 				.end((err, res) => {
 					res.should.have.status(404);
-					res.body.should.be.a('object');
-					res.body.should.have.property('errors');
 					done();
 				});
 		});
@@ -198,8 +190,6 @@ describe('*********** AUTH ***********', () => {
 				})
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.include.keys('msg');
-					res.body.msg.should.equal('PASSWORD_CHANGED');
 					done();
 				});
 		});
