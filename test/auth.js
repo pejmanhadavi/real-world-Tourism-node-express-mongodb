@@ -20,11 +20,12 @@ const wrongLoginDetails = {
 	password: 'wrongPass'
 };
 
+const registerDetalis = {
+	name: faker.random.words(),
+	email : 'pejmanhadaviph@yahoo.com',
+	password : faker.internet.password()
+};
 const server = require('../bin/www').server;
-
-const name = faker.random.words();
-const email = 'pejmanhadaviph@yahoo.com';
-const password = "faker.internet.password()";
 
 
 let createdID;
@@ -72,15 +73,10 @@ describe('*********** AUTH ***********', () => {
 
 	describe('/POST register', () => {
 		it('it should POST register', done => {
-			const user = {
-				name: faker.random.words(),
-				email,
-				password: faker.internet.password()
-			};
 			chai
 				.request(server)
 				.post('/auth/register')
-				.send(user)
+				.send(registerDetalis)
 				.end(async (err, res) => {
 					res.should.have.status(201);
 					createdID = res.body.data.user._id;
@@ -92,9 +88,19 @@ describe('*********** AUTH ***********', () => {
 		});
 
 		it('it should NOT POST a register if email already exists', done => {
+			chai
+				.request(server)
+				.post('/auth/register')
+				.send(registerDetalis)
+				.end((err, res) => {
+					res.should.have.status(409);
+					done();
+				});
+		});
+		it('it should NOT POST a register if email is not valid', done => {
 			const user = {
 				name: faker.random.words(),
-				email,
+				email: 'this is not an email',
 				password: faker.random.words()
 			};
 			chai
@@ -102,9 +108,7 @@ describe('*********** AUTH ***********', () => {
 				.post('/auth/register')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(422);
-					res.body.should.be.a('object');
-					res.body.should.have.property('errors');
+					res.should.have.status(400);
 					done();
 				});
 		});
