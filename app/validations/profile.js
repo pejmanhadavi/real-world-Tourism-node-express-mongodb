@@ -1,5 +1,5 @@
 const {check, param, validationResult} = require('express-validator/check');
-const {buildErrObject, handleError} = require('../services/error_handler');
+const {buildErrObject} = require('../services/error_handler');
 
 exports.updateProfile = [
 	check('name')
@@ -54,7 +54,7 @@ exports.updateProfile = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -87,7 +87,7 @@ exports.updatePassword = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -102,7 +102,7 @@ exports.deleteProfileImage = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];

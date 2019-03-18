@@ -1,6 +1,6 @@
 const {check, param}= require('express-validator/check');
 const validationResult = require('express-validator/check').validationResult;
-const {buildErrObject, handleError} = require('../services/error_handler');
+const {buildErrObject} = require('../services/error_handler');
 
 exports.register = [
 	check('name')
@@ -33,7 +33,7 @@ exports.register = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -49,7 +49,7 @@ exports.verify = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -70,7 +70,7 @@ exports.forgotPassword = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -85,7 +85,7 @@ exports.getResetPassword = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -108,7 +108,7 @@ exports.postResetPassword = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -138,7 +138,7 @@ exports.login = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
@@ -157,7 +157,7 @@ exports.token = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			return handleError(res, buildErrObject(422, err.array()));
+			next(buildErrObject(422, err.array()[0].msg));
 		}
 	}
 ];
