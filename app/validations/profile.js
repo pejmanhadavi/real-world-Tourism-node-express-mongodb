@@ -1,6 +1,8 @@
 const {check, param, validationResult} = require('express-validator/check');
 const {buildErrObject} = require('../services/error_handler');
 
+const validationErrCode = 400;
+
 exports.updateProfile = [
 	check('name')
 		.optional()
@@ -54,7 +56,7 @@ exports.updateProfile = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];
@@ -87,7 +89,7 @@ exports.updatePassword = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];
@@ -102,7 +104,7 @@ exports.deleteProfileImage = [
 			validationResult(req).throw();
 			return next();
 		} catch (err) {
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];

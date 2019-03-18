@@ -1,6 +1,8 @@
 const {check, param, validationResult} = require('express-validator/check');
 const {buildErrObject} = require('../services/error_handler');
 
+const validationErrCode = 400;
+
 exports.sendRequest = [
 	check('tourLeader')
 		.exists()
@@ -23,7 +25,7 @@ exports.sendRequest = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];
@@ -41,7 +43,7 @@ exports.tourLeaderValidate = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];
@@ -66,7 +68,7 @@ exports.satisfaction = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];

@@ -1,6 +1,8 @@
 const {check, validationResult} = require('express-validator/check');
 const {buildErrObject} = require('../services/error_handler');
 
+const validationErrCode = 400;
+
 exports.registerTourLeader = [
 	check('costPerDay')
 		.exists()
@@ -19,7 +21,7 @@ exports.registerTourLeader = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];
@@ -40,7 +42,7 @@ exports.edit = [
 			validationResult(req).throw();
 			return next();
 		}catch(err){
-			next(buildErrObject(422, err.array()[0].msg));
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
 		}
 	}
 ];
