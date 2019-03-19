@@ -126,10 +126,13 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 			costPerHalfDay: req.body.costPerHalfDay,
 		});
 		if (req.files){
-			if (req.files.scanTourLeaderCertification)
+			if (req.files.scanTourLeaderCertification && req.files.scanBirthCertification){
+
 				tourLeader.scanTourLeaderCertification = req.files.scanTourLeaderCertification[0].filename;
-			if (req.files.scanBirthCertification)
 				tourLeader.scanBirthCertification = req.files.scanBirthCertification[0].filename;
+			}else {
+				reject(buildErrObject(409, 'SEND_SCAN_BIRTH_AND_LEADER_CARDS'));
+			}
 		}
 		tourLeader.save()
 			.then(result => {

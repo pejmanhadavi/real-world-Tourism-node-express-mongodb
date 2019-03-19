@@ -17,7 +17,6 @@ router.post(
 	'/',
 	requireAuth,
 	upload.fields([{name: 'scanBirthCertification'}, {name: 'scanTourLeaderCertification'}]),
-	validate.registerTourLeader,
 	controller.registerTourLeader
 );
 
