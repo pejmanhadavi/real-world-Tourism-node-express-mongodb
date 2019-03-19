@@ -30,7 +30,7 @@ tourLeaderSchema.statics.tourLeaderDoesNotExists= id=>{
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(422, 'USER_IS_NOT_TOUR_LEADER'));
+					reject(buildErrObject(404, 'USER_IS_NOT_TOUR_LEADER'));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
