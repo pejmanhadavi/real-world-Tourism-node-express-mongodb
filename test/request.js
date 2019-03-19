@@ -94,7 +94,7 @@ describe('*********** REQUEST ***********', () => {
                 });
         });
 
-        it('should POST request with wrong experiences', done => {
+        it('should NOT POST request with wrong experiences', done => {
             chai
                 .request(server)
                 .post('/request')
@@ -106,7 +106,7 @@ describe('*********** REQUEST ***********', () => {
                 });
         });
 
-        it('should POST request with wrong tourLeader', done => {
+        it('should NOT POST request with wrong tourLeader', done => {
             chai
                 .request(server)
                 .post('/request')
@@ -124,11 +124,73 @@ describe('*********** REQUEST ***********', () => {
                 .set('Authorization', `Bearer ${userToken}`)
                 .send(request)
                 .end((err, res) => {
-                   res.should.have.status(200);
-                   requestId = res.body.data.id;
-                   done();
+                    res.should.have.status(200);
+                    requestId = res.body.data.id;
+                    done();
                 });
         });
+    });
+    describe('Get REQUEST Validation', () => {
+        it('should NOT Get REQUEST tour leader first validate with wrong TourLeader', done => {
+            chai
+                .request(server)
+                .get('/request/tourLeaderFirstValidate/' + requestId)
+                .set('Authorization', `Bearer ${userToken}`)
+                .send()
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    done();
+                });
+        });
+
+        it('should Get REQUEST tour leader first validate', done => {
+            chai
+                .request(server)
+                .get('/request/tourLeaderFirstValidate/' + requestId)
+                .set('Authorization', `Bearer ${leaderToken}`)
+                .send()
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('should Get REQUEST tour leader final validate', done => {
+            chai
+                .request(server)
+                .get('/request/tourLeaderFinalValidate/' + requestId)
+                .set('Authorization', `Bearer ${leaderToken}`)
+                .send()
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('should NOT Get REQUEST user final validate with wrong user', done => {
+            chai
+                .request(server)
+                .get('/request/userFinalValidate/' + requestId)
+                .set('Authorization', `Bearer ${leaderToken}`)
+                .send()
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    done();
+                });
+
+            it('should Get REQUEST user final validate', done => {
+                chai
+                    .request(server)
+                    .get('/request/userFinalValidate/' + requestId)
+                    .set('Authorization', `Bearer ${userToken}`)
+                    .send()
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        done();
+                    });
+            });
+        });
+
     });
 });
 
