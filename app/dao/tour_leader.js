@@ -77,14 +77,8 @@ tourLeaderSchema.statics.checkTheExperiences = (id, experiences )=> {
 				if (!result)
 					reject(buildErrObject(404, 'NOT_FOUND'));
 				for(let i in experiences){
-					if (result.experiences[i]){
-						let equality = result.experiences[i].toString() === experiences[i];
-						if (!equality){
-							reject(buildErrObject(400, 'BAD_REQUEST'));
-						}}
-					else{
-						reject(buildErrObject(400, 'BAD_REQUEST'));
-					}
+				    if (result.experiences.indexOf(experiences[i]) < 0)
+				        reject(buildErrObject(400, 'BAD_REQUEST'));
 				}
 				resolve(true);
 			})
