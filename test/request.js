@@ -22,8 +22,7 @@ let leaderToken, userToken, requestId;
 const request = {
     tourLeader: leaderId,
     experiences: [
-        '5c8e342f7bcd6d2b56114945',
-        '5c8e343680ee502b6704abfe'
+        '5c8e342f7bcd6d2b56114945'
     ]
 };
 
