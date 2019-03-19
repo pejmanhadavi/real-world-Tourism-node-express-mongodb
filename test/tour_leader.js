@@ -2,11 +2,11 @@ process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-
+const should = chai.should();
 const {TourLeader} = require('../app/dao/tour_leader');
 
 const loginDetails = {
-    email: 'pejmanhadavi77@gmail.com',
+    email: 'leader@example.com',
     password: 'admin'
 };
 
@@ -16,7 +16,18 @@ let token;
 let createdID;
 chai.use(chaiHttp);
 
+const experiences = {
+    experiences: [
+        '5c8e342f7bcd6d2b56114945',
+        '5c8e33466c3165282fbcc2ab'
+    ]
+};
 
+const wrongExperiences = {
+    experiences: [
+        '5c8e33466c3165282fbcc2af'
+    ]
+};
 
 
 
@@ -38,65 +49,36 @@ describe('*********** TOUR_LEADER ***********', () => {
                 .send(loginDetails)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.have.property('token');
-                    token = res.body.token;
-                    done();
-                });
-        });
-    });
-    describe('/POST register', () => {
-        it('it should NOT be able to consume the route since no token was sent', done => {
-            chai
-                .request(server)
-                .get('/tourLeader')
-                .end((err, res) => {
-                    res.should.have.status(404);
-                    done();
-                });
-        });
-        it('it should POST register', done => {
-            chai
-                .request(server)
-                .post('/tourLeader')
-                .set('Authorization', `Bearer ${token}`)
-                .send({
-                    costPerDay: 5000,
-                    costPerHalfDay: 2500
-                })
-                .end((err, res) => {
-                    createdID = res.body.id;
-                    res.should.have.status(200);
+                    res.body.data.should.have.property('token');
+                    token = res.body.data.token;
                     done();
                 });
         });
     });
 
     describe('/PUT tourLeader', () => {
-        it('it should UPDATE tourLeader', done => {
+        it('it should NOT UPDATE tourLeader with wrong experience', done => {
             chai
                 .request(server)
                 .put('/tourLeader')
                 .set('Authorization', `Bearer ${token}`)
-                .send({
-                    costPerDay: 800,
-                    costPerHalfDay: 900
-                })
+                .send(wrongExperiences)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    done();
+                });
+        });
+
+        it('it should NOT UPDATE tourLeader', done => {
+            chai
+                .request(server)
+                .put('/tourLeader')
+                .set('Authorization', `Bearer ${token}`)
+                .send(experiences)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('object');
                     done();
                 });
         });
     });
-});
-
-
-
-after(() => {
-    TourLeader.deleteOne(
-        {
-            _id: createdID
-        })
-        .then(result => console.log(result))
-        .catch(err => console.log(err));
 });
