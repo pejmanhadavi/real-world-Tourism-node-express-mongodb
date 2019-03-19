@@ -46,7 +46,7 @@ tourLeaderSchema.statics.tourLeaderCheckForRequest = id => {
 		})
 			.then(result => {
 				if(!result)
-					reject(buildErrObject(404, 'TOUR_lEADER_NOT_FOUND_OR_NOT_VERIFIED'));
+					reject(buildErrObject(404, 'TOUR_LEADER_NOT_FOUND_OR_NOT_VERIFIED'));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -95,7 +95,7 @@ tourLeaderSchema.statics.checkTheExperiences = (id, experiences )=> {
 //EDIT
 tourLeaderSchema.statics.edit = (req, id) => {
 	return new Promise((resolve, reject) => {
-		if (!req.body.costPerDay && !req.body.costPerHalfDay)
+		if (!req.body.experiences)
 			reject(buildErrObject(422,'BAD_REQUEST'));
 		TourLeader.findOne({
 			user: id
@@ -103,10 +103,8 @@ tourLeaderSchema.statics.edit = (req, id) => {
 			.then(async result => {
 				if (!result)
 					reject(buildErrObject(404, 'USER_NOT_FOUND'));
-				if (req.body.experiences) {
-					result.experiences = req.body.experiences;
-					await result.save();
-				}
+				result.experiences = req.body.experiences;
+				await result.save();
 				resolve({
 					id: result._id
 				});
