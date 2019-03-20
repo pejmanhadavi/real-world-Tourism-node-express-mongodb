@@ -8,7 +8,7 @@
 -set tour leader edit experiences like send request dao test
 -edit route names
 -edit error messages to persian
-- check the other side of experiences
+-check the other side of experiences
 -edit pay calculate experience payment
 
 tour leader registration is done
