@@ -11,19 +11,40 @@ const {buildErrObject} = require('../services/error_handler');
  ********************/
 
 //CALCULATE AMOUNT OF REQUEST
+// experienceSchema.statics.calculateAmount  = experiences => {
+// 	return new Promise((resolve, reject) => {
+// 		let amount = 0;
+// 		for (let i in experiences){
+// 			Experience.findById(experiences[i])
+// 				.then(result => {
+// 					if (!result)
+// 						reject(buildErrObject(404, 'NOT_FOUND'));
+// 					amount += result.cost;
+// 				})
+// 				.catch(err => reject(buildErrObject(422, err.code)));
+// 		}
+// 		console.log(amount);
+// 		resolve(amount);
+// 	});
+// };
+
 experienceSchema.statics.calculateAmount  = experiences => {
 	return new Promise((resolve, reject) => {
-		let amount = 0;
-		for (let i in experiences){
-			Experience.findById(experiences[i])
-				.then(result => {
-					if (!result)
-						reject(buildErrObject(404, 'NOT_FOUND'));
-					amount += result.cost;
-				})
-				.catch(err => reject(buildErrObject(422, err.code)));
-		}
-		resolve(amount);
+		let amount = 0 ;
+		Experience.find()
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOT_FOUND'));
+
+				const idArr = pushIdsInArray(result);
+				const amountArr = pushAmountsInArray(result);
+				console.log(experiences[0].toString());
+				for ( let i = 0 ; i < experiences.length ; i ++) {
+					amount += amountArr[idArr.indexOf(experiences[i].toString())];
+				}
+				resolve(amount);
+			})
+			.catch(err => buildErrObject(422, err.message));
 	});
 };
 
@@ -53,6 +74,14 @@ const pushIdsInArray = json => {
 	let array = [];
 	for (let i in json){
 		array.push(json[i]._id.toString());
+	}
+	return array;
+};
+
+const pushAmountsInArray = json => {
+	let array = [];
+	for (let i in json){
+		array.push(json[i].cost);
 	}
 	return array;
 };

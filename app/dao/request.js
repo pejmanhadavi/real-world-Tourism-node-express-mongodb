@@ -253,7 +253,7 @@ requestSchema.statics.findRequestForPay = (requestId, userId) => {
 		})
 			.then(result => {
 				if (!result)
-					resolve(false);
+					reject(buildErrObject(404, 'NOT_FOUND_OR_PAID'));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

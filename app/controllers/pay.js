@@ -21,6 +21,7 @@ exports.pay = async (req, res, next) => {
 		const request = await Request.findRequestForPay(requestId, userId);
 		const experiences = request.experiences;
 		const amount = await Experience.calculateAmount(experiences);
+		console.log(amount);
 		const link = await gateway.send(amount, 'http:/127.0.0.1:3000/pay/verify', request.factorNumber);
 		res.redirect(link);
 	} catch(err) {
