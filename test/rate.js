@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const should = chai.should();
 const server = require('../bin/www').server;
+const {Rate} = require('../app/dao/rate');
 const {Request} = require('../app/dao/request');
 
 const userLogin = {
@@ -21,7 +22,7 @@ const data = {
   comment: 'this is some comment'
 };
 
-let userToken;
+let userToken, rateId;
 
 chai.use(chaiHttp);
 
@@ -69,8 +70,28 @@ describe('*********** RATE ***********', () => {
                 .end((err, res) => {
                     console.log(res.body.message);
                    res.should.have.status(201);
+                   rateId = res.body.data.id;
                    done();
                 });
         });
     });
+});
+
+
+after(() => {
+    Rate.deleteOne(
+        {
+            _id: rateId
+        })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
+
+    Request.update(
+        {
+            _id: requestId
+        },{
+            rated: false
+        })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
 });
