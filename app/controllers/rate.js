@@ -19,7 +19,7 @@ exports.rateTourLeader = async (req, res, next) => {
 		await Request.isRequestRated(requestId, userId);
 		await Request.setRate(requestId);
 		const response = await Rate.saveRate(req, tourLeaderId, userId);
-		handleResponse(res, 200, 'RATED', response);
+		handleResponse(res, 201, 'RATED', response);
 	} catch (err) {
 		next(err);
 	}

@@ -25,7 +25,7 @@ exports.rateTourLeader = [
 		.isEmpty()
 		.withMessage('IS_EMPTY')
 		.isNumeric()
-		.withMessage('SHOULD_BE_NUMBERIC'),
+		.withMessage('SHOULD_BE_NUMERIC'),
 	check('comment')
 		.not()
 		.isEmpty()

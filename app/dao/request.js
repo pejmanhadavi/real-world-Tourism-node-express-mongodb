@@ -209,14 +209,14 @@ requestSchema.statics.isRequestRated = (requestId, userId) => {
 			tourLeaderFirstValidate: true,
 			userFinalValidate: true,
 			tourLeaderFinalValidate: true,
-			// paid: true,
+			paid: true,
 			userSatisfaction: true,
 			tourLeaderSatisfaction: true,
 			rated: false
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND_OR_BAD_REQUEST'));
+					reject(buildErrObject(404, 'NOT_FOUND_OR_RATED'));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
