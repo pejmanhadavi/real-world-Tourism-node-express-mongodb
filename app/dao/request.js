@@ -210,8 +210,8 @@ requestSchema.statics.isRequestRated = (requestId, userId) => {
 			userFinalValidate: true,
 			tourLeaderFinalValidate: true,
 			paid: true,
-			userSatisfaction: true,
-			tourLeaderSatisfaction: true,
+			// userSatisfaction: true,
+			// tourLeaderSatisfaction: true,
 			rated: false
 		})
 			.then(result => {
