@@ -11,7 +11,8 @@ const {buildErrObject}= require('../services/error_handler');
 tourLeaderSchema.statics.tourLeaderExists= id => {
 	return new Promise((resolve, reject)=>{
 		TourLeader.findOne({
-			user: id
+			user: id,
+			verified: true,
 		})
 			.then(result => {
 				if (!result)
@@ -92,7 +93,8 @@ tourLeaderSchema.statics.edit = (req, id) => {
 		if (!req.body.experiences)
 			reject(buildErrObject(422,'BAD_REQUEST'));
 		TourLeader.findOne({
-			user: id
+			user: id,
+			verified: true,
 		})
 			.then(async result => {
 				if (!result)
@@ -152,18 +154,6 @@ tourLeaderSchema.statics.getTourLeaderId = userId => {
 	});
 };
 
-//GET TOUR LEADER COST PER DAY
-tourLeaderSchema.statics.getTourLeaderCostPerDay = id => {
-	return new Promise((resolve, reject) => {
-		TourLeader.findById(id)
-			.then(result => {
-				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
-				resolve(result.costPerDay);
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
 
 
 /**************************
