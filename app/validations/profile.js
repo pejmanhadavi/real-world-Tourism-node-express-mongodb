@@ -33,7 +33,8 @@ exports.updateProfile = [
 		.withMessage('IS_EMPTY')
 		.isLength({
 			max: 500
-		}),
+		})
+		.withMessage('ABOUT_ME_MESSAGE'),
 	check('motto')
 		.optional()
 		.not()
@@ -41,16 +42,19 @@ exports.updateProfile = [
 		.withMessage('IS_EMPTY')
 		.isLength({
 			max: 300
-		}),
+		})
+		.withMessage('motto_length'),
 	check('languages')
 		.optional()
-		.isArray(),
+		.isArray()
+		.withMessage('badREQ'),
 	check('iWillShowYou')
 		.optional()
 		.isArray(),
 	check('travelFacilities')
 		.optional()
-		.isArray(),
+		.isArray()
+		.withMessage('badREQ'),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();

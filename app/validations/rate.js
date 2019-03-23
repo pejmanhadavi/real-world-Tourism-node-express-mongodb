@@ -21,12 +21,14 @@ exports.rateTourLeader = [
 		.isMongoId()
 		.withMessage('ID_IS_NOT_VALID'),
 	check('star')
+		.optional()
 		.not()
 		.isEmpty()
 		.withMessage('IS_EMPTY')
 		.isNumeric()
 		.withMessage('SHOULD_BE_NUMERIC'),
 	check('comment')
+		.optional()
 		.not()
 		.isEmpty()
 		.withMessage('IS_EMPTY'),
