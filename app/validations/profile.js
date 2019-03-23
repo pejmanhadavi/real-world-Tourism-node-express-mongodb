@@ -50,11 +50,12 @@ exports.updateProfile = [
 		.withMessage('badREQ'),
 	check('iWillShowYou')
 		.optional()
-		.isArray(),
+		.isArray()
+		.withMessage('MOST_BE_ARRAY'),
 	check('travelFacilities')
 		.optional()
 		.isArray()
-		.withMessage('badREQ'),
+		.withMessage('MOST_BE_ARRAY'),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();
