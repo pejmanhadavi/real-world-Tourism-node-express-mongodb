@@ -233,7 +233,7 @@ requestSchema.statics.setRate = requestId => {
 				result.rated= true;
 				await result.save();
 				resolve({
-					msg: 'REQUEST_RATED'
+					id: result._id
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
