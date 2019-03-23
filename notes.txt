@@ -2,13 +2,13 @@
 -block user => done
 -edit handle error => done
 -edit response pattern => done
--index
 -send request with experiences => done
 -calculate amount of request => done
--set tour leader edit experiences like send request dao test
--edit route names
--edit error messages to persian
--check the other side of experiences
--edit pay calculate experience payment
+-set tour leader edit experiences like send request dao test => done
+-check the other side of experiences => done
+-edit pay calculate experience payment => done
+tour leader registration is done = > done
+-edit route names => not important
 
-tour leader registration is done
+-index
+-edit error messages to persian
