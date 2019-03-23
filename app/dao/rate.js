@@ -18,7 +18,6 @@ rateSchema.statics.saveRate = (req, tourLeaderId, userId) => {
 			.then(result => {
 				resolve({
 					id: result._id,
-					msg: 'RATED'
 				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
