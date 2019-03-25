@@ -8,7 +8,7 @@ const config = {
 };
 
 const seeder = new Seeder(config);
-const collections = seeder.readCollectionsFromPath(path.resolve('./data'));
+const collections = seeder.readCollectionsFromPath(path.resolve('./test/data'));
 
 
 const main = async () => {
