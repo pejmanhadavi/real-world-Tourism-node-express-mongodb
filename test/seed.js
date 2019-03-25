@@ -3,7 +3,7 @@ const path = require('path');
 
 const config = {
     database: "mongodb://localhost:27017/touraso_test",
-    inputPath: path.resolve(__dirname, './test/data'),
+    inputPath: path.resolve(__dirname, './data'),
     dropDatabase: false
 };
 
