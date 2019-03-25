@@ -16,4 +16,4 @@ for( let i = 0 ; i < 20 ; i ++ ) {
 }
 
 module.exports = cities;
-module.exports.id = cities.map(a => a._id);
+module.exports.ids = cities.map(a => a._id);

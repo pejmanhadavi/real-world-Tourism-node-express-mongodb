@@ -22,4 +22,4 @@ for( let i = 0 ; i < 20 ; i ++ ) {
 }
 
 module.exports = experiences;
-module.exports.id = experiences.map(a => a._id);
+module.exports.ids = experiences.map(a => a._id);
