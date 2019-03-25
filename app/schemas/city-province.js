@@ -27,6 +27,7 @@ const citySchema = new Schema(
 
 		province: {
 			type: ObjectId,
+			ref: 'CITY',
 			required: true,
 		},
 		name: {

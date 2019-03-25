@@ -13,7 +13,5 @@ for( let i = 0 ; i < 20 ; i ++ ) {
 
 }
 
-console.log(provinces.map(a => a._id));
-
 module.exports = provinces;
 module.exports.ids = provinces.map(a => a._id);
