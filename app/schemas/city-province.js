@@ -9,12 +9,12 @@ const provinceSchema = new Schema(
 	{
 		name: {
 			type: String,
-			required: false
+			required: true
 		}
 	},
 	{
 		versionKey: false,
-		timestamps: true
+		timestamps: false
 	}
 );
 provinceSchema.index({
