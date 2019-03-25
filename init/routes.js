@@ -1,5 +1,5 @@
 const express = require('express');
-// const indexRouter = require('../app/routes/index');
+const indexRouter = require('../app/routes/index');
 const usersRouter = require('../app/routes/users');
 const authRouter = require('../app/routes/auth');
 const profileRouter = require('../app/routes/profile');
@@ -13,7 +13,7 @@ module.exports = app => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
 
-    // app.use('/', indexRouter);
+    app.use('/', indexRouter);
     app.use('/users', usersRouter);
     app.use('/auth', authRouter);
     app.use('/profile', profileRouter);

@@ -4,6 +4,7 @@ const {TourLeader}  = require('../dao/tour_leader');
 const {Rate} = require('../dao/rate');
 const {User} = require('../dao/user');
 const {handleResponse}  = require('../services/response_handler');
+const {buildErrObject} = require('../services/error_handler');
 const {Experience} = require('../dao/experience');
 
 /************************
@@ -123,9 +124,9 @@ exports.profileSetting = async (req, res, next) => {
 exports.tourLeaderPage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.params.userId);
-		const tourLeader = await TourLeader.findOne({user: id}, '_id experiences');
+		const tourLeader = await TourLeader.findOne({user: id, verified: true}, '_id experiences');
 		if (tourLeader === null)
-			res.status(404).json({error: {code: 404, message: 'NOT_FOUND'}}).end();
+			next(buildErrObject(404, 'NOT_FOUND'));
 		const userInfo = await User.findById(id, 'name city motto profileImages iWillShowYou aboutMe languages travelFacilities');
 		const rate = await Rate.find({tourLeader: tourLeader._id}, '-updatedAt');
 		const experiencesInfo = await Experience.getProfileAndCostOfExperiences(tourLeader.experiences);

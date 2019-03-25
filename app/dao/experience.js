@@ -68,24 +68,38 @@ experienceSchema.statics.checkTheExperiences =  experiences => {
 };
 
 //GET PROFILE AND COST OF EXPERIENCES
+// experienceSchema.statics.getProfileAndCostOfExperiences = experiences => {
+// 	return new Promise((resolve, reject) => {
+// 		let array = [];
+// 		console.log(experiences);
+// 		for (let i =0 ; i < experiences.length ; i++ ){
+// 			Experience.findById(experiences[i])
+// 				.then(result => {
+// 					if(!result)
+// 						reject(buildErrObject(400, 'BAD_REQ'));
+// 					array.push({
+// 						id: result._id,
+// 						title: result.title,
+// 						profile: result.profile,
+// 					});
+// 					console.log(array);
+// 				})
+// 				.catch(err => reject(buildErrObject(422, err.message)));
+// 			resolve(array);
+// 		}
+// 	});
+// };
+
 experienceSchema.statics.getProfileAndCostOfExperiences = experiences => {
 	return new Promise((resolve, reject) => {
-		let array = [];
-		for ( i in experiences){
-			Experience.findById(experiences[i])
-				.then(result => {
-					if(!result)
-						reject(buildErrObject(400, 'BAD_REQ'));
-					array.push({
-						id: result._id,
-						title: result.title,
-						profile: result.profile,
-					});
-					if (i === experiences.length-1 )
-						resolve(array);
-				})
-				.catch(err => reject(buildErrObject(422, err.code)));
-		}
+		Experience.find()
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'NOD EX'));
+				const items = getIdProfileTitle(result, experiences);
+				resolve(items);
+			})
+			.catch(err => buildErrObject(422, err.message));
 	});
 };
 
@@ -108,12 +122,29 @@ const pushAmountsInArray = json => {
 	return array;
 };
 
-const pushProfilesInArray = json => {
-	let array = [];
-	for (let i in json){
-		array.push(json[i].profile.toString());
-	}
-	return array;
+const getIdProfileTitle = (json, experiences) => {
+	let arrayOFExperiencesProperties = [];
+
+	const ids = json.map(a => a._id.toString());
+	const profiles = json.map(a => a.profile);
+	const titles = json.map(a => a.title);
+
+	let exProperty = {} ;
+
+	experiences.forEach(item => {
+		let index = ids.indexOf(item.toString());
+		if ( index < 0 )
+			return (buildErrObject(400, 'badRequest'));
+		exProperty.id = item;
+		exProperty.title = titles[index];
+		exProperty.profile = profiles[index];
+
+		arrayOFExperiencesProperties.push(exProperty);
+		exProperty = {};
+	});
+
+	console.log(arrayOFExperiencesProperties);
+	return arrayOFExperiencesProperties;
 };
 /**************************
  * CREATE AND EXPORT MODEL
