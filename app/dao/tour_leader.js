@@ -154,6 +154,18 @@ tourLeaderSchema.statics.getTourLeaderId = userId => {
 	});
 };
 
+//GET LEADER BY EXPERIENCE
+tourLeaderSchema.statics.getLeaderByExperience = id => {
+	return new Promise((resolve, reject) => {
+		TourLeader.find({experiences: $elemMatch(id)}, 'name profileImages')
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'THERE IS NO LEADER WITH THIS EX'));
+				resolve(result);
+			})
+			.catch(err => buildErrObject(422, 'ERROR'));
+	});
+};
 
 
 /**************************

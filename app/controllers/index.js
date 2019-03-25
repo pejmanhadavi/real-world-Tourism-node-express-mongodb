@@ -128,7 +128,7 @@ exports.tourLeaderPage = async (req, res, next) => {
 			res.status(404).json({error: {code: 404, message: 'NOT_FOUND'}}).end();
 		const userInfo = await User.findById(id, 'name city motto profileImages iWillShowYou aboutMe languages travelFacilities');
 		const rate = await Rate.find({tourLeader: tourLeader._id}, '-updatedAt');
-		const experiencesInfo = Experience.getProfileAndCostOfExperiences(tourLeader.experiences);
+		const experiencesInfo = await Experience.getProfileAndCostOfExperiences(tourLeader.experiences);
 		const data = {
 			tourLeaderInfo: tourLeader,
 			userInfo : userInfo,
@@ -138,6 +138,29 @@ exports.tourLeaderPage = async (req, res, next) => {
 
 		handleResponse(res, 200, 'TOUR_LEADER_PAGE', data);
 	}  catch (err) {
+		next(err);
+	}
+};
+
+/************************************
+ * EXPERIENCE PAGE CONTROLLER
+ * @param req
+ * @param res
+ * @param error
+ * @returns {Promise<void>}
+ */
+exports.experiencePage = async (req, res, next) => {
+	try{
+		const id = isIDGood(req.params.experienceId);
+		const experienceInfo = await Experience.findById(id, 'profile images title description');
+		const experienceTourLeaders = await TourLeader.getLeaderByExperience(id);
+		const data = {
+			experience: experienceInfo,
+			tourLeaders: experienceTourLeaders
+		};
+
+		handleResponse(res, 200, 'EXPERIENCE_PAGE', data);
+	} catch (err) {
 		next(err);
 	}
 };
