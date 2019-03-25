@@ -48,7 +48,7 @@ experienceSchema.statics.calculateAmount  = experiences => {
 	});
 };
 
-//CHECK THE EXPERIENCES
+
 //CHECK IF THE TOUR LEADER HAS THE EXPERIENCES
 experienceSchema.statics.checkTheExperiences =  experiences => {
 	return new Promise((resolve, reject) => {
@@ -67,6 +67,28 @@ experienceSchema.statics.checkTheExperiences =  experiences => {
 	});
 };
 
+//GET PROFILE AND COST OF EXPERIENCES
+experienceSchema.statics.getProfileAndCostOfExperiences = experiences => {
+	return new Promise((resolve, reject) => {
+		let array = [];
+		for ( i in experiences){
+			Experience.findById(experiences[i])
+				.then(result => {
+					if(!result)
+						reject(buildErrObject(400, 'BAD_REQ'));
+					array.push({
+						id: result._id,
+						title: result.title,
+						profile: result.profile,
+					});
+					if (i === experiences.length-1 )
+						resolve(array);
+				})
+				.catch(err => reject(buildErrObject(422, err.code)));
+		}
+	});
+};
+
 /**************************
  * HELPERS
  *************************/
@@ -82,6 +104,14 @@ const pushAmountsInArray = json => {
 	let array = [];
 	for (let i in json){
 		array.push(json[i].cost);
+	}
+	return array;
+};
+
+const pushProfilesInArray = json => {
+	let array = [];
+	for (let i in json){
+		array.push(json[i].profile.toString());
 	}
 	return array;
 };
