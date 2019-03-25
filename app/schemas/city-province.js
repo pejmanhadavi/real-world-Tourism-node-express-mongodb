@@ -9,7 +9,7 @@ const provinceSchema = new Schema(
 	{
 		name: {
 			type: String,
-			required: true
+			required: false
 		}
 	},
 	{
@@ -36,7 +36,7 @@ const citySchema = new Schema(
 	},
 	{
 		versionKey: false,
-		timestamps: true
+		timestamps: false
 	}
 );
 citySchema.index({
