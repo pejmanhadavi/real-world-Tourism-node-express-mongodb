@@ -20,6 +20,6 @@ router.get('/profileSetting', requireAuth, controller.profileSetting);
 
 router.get('/tourLeader/:userId', requireAuth, controller.tourLeaderPage);
 
-router.get('/experience/:experienceId', requireAuth, controller.experiencePage);
+router.get('/experience/:experienceId', controller.experiencePage);
 
 module.exports = router;

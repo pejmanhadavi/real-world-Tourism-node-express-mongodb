@@ -152,7 +152,7 @@ exports.tourLeaderPage = async (req, res, next) => {
  */
 exports.experiencePage = async (req, res, next) => {
 	try{
-		const id = isIDGood(req.params.experienceId);
+		const id = await isIDGood(req.params.experienceId);
 		const experienceInfo = await Experience.findById(id, 'profile images title description');
 		const experienceTourLeaders = await TourLeader.getLeaderByExperience(id);
 		const data = {
