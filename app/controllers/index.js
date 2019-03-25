@@ -4,7 +4,7 @@ const {TourLeader}  = require('../dao/tour_leader');
 const {Rate} = require('../dao/rate');
 const {User} = require('../dao/user');
 const {handleResponse}  = require('../services/response_handler');
-
+const {Experience} = require('../dao/experience');
 
 /************************
  * MAIN PAGE CONTROLLER
@@ -19,10 +19,11 @@ exports.mainPage  = async (req, res, next) => {
 		const tourLeaders = await TourLeader.find({verified: true},'costPerDay _id user')
 			.populate('user', '_id name city motto profileImages');
 		const rates = await Rate.find({},'tourLeader user comment star');
-
+		const experiences = await Experience.find({}, '_id title cost');
 		const data =  {
 			tourLeaders: tourLeaders,
-			rates: rates
+			rates: rates,
+			experiences: experiences
 		};
 		handleResponse(res, 200, 'MAIN_PAGE', data);
 
@@ -54,6 +55,7 @@ exports.loggedIn = async (req, res, next) => {
 			tourLeaders: tourLeaders,
 			rates: rates,
 			userInfo: userInfo,
+			experiences: experiences
 		};
 		handleResponse(res, 200, 'LOGGED_IN_MAIN_PAGE', data);
 
@@ -121,15 +123,17 @@ exports.profileSetting = async (req, res, next) => {
 exports.tourLeaderPage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.params.userId);
-		const tourLeader = await TourLeader.findOne({user: id}, '_id cost');
+		const tourLeader = await TourLeader.findOne({user: id}, '_id experiences');
 		if (tourLeader === null)
 			res.status(404).json({error: {code: 404, message: 'NOT_FOUND'}}).end();
 		const userInfo = await User.findById(id, 'name city motto profileImages iWillShowYou aboutMe languages travelFacilities');
 		const rate = await Rate.find({tourLeader: tourLeader._id}, '-updatedAt');
+		const experiencesInfo = Experience.getProfileAndCostOfExperiences(tourLeader.experiences);
 		const data = {
 			tourLeaderInfo: tourLeader,
 			userInfo : userInfo,
-			rate: rate
+			rate: rate,
+			experiences: experiencesInfo
 		};
 
 		handleResponse(res, 200, 'TOUR_LEADER_PAGE', data);
