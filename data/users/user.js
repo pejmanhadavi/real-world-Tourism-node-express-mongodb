@@ -8,7 +8,7 @@ const provinces = require('../provinces/province').ids;
 for( let i = 0 ; i < 20 ; i ++ ) {
     user = {
         _id: new ObjectId(),
-        name: faker.name.firstName,
+        name: faker.name.firstName(),
         password: '$2b$10$7JFz3Ah9Nnk5jwbj.gkAmOwusKA.T6XAYMrtSihxlJ/9bU2ZGmERG',
         email: faker.internet.email(),
         verification: uuid.v4(),
