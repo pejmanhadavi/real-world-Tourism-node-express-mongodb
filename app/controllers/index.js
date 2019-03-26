@@ -6,6 +6,7 @@ const {User} = require('../dao/user');
 const {handleResponse}  = require('../services/response_handler');
 const {buildErrObject} = require('../services/error_handler');
 const {Experience} = require('../dao/experience');
+const {City} = require('../schemas/city-province');
 
 /************************
  * MAIN PAGE CONTROLLER
@@ -17,10 +18,20 @@ const {Experience} = require('../dao/experience');
 exports.mainPage  = async (req, res, next) => {
 	try{
 
-		const tourLeaders = await TourLeader.find({verified: true},'costPerDay _id user')
-			.populate('user', '_id name city motto profileImages');
+		// const tourLeaders = await TourLeader.find({verified: true},'_id user')
+		// 	.populate('user', '_id name city motto profileImages')
+		// 	.populate({path: 'city', select: 'name'});
+		const tourLeaders = await TourLeader.find({verified: true},'_id user')
+			.populate({
+				path : 'user',
+				select: '_id name city motto profileImages',
+				populate: {
+					path: 'city',
+					select: 'name'
+				}
+			});
 		const rates = await Rate.find({},'tourLeader user comment star');
-		const experiences = await Experience.find({}, '_id title cost');
+		const experiences = await Experience.find({}, '_id title cost profile');
 		const data =  {
 			tourLeaders: tourLeaders,
 			rates: rates,
