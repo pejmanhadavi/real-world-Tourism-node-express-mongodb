@@ -9,7 +9,7 @@ for( let i = 0 ; i < 20 ; i ++ ) {
         _id: new ObjectId(),
         tourLeader: leaders[ 20 - i ],
         user: users[i],
-        star: Math.floor(Math.random() * 20 + 1),
+        star: Math.floor(Math.random() * 5 + 1),
         comment: `this is some comment ${i+1}`
     };
 
