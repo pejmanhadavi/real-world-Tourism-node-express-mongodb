@@ -52,4 +52,8 @@ citySchema.plugin(mongoosePaginate);
 module.exports.citySchema = citySchema;
 module.exports.provinceSchema = provinceSchema;
 
+//EXPORT MODELS
+module.exports.City = mongoose.model('City', citySchema);
+module.exports.Province = mongoose.model('Province', provinceSchema);
+
 
