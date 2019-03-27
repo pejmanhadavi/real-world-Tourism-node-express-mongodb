@@ -7,11 +7,13 @@ const tourLeaderRouter = require('../app/routes/tour_leader');
 const requestRoute = require('../app/routes/request');
 const rateRoute = require('../app/routes/rate');
 const payRoute = require('../app/routes/pay');
+const cors = require('cors');
 
 
 module.exports = app => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
+    app.use(cors());
 
     app.use('/', indexRouter);
     app.use('/users', usersRouter);
