@@ -1,5 +1,5 @@
 const {buildErrObject} = require('../services/error_handler');
-
+const {base_controller} = require('../../messages');
 
 /***************************
     * IS GOOD ID *
@@ -11,6 +11,6 @@ exports.isIDGood = async id => {
 		const goodID = String(id).match(/^[0-9a-fA-F]{24}$/);
 		return goodID
 			? resolve(id)
-			: reject(buildErrObject(422, 'ID_MALFORMED'));
+			: reject(buildErrObject(422, base_controller.ID_MALFORMED));
 	});
 };

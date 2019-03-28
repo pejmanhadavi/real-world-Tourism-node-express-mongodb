@@ -2,6 +2,7 @@ const {isIDGood} = require('./base');
 const {resizeImage} = require('../services/resize_image');
 const {User} = require('../dao/user');
 const {handleResponse} = require('../services/response_handler');
+const {profile_controller} = require('../../messages');
 
 /**************************
  * GET_PROFILE CONTROLLER
@@ -14,7 +15,7 @@ exports.getProfile = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		const response = await User.getProfileFromDB(id);
-		handleResponse(res, 200, 'DONE', response);
+		handleResponse(res, 200, profile_controller.GET_PROFILE, response);
 	}catch (err) {
 		next(err);
 	}
@@ -50,7 +51,7 @@ exports.updatePassword = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		const response = await User.updatePasswordInProfile(req, id);
-		handleResponse(res, 200, 'PASSWORD_UPDATED', response);
+		handleResponse(res, 200, profile_controller.PASSWORD_UPDATED, response);
 	}catch (err) {
 		next(err);
 	}
@@ -69,7 +70,7 @@ exports.updateProfileImage = async (req, res, next) => {
 		const id = await isIDGood(req.user._id);
 		const response = await User.updateProfileImage(req, id);
 		resizeImage(response.profile);
-		handleResponse(res, 200, 'PROFILE_IMAGE_UPDATED', response);
+		handleResponse(res, 200, profile_controller.PROFILE_IMAGE_UPDATED, response);
 	}catch (err) {
 		next(err);
 	}
@@ -87,7 +88,7 @@ exports.updateBackgroundImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		const response = await User.updateBackgroundImage(req, id);
-		handleResponse(res, 200, 'BACKGROUND_IMAGE_UPDATED', response);
+		handleResponse(res, 200, profile_controller.BACKGROUND_IMAGE_UPDATED, response);
 	}catch (err) {
 		next(err);
 	}
@@ -104,7 +105,7 @@ exports.deleteProfileImage = async (req, res, next) => {
 	try {
 		const id = await isIDGood(req.user._id);
 		const response = await User.deleteProfileImage(id, req.params.profile);
-		handleResponse(res, 200, 'PROFILE_IMAGE_DELETED', response);
+		handleResponse(res, 200, profile_controller.PROFILE_IMAGE_DELETED, response);
 	}catch (err) {
 		next(err);
 	}
@@ -122,7 +123,7 @@ exports.deleteBackgroundImage = async (req, res, next) => {
 	try{
 		const id = await isIDGood(req.user._id);
 		const response = await User.deleteBackgroundImage(id);
-		handleResponse(res, 200, 'BACKGROUND_IMAGE_DELETED', response);
+		handleResponse(res, 200, profile_controller.BACKGROUND_IMAGE_DELETED, response);
 	}catch (err) {
 		next(err);
 	}

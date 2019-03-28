@@ -6,6 +6,7 @@ const {userRefreshSchema} = require('../schemas/user_refresh');
 const {User} = require('../dao/user');
 const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access');
 const {generateToken} = require('../services/auth');
+const {userRefresh_dao} = require('../../messages');
 
 /********************
  * STATICS *
@@ -43,7 +44,7 @@ userRefreshSchema.statics.findRefreshAndReturnUserId = refreshToken => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(401, 'NO_REFRESH_TOKEN'));
+					reject(buildErrObject(401, userRefresh_dao.REFRESH_TOKEN_NOT_FOUND));
 				resolve(result.userId);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

@@ -1,35 +1,36 @@
 const {check, param}= require('express-validator/check');
 const validationResult = require('express-validator/check').validationResult;
 const {buildErrObject} = require('../services/error_handler');
+const {auth_validation} = require('../../messages');
 
 const validationErrCode = 400;
 
 exports.register = [
 	check('name')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.NAME_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY'),
+		.withMessage(auth_validation.NAME_IS_EMPTY),
 	check('email')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.EMAIL_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(auth_validation.EMAIL_IS_EMPTY)
 		.isEmail()
-		.withMessage('EMAIL_IS_NOT_VALID')
+		.withMessage(auth_validation.EMAIL_IS_NOT_VALID)
 		.normalizeEmail(),
 	check('password')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.PASSWORD_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(auth_validation.PASSWORD_IS_EMPTY)
 		.isLength({
 			min: 5
 		})
-		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+		.withMessage(auth_validation.PASSWORD_IS_TOO_SHORT_MIN_5),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();
@@ -45,7 +46,7 @@ exports.register = [
 exports.verify = [
 	param('verification')
 		.isUUID()
-		.withMessage('BAD_REQUEST'),
+		.withMessage(auth_validation.VERIFICATION_BAD_REQUEST),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();
@@ -60,12 +61,12 @@ exports.verify = [
 exports.forgotPassword = [
 	check('email')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.EMAIL_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(auth_validation.EMAIL_IS_EMPTY)
 		.isEmail()
-		.withMessage('EMAIL_IS_NOT_VALID')
+		.withMessage(auth_validation.EMAIL_IS_NOT_VALID)
 		.normalizeEmail(),
 	(req, res, next)=>{
 		try{
@@ -81,7 +82,7 @@ exports.forgotPassword = [
 exports.getResetPassword = [
 	param('verification')
 		.isUUID()
-		.withMessage('BAD_REQUEST'),
+		.withMessage(auth_validation.VERIFICATION_BAD_REQUEST),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();
@@ -94,17 +95,17 @@ exports.getResetPassword = [
 exports.postResetPassword = [
 	param('verification')
 		.isUUID()
-		.withMessage('BAD_REQUEST'),
+		.withMessage(auth_validation.VERIFICATION_BAD_REQUEST),
 	check('password')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.PASSWORD_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(auth_validation.PASSWORD_IS_EMPTY)
 		.isLength({
 			min: 5
 		})
-		.withMessage('PASSWORD_IS_TOO_SHORT_MIN_5'),
+		.withMessage(auth_validation.PASSWORD_IS_TOO_SHORT_MIN_5),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();
@@ -118,23 +119,23 @@ exports.postResetPassword = [
 exports.login = [
 	check('email')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.EMAIL_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(auth_validation.EMAIL_IS_EMPTY)
 		.isEmail()
-		.withMessage('EMAIL_IS_NOT_VALID')
+		.withMessage(auth_validation.EMAIL_IS_NOT_VALID)
 		.normalizeEmail(),
 	check('password')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.PASSWORD_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(auth_validation.PASSWORD_IS_EMPTY)
 		.isLength({
 			min: 5
 		})
-		.withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+		.withMessage(auth_validation.PASSWORD_IS_TOO_SHORT_MIN_5),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();
@@ -149,10 +150,10 @@ exports.login = [
 exports.token = [
 	check('refreshToken')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(auth_validation.REFRESH_TOKEN_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY'),
+		.withMessage(auth_validation.REFRESH_TOKEN_IS_EMPTY),
 	//here we can add also is it uuid or not...
 	(req, res, next) => {
 		try {

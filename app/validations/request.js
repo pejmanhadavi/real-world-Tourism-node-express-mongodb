@@ -1,25 +1,26 @@
 const {check, param, validationResult} = require('express-validator/check');
 const {buildErrObject} = require('../services/error_handler');
+const {request_validation} = require('../../messages');
 
 const validationErrCode = 400;
 
 exports.sendRequest = [
 	check('tourLeader')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(request_validation.LEADER_ID_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(request_validation.LEADER_ID_IS_EMPTY)
 		.isMongoId()
-		.withMessage('ID_IS_NOT_VALID'),
+		.withMessage(request_validation.LEADER_ID_IS_NOT_VALID),
 	check('experiences')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(request_validation.EXPERIENCES_MISSING)
 		.not()
 		.isEmpty()
-		.withMessage('IS_EMPTY')
+		.withMessage(request_validation.EXPERIENCES_IS_EMPTY)
 		.isArray()
-		.withMessage('MOST_BE_ARRAY'),
+		.withMessage(request_validation.EXPERIENCES_MOST_BE_AN_ARRAY),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();
@@ -35,9 +36,9 @@ exports.sendRequest = [
 exports.tourLeaderValidate = [
 	param('requestId')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(request_validation.REQUEST_ID_MISSING)
 		.isMongoId()
-		.withMessage('ID_IS_NOT_VALID'),
+		.withMessage(request_validation.REQUEST_ID_IS_NOT_VALID),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();
@@ -55,14 +56,14 @@ exports.tourLeaderValidate = [
 exports.satisfaction = [
 	param('requestId')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(request_validation.REQUEST_ID_MISSING)
 		.isMongoId()
-		.withMessage('ID_IS_NOT_VALID'),
+		.withMessage(request_validation.REQUEST_ID_IS_NOT_VALID),
 	check('satisfaction')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(request_validation.SATISFACTION_MISSING)
 		.isBoolean()
-		.withMessage('MALFORMED'),
+		.withMessage(request_validation.SATISFACTION_MALFORMED),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();

@@ -41,7 +41,7 @@ exports.rate_controller = {
     RATED: 'نظر شما ثبت شد',
 };
 
-exports.rate_controller = {
+exports.request_controller = {
     REQUEST_SENT: 'درخواست ارسال شد',
     TOUR_LEADER_FIRST_VALIDATE: 'شما به عنوان راهنما درخواست را تایید کردید',
     TOUR_LEADER_FINAL_VALIDATE: 'شما به عنوان راهنما درخواست را تایید نهایی کردید',
@@ -143,6 +143,7 @@ exports.profile_vlidation = {
     NEW_PASSWORD_IS_TOO_SHORT_MIN_5: 'رمز عبور جدید باید حداقل ۵ کاراکتر باشد',
     PROFILE_IMAGE_MISSING: 'پروفایلی وجود ندارد',
     I_WILL_SHOW_YOU_MOST_BE_AN_ARRAY: 'درخواست نامعتبر است باید ارایه باشد',
+    LANGUAGES_MOST_BE_AN_ARRAY: 'درخواست نامعتبر است باید ارایه باشد',
     TRAVEL_FACILITIES_MOST_BE_AN_ARRAY: 'درخواست نامعتبر است باید ارایه باشد',
 };
 

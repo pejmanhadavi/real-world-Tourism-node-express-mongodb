@@ -10,6 +10,8 @@ const {userSchema} = require('../schemas/user');
 const {buildErrObject}= require('../services/error_handler');
 const {generateToken} = require('../services/auth');
 
+const {user_dao} = require('../../messages');
+
 const LOGIN_ATTEMPTS = 5;
 const HOURS_TO_BLOCK = 12;
 
@@ -30,7 +32,7 @@ userSchema.statics.emailExists= email=>{
 			.then(result => {
 				if (!result)
 					resolve(result);
-				reject(buildErrObject(409, 'EMAIL_ALREADY_EXISTS'));
+				reject(buildErrObject(409, user_dao.EMAIL_EXISTS));
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -74,7 +76,7 @@ userSchema.statics.verificationExists = verification => {
 			})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND_OR_ALREADY_VERIFIED'));
+					reject(buildErrObject(404, user_dao.NOT_FOUND_OR_ALREADY_VERIFIED));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -109,7 +111,7 @@ userSchema.statics.findUserByEmail = email => {
 			'password loginAttempts blockExpires name email role verified',)
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'USER_DOES_NOT_EXISTS_OR_NOT_VERIFIED'));
+					reject(buildErrObject(404, user_dao.NOT_FOUND_OR_ALREADY_VERIFIED));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -154,7 +156,7 @@ userSchema.statics.passwordsDoNotMatch = user => {
 		user.loginAttempts += 1;
 		await this.saveLoginAttemptsToDB(user);
 		if (user.loginAttempts <= LOGIN_ATTEMPTS) {
-			reject(buildErrObject(409, 'WRONG_PASSWORD'));
+			reject(buildErrObject(409, user_dao.PASSWORDS_DO_NOT_MATCH));
 		} else {
 			reject(buildErrObject(409, await blockUser(user)));
 		}
@@ -188,7 +190,7 @@ userSchema.statics.comparePassword = (passwordAttempt, password, cb) => {
 userSchema.statics.userIsBlocked = user => {
 	return new Promise((resolve, reject) => {
 		if(user.blockExpires > new Date())
-			reject(buildErrObject(409, 'BLOCKED_USER'));
+			reject(buildErrObject(409, user_dao.USER_BLOCKED));
 		resolve(true);
 	});
 };
@@ -200,7 +202,7 @@ userSchema.statics.getProfileFromDB = id => {
 		User.findById(id, '-_id -updatedAt -createdAt -loginAttempts -verified -blockExpires -verification -password')
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, user_dao.USER_NOT_FOUND));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -216,7 +218,7 @@ userSchema.statics.updateProfileInDB = (req, id) => {
 		User.findById(id)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404,  user_dao.USER_NOT_FOUND));
 				// Assigns new values to user
 				for (const property in req.body) {
 					result[property] = req.body[property];
@@ -236,13 +238,13 @@ userSchema.statics.updatePasswordInProfile = (req, id) => {
 		User.findById(id)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, user_dao.USER_NOT_FOUND));
 
 				const isPassMatch = await User.checkPassword(req.body.currentPassword, result);
 				if (isPassMatch)
 					await User.updatePassword(result, req.body.newPassword);
 				else
-					reject(buildErrObject(409, 'WRONG_CURRENT_PASSWORD'));
+					reject(buildErrObject(409, user_dao.WRONG_CURRENT_PASSWORD));
 
 				resolve({
 					id: result._id
@@ -257,7 +259,7 @@ userSchema.statics.updateProfileImage = (req, id) => {
 		User.findById(id)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404,  user_dao.USER_NOT_FOUND));
 				result.profileImages.push(req.file.filename);
 				await result.save();
 				resolve({
@@ -275,7 +277,7 @@ userSchema.statics.updateBackgroundImage = (req, id) => {
 		User.findById(id)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404,  user_dao.USER_NOT_FOUND));
 				result.backgroundImage = req.file.filename;
 				await result.save();
 				resolve({
@@ -292,7 +294,7 @@ userSchema.statics.deleteProfileImage = (id, profileImage) => {
 		User.findByIdAndUpdate(id, {$pull:{profileImages: profileImage}})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404,  user_dao.USER_NOT_FOUND));
 				try {
 					const path = './public/uploads/'+profileImage;
 					fs.unlinkSync(path);
@@ -314,7 +316,7 @@ userSchema.statics.deleteBackgroundImage = (id) => {
 		User.findByIdAndUpdate(id, {$unset:{backgroundImage: undefined}})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404,  user_dao.USER_NOT_FOUND));
 				resolve({
 					id: result._id
 				});
@@ -371,7 +373,7 @@ const blockUser = user => {
 	return new Promise((resolve, reject) => {
 		user.blockExpires = dateFns.addHours(new Date(), HOURS_TO_BLOCK);
 		user.save()
-			.then(() => resolve('USER_BLOCKED'))
+			.then(() => resolve(user_dao.USER_BLOCKED))
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };

@@ -4,7 +4,7 @@ const {buildErrObject} = require('../services/error_handler');
 
 const uuid = require('uuid');
 const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access');
-
+const {forgotPassword_dao} = require('../../messages');
 
 /**************
  * STATICS
@@ -37,7 +37,7 @@ forgotPasswordSchema.statics.findForgotPassword = verification => {
 			})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404,'NOT_FOUND_OR_ALREADY_USED'));
+					reject(buildErrObject(404,forgotPassword_dao.NOT_FOUND_OR_ALREADY_USED));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -54,7 +54,7 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = (req, forgotPass) => {
 		forgotPass.save()
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, forgotPassword_dao.FORGOT_PASSWORD_NOT_FOUND));
 				resolve({
 					email: result.email
 				});
@@ -72,7 +72,7 @@ forgotPasswordSchema.statics.deleteUnusedForgotPasswords = email => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404 , 'NOT_FOUND'));
+					reject(buildErrObject(404 , forgotPassword_dao.NOT_FOUND));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));

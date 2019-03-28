@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const {experienceSchema} = require('../schemas/experience');
 const {buildErrObject} = require('../services/error_handler');
-
+const {experience_dao} = require('../../messages');
 
 
 
@@ -34,7 +34,7 @@ experienceSchema.statics.calculateAmount  = experiences => {
 		Experience.find()
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, experience_dao.NO_EXPERIENCE));
 
 				const idArr = pushIdsInArray(result);
 				const amountArr = pushAmountsInArray(result);
@@ -55,11 +55,11 @@ experienceSchema.statics.checkTheExperiences =  experiences => {
 		Experience.find()
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(409, 'NO_EXPERIENCE'));
+					reject(buildErrObject(409, experience_dao.NO_EXPERIENCE));
 				const arrayOfIds = pushIdsInArray(result);
 				for(let i in experiences){
 					if (arrayOfIds.indexOf(experiences[i])<0)
-						reject(buildErrObject(400, 'BAD_REQUEST'))
+						reject(buildErrObject(400, experience_dao.BAD_REQUEST))
 				}
 				resolve(true);
 			})
@@ -95,7 +95,7 @@ experienceSchema.statics.getProfileAndCostOfExperiences = experiences => {
 		Experience.find()
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOD EX'));
+					reject(buildErrObject(404, experience_dao.NO_EXPERIENCE));
 				const items = getIdProfileTitle(result, experiences);
 				resolve(items);
 			})
@@ -134,7 +134,7 @@ const getIdProfileTitle = (json, experiences) => {
 	experiences.forEach(item => {
 		let index = ids.indexOf(item.toString());
 		if ( index < 0 )
-			return (buildErrObject(400, 'badRequest'));
+			return (buildErrObject(400, experience_dao.BAD_REQUEST));
 		exProperty.id = item;
 		exProperty.title = titles[index];
 		exProperty.profile = profiles[index];

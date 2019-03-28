@@ -6,7 +6,7 @@ const {UserRefresh} = require('../dao/user_refresh');
 const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('../services/send_email');
 const {generateToken} = require('../services/auth');
 const {handleResponse} = require('../services/response_handler');
-
+const {auth_controller} = require('../../messages');
 
 /**************************************
  * 1_REGISTER CONTROLLER *
@@ -23,7 +23,7 @@ exports.register = async(req, res, next) => {
 		const userInfo = User.setUserInfo(user);
 		const response = user.returnRegistrationToken(user, userInfo);
 		sendRegistrationEmailMessage(user);
-		handleResponse(res, 201, 'USER_REGISTERED_VERIFY_EMAIL', response);
+		handleResponse(res, 201, auth_controller.USER_REGISTERED_VERIFY_EMAIL, response);
 	}catch(err){
 		next(err);
 	}
@@ -41,7 +41,7 @@ exports.verify = async (req, res, next) => {
 	try {
 		const user = await User.verificationExists(req.params.verification);
 		const response = await User.verifyUser(user);
-		handleResponse(res, 200, 'EMAIL_VERIFIED_NOW_LOGIN', response);
+		handleResponse(res, 200, auth_controller.EMAIL_VERIFIED_NOW_LOGIN, response);
 	} catch (err) {
 		next(err);
 	}
@@ -60,7 +60,7 @@ exports.forgotPassword = async (req, res, next) => {
 		await User.findUserByEmail(data.email);
 		const forgotPass = await ForgotPassword.saveForgotPassword(req);
 		sendResetPasswordEmailMessage(forgotPass);
-		handleResponse(res, 200, 'RESET_EMAIL_SENT', data.email);
+		handleResponse(res, 200, auth_controller.RESET_EMAIL_SENT, data.email);
 	}catch (err) {
 		next(err);
 	}
@@ -77,7 +77,7 @@ exports.forgotPassword = async (req, res, next) => {
 exports.getResetPassword = async (req, res, next) => {
 	try{
 		await ForgotPassword.findForgotPassword(req.params.verification);
-		handleResponse(res, 200, 'RESET_PASSWORD_PAGE', {
+		handleResponse(res, 200, auth_controller.RESET_PASSWORD_PAGE, {
 			msg:'RESET_PASSWORD'
 		});
 	}catch (err) {
@@ -100,7 +100,7 @@ exports.postResetPassword = async (req, res, next) => {
 		await User.updatePassword(user, data.password);
 		const result = await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
 		await ForgotPassword.deleteUnusedForgotPasswords(forgotPassword.email);
-		handleResponse(res, 200, 'PASSWORD_CHANGED', result);
+		handleResponse(res, 200, auth_controller.PASSWORD_CHANGED, result);
 	}catch (err) {
 		next(err);
 	}
@@ -128,7 +128,7 @@ exports.login = async (req, res, next) => {
 			user.loginAttempts = 0;
 			await saveLoginAttemptsToDB(user);
 			const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
-			handleResponse(res, 200, 'LOGGED_IN', response);
+			handleResponse(res, 200, auth_controller.LOGGED_IN, response);
 		}
 	} catch (err) {
 		next(err);
@@ -149,7 +149,7 @@ exports.token = async (req, res, next) => {
 		const response = {
 			token: generateToken(userId),
 		};
-		handleResponse(res, 200, 'TOKEN_REFRESHED', response);
+		handleResponse(res, 200, auth_controller.TOKEN_REFRESHED, response);
 
 	}catch (err) {
 		next(err);

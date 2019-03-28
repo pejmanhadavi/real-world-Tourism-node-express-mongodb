@@ -1,14 +1,15 @@
 const {param, validationResult} = require('express-validator/check');
 const {buildErrObject} = require('../services/error_handler');
+const {request_validation} = require('../../messages');
 
 const validationErrCode = 400;
 
 exports.pay = [
 	param('requestId')
 		.exists()
-		.withMessage('MISSING')
+		.withMessage(request_validation.REQUEST_ID_MISSING)
 		.isMongoId()
-		.withMessage('ID_IS_NOT_VALID'),
+		.withMessage(request_validation.REQUEST_ID_IS_NOT_VALID),
 	(req, res, next)=>{
 		try{
 			validationResult(req).throw();

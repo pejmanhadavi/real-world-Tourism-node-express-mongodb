@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const {tourLeaderSchema} = require('../schemas/tour_leader');
 const {buildErrObject}= require('../services/error_handler');
-
+const {leader_dao} = require('../../messages');
 
 /*************************
  * STATICS
@@ -17,7 +17,7 @@ tourLeaderSchema.statics.tourLeaderExists= id => {
 			.then(result => {
 				if (!result)
 					resolve(true);
-				reject(buildErrObject(422, 'USER_ALREADY_EXISTS'));
+				reject(buildErrObject(422, leader_dao.LEADER_ALREADY_EXISTS));
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -31,7 +31,7 @@ tourLeaderSchema.statics.tourLeaderDoesNotExists= id=>{
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'USER_IS_NOT_TOUR_LEADER'));
+					reject(buildErrObject(404, leader_dao.USER_IS_NOT_TOUR_LEADER));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -47,7 +47,7 @@ tourLeaderSchema.statics.tourLeaderCheckForRequest = id => {
 		})
 			.then(result => {
 				if(!result)
-					reject(buildErrObject(404, 'TOUR_LEADER_NOT_FOUND_OR_NOT_VERIFIED'));
+					reject(buildErrObject(404, leader_dao.TOUR_LEADER_NOT_FOUND_OR_NOT_VERIFIED));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -63,7 +63,7 @@ tourLeaderSchema.statics.getTourLeaderById = id => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, leader_dao.LEADER_NOT_FOUND));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -76,10 +76,10 @@ tourLeaderSchema.statics.checkTheExperiences = (id, experiences )=> {
 		TourLeader.findById(id)
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, leader_dao.LEADER_NOT_FOUND));
 				for(let i in experiences){
 				    if (result.experiences.indexOf(experiences[i]) < 0)
-				        reject(buildErrObject(400, 'BAD_REQUEST'));
+				        reject(buildErrObject(400, leader_dao.BAD_REQUEST));
 				}
 				resolve(true);
 			})
@@ -91,14 +91,14 @@ tourLeaderSchema.statics.checkTheExperiences = (id, experiences )=> {
 tourLeaderSchema.statics.edit = (req, id) => {
 	return new Promise((resolve, reject) => {
 		if (!req.body.experiences)
-			reject(buildErrObject(422,'BAD_REQUEST'));
+			reject(buildErrObject(400,leader_dao.BAD_REQUEST));
 		TourLeader.findOne({
 			user: id,
 			verified: true,
 		})
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'USER_NOT_FOUND'));
+					reject(buildErrObject(404, leader_dao.LEADER_NOT_FOUND));
 				result.experiences = req.body.experiences;
 				await result.save();
 				resolve({
@@ -125,7 +125,7 @@ tourLeaderSchema.statics.registerTourLeader = (req, id) => {
 				tourLeader.scanTourLeaderCertification = req.files.scanTourLeaderCertification[0].filename;
 				tourLeader.scanBirthCertification = req.files.scanBirthCertification[0].filename;
 			}else {
-				reject(buildErrObject(409, 'SEND_SCAN_BIRTH_AND_LEADER_CARDS'));
+				reject(buildErrObject(409, leader_dao.SEND_SCAN_BIRTH_AND_LEADER_CARDS));
 			}
 		}
 		tourLeader.save()
@@ -147,7 +147,7 @@ tourLeaderSchema.statics.getTourLeaderId = userId => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, leader_dao.LEADER_NOT_FOUND));
 				resolve(result._id);
 			})
 			.catch(err => reject(buildErrObject(422,err.message)));
@@ -160,7 +160,7 @@ tourLeaderSchema.statics.getLeaderByExperience = id => {
 		TourLeader.find({verified: true, experiences: {$elemMatch: id}}, '_id user name profileImages')
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'THERE IS NO LEADER WITH THIS EX'));
+					reject(buildErrObject(404, leader_dao.LEADER_NOT_FOUND));
 				resolve(result);
 			})
 			.catch(err => buildErrObject(422, 'ERROR'));

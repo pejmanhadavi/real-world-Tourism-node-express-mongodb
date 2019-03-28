@@ -7,6 +7,7 @@ const {Request} = require('../dao/request');
 const {Pay} = require('../dao/pay');
 const {handleResponse} = require('../services/response_handler');
 const {Experience} = require('../dao/experience');
+const {pay_controller} = require('../../messages');
 /*****************************
  * PAY CONTROLLER
  * @param req
@@ -43,7 +44,7 @@ exports.verifyPay = (req, res, next) => {
 				request.paid = true;
 				await request.save();
 				const response = await Pay.savePayment(data);
-				handleResponse(res, 200, 'SUCCESS_FULL_PAYMENT', response);
+				handleResponse(res, 200, pay_controller.SUCCESS_FULL_PAYMENT, response);
 			});
 	}  catch (err) {
 		next(err);

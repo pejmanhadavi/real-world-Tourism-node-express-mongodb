@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const {requestSchema} = require('../schemas/request');
 const {buildErrObject} = require('../services/error_handler');
-
+const {request_dao} = require('../../messages');
 
 /*********************
  * STATICS
@@ -30,7 +30,7 @@ requestSchema.statics.requestExists = (requestId) => {
 	return new Promise((resolve, reject) => {
 		Request.findById(requestId)
 			.then(resolve)
-			.catch(err => reject(buildErrObject(422, err.messageSchema)));
+			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
 //IS TOUR LEADER FOR THIS REQUEST
@@ -42,7 +42,7 @@ requestSchema.statics.checkTourLeaderForRequest = (requestId, tourLeaderId) => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'REQUEST_WITH_THIS_TOUR_LEADER_NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_WITH_TOUR_LEADER_NOT_FOUND));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -55,7 +55,7 @@ requestSchema.statics.tourLeaderFirstValidate = requestId => {
 		Request.findById(requestId)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				result.tourLeaderFirstValidate = true;
 				await result.save();
 				resolve({
@@ -72,7 +72,7 @@ requestSchema.statics.tourLeaderFinalValidate = requestId => {
 		Request.findById(requestId)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				result.tourLeaderFinalValidate = true;
 				await result.save();
 				resolve({
@@ -92,7 +92,7 @@ requestSchema.statics.userFinalValidate = (requestId, userId) => {
 		})
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				result.userFinalValidate = true;
 				await result.save();
 				resolve({
@@ -116,9 +116,9 @@ requestSchema.statics.userSatisfaction= (requestId, userId, satisfaction) => {
 		})
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				if (result.userSatisfaction)
-					reject(buildErrObject(409, 'ALREADY_EXISTS'));
+					reject(buildErrObject(409, request_dao.SATISFACTION_ALREADY_EXISTS));
 				result.userSatisfaction = satisfaction;
 				await result.save();
 				resolve({
@@ -142,9 +142,9 @@ requestSchema.statics.tourLeaderSatisfaction= (requestId, tourLeaderId, satisfac
 		})
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				if (result.tourLeaderSatisfaction)
-					reject(buildErrObject(409, 'ALREADY_EXISTS'));
+					reject(buildErrObject(409, request_dao.SATISFACTION_ALREADY_EXISTS));
 				result.tourLeaderSatisfaction= satisfaction;
 				await result.save();
 				resolve({
@@ -180,7 +180,7 @@ requestSchema.statics.findRequestByTourLeaderId = (requestId, tourLeaderId) => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -193,7 +193,7 @@ requestSchema.statics.getRequestById = id => {
 		Request.findById(id)
 			.then(result => {
 				if(!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -216,7 +216,7 @@ requestSchema.statics.isRequestRated = (requestId, userId) => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND_OR_RATED'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND_OR_RATED));
 				resolve(true);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -229,7 +229,7 @@ requestSchema.statics.setRate = requestId => {
 		Request.findById(requestId)
 			.then(async result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				result.rated= true;
 				await result.save();
 				resolve({
@@ -253,7 +253,7 @@ requestSchema.statics.findRequestForPay = (requestId, userId) => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND_OR_PAID'));
+					reject(buildErrObject(404, request_dao.NOT_FOUND_OR_PAID));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -270,7 +270,7 @@ requestSchema.statics.findRequestByFactorNumber = factorNumber => {
 		})
 			.then(result => {
 				if (!result)
-					reject(buildErrObject(404, 'NOT_FOUND'));
+					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
