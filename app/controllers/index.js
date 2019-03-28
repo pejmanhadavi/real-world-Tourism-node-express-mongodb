@@ -18,9 +18,6 @@ const {City} = require('../schemas/city-province');
 exports.mainPage  = async (req, res, next) => {
 	try{
 
-		// const tourLeaders = await TourLeader.find({verified: true},'_id user')
-		// 	.populate('user', '_id name city motto profileImages')
-		// 	.populate({path: 'city', select: 'name'});
 		const tourLeaders = await TourLeader.find({verified: true},'_id user')
 			.populate({
 				path : 'user',
@@ -29,12 +26,28 @@ exports.mainPage  = async (req, res, next) => {
 					path: 'city',
 					select: 'name'
 				}
+			}).lean();
+
+		const rates = await Rate.aggregate([
+			{
+				$group: {
+					_id: '$tourLeader',
+					averageStar: { $avg: "$star" },
+					comments: {$push: "$comment"}
+				}
+			}
+		]);
+
+		tourLeaders.forEach(leader => {
+			rates.forEach(rate => {
+				if (leader._id.toString() === rate._id.toString())
+					leader.rate = rate;
 			});
-		const rates = await Rate.find({},'tourLeader user comment star');
+		});
+
 		const experiences = await Experience.find({}, '_id title cost profile');
 		const data =  {
 			tourLeaders: tourLeaders,
-			rates: rates,
 			experiences: experiences
 		};
 		handleResponse(res, 200, 'MAIN_PAGE', data);
