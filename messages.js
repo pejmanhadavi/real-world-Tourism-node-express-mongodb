@@ -2,179 +2,177 @@
  * GLOBAL
  */
 exports.global = {
-  ERROR: '',
-  NOT_FOUND: '',
+  ERROR: 'مشکلی به وجود آمد بعدا تلاش کنید',
+  NOT_FOUND: 'داده ای یافت نشد!',
 };
 
 /*********************
  * CONTROLLER
  */
 exports.auth_controller = {
-    USER_REGISTERED_VERIFY_EMAIL: '',
-    EMAIL_VERIFIED_NOW_LOGIN: '',
-    RESET_EMAIL_SENT: '',
-    RESET_PASSWORD_PAGE: '',
-    PASSWORD_CHANGED: '',
-    LOGGED_IN: '',
-    TOKEN_REFRESHED: '',
+    USER_REGISTERED_VERIFY_EMAIL: 'ایمیل تایید از طرف تورآسو برای شما ارسال شد آن را تایید کنید',
+    EMAIL_VERIFIED_NOW_LOGIN: 'ایمیل شما تایید شد اکنون می توانید وارد شوید',
+    RESET_EMAIL_SENT: 'ایمیل بازیابی برای شما ارسال شد',
+    RESET_PASSWORD_PAGE: 'صفحه بازیابی رمز عبور',
+    PASSWORD_CHANGED: 'رمز عبور تغییر یافت',
+    LOGGED_IN: 'با موفقیت وارد شدید',
+    TOKEN_REFRESHED: 'DONE',
 };
 
 exports.base_controller = {
-    ID_MALFORMED: ''
+    ID_MALFORMED: 'درخواست معتبر نیست'
 };
 
 exports.pay_controller = {
-    SUCCESS_FULL_PAYMENT: ''
+    SUCCESS_FULL_PAYMENT: 'پرداخت با موفقیت انجام شد'
 };
 
 exports.profile_controller = {
-    GET_PROFILE: '',
-    PROFILE_UPDATED: '',
-    PASSWORD_UPDATED: '',
-    PROFILE_IMAGE_UPDATED: '',
-    BACKGROUND_IMAGE_UPDATED: '',
-    PROFILE_IMAGE_DELETED: '',
-    BACKGROUND_IMAGE_DELETED: '',
+    GET_PROFILE: 'صفحه پروفایل',
+    PROFILE_UPDATED: 'پروفایل شما بروزرسانی شد',
+    PASSWORD_UPDATED: 'رمز عبور شما با موفقیت تغییر یافت',
+    PROFILE_IMAGE_UPDATED: 'عکس پروفایل شما بروزرسانی شد',
+    BACKGROUND_IMAGE_UPDATED: 'عکس زمینه شما بروزرسانی شد',
+    PROFILE_IMAGE_DELETED: 'عکس پروفایل شما حذف شد',
+    BACKGROUND_IMAGE_DELETED: 'عکس زمینه شما حذف شد',
 };
 
 exports.rate_controller = {
-    RATED: '',
+    RATED: 'نظر شما ثبت شد',
 };
 
 exports.rate_controller = {
-    REQUEST_SENT: '',
-    TOUR_LEADER_FIRST_VALIDATE: '',
-    TOUR_LEADER_FINAL_VALIDATE: '',
-    USER_FINAL_VALIDATE: '',
-    USER_SATISFACTION: '',
-    TOUR_LEADER_SATISFACTION: ''
+    REQUEST_SENT: 'درخواست ارسال شد',
+    TOUR_LEADER_FIRST_VALIDATE: 'شما به عنوان راهنما درخواست را تایید کردید',
+    TOUR_LEADER_FINAL_VALIDATE: 'شما به عنوان راهنما درخواست را تایید نهایی کردید',
+    USER_FINAL_VALIDATE: 'شما به عنوان گردشگر درخواست را تایید نهایی کردید',
+    USER_SATISFACTION: 'رضایت شما به عنوان گردشگر ثبت شد',
+    TOUR_LEADER_SATISFACTION: 'رضایت شما به عنوان راهنما ثبت شد'
 };
 
 
 exports.leader_controller = {
-    TOUR_LEADER_REGISTER_WAIT_UNTIL_VERIFY: '',
-    TOUR_LEADER_EDITED: '',
+    TOUR_LEADER_REGISTER_WAIT_UNTIL_VERIFY: 'درخواست شما برای راهنما ثبت شد نتیجه از طریق ایمیل برای شما ارسال میشود',
+    TOUR_LEADER_EDITED: 'پروفایل راهنمای شما تغییر یافت',
 };
 /**********************
  * DAO
  */
 exports.experience_dao = {
-  NO_EXPERIENCE: '',
-  BAD_REQUEST: '',
+  NO_EXPERIENCE: 'چنین تجربه ای وجود ندارد',
+  BAD_REQUEST: 'درخواست شما معتبر نیست',
 };
 
 exports.forgotPassword_dao = {
-    NOT_FOUND_OR_ALREADY_USED: '',
-    FORGOT_PASSWORD_NOT_FOUND: '',
-    NOT_FOUND: '',
-    RESET_EMAIL_SENTl: '',
+    NOT_FOUND_OR_ALREADY_USED: 'چنین ایمیل بازیابی ارسال نشده یا اینکه استفاده شده',
+    FORGOT_PASSWORD_NOT_FOUND: 'چنین بازیابی رمز عبوری وجود ندارد',
+    NOT_FOUND: 'داده ای یافت نشد',
+    RESET_EMAIL_SENTl: 'ایمیل بازیابی رمز عبور ارسال شد',
 };
 
 exports.request_dao = {
-    REQUEST_WITH_TOUR_LEADER_NOT_FOUND: '',
-    REQUEST_NOT_FOUND: '',
-    REQUEST_WITH_USER_NOT_FOUND: '',
-    SATISFACTION_NOT_FOUND: '',
-    SATISFACTION_ALREADY_EXISTS: '',
-    REQUEST_NOT_FOUND_OR_RATED: '',
-    NOT_FOUND_OR_PAID: '',
-    REQUEST_WITH_FACTOR_NOT_FOUND: '',
+    REQUEST_WITH_TOUR_LEADER_NOT_FOUND: 'چنین درخواستی وجود ندارد',
+    REQUEST_NOT_FOUND: 'چنین درخواستی وجود ندارد',
+    REQUEST_WITH_USER_NOT_FOUND: 'چنین درخواستی وجود ندارد',
+    SATISFACTION_NOT_FOUND: 'چنین درخواستی وجود ندارد',
+    SATISFACTION_ALREADY_EXISTS: 'شما رضایت خود را قبل ثبت کرده اید',
+    REQUEST_NOT_FOUND_OR_RATED: 'چنین درخواستی وجود ندارد یا نظرسنجی شده است',
+    NOT_FOUND_OR_PAID: 'چنین درخواستی وجود ندارد یا اینکه پرداخت شده است',
+    REQUEST_WITH_FACTOR_NOT_FOUND: 'چنین درخواستی با این شماره فاکتور وجود ندارد',
 };
 
 exports.leader_dao = {
-    LEADER_ALREADY_EXISTS: '',
-    USER_IS_NOT_TOUR_LEADER: '',
-    TOUR_LEADER_NOT_FOUND_OR_NOT_VERIFIED: '',
-    LEADER_NOT_FOUND: '',
-    BAD_REQUEST: '',
-    SEND_SCAN_BIRTH_AND_LEADER_CARDS: '',
+    LEADER_ALREADY_EXISTS: 'راهنما وجود داشته است',
+    USER_IS_NOT_TOUR_LEADER: 'این کاربر یک راهنما نیست',
+    TOUR_LEADER_NOT_FOUND_OR_NOT_VERIFIED: 'چنین راهنمایی وجود ندارد یا اینکه تایید نشده است',
+    LEADER_NOT_FOUND: 'راهنما یافت نشد',
+    BAD_REQUEST: 'درخواست معتبر نیست',
+    SEND_SCAN_BIRTH_AND_LEADER_CARDS: 'اسکن کارت تورلیدری و شناسنامه خود را ارسال کنید',
 };
 
 exports.userRefresh_dao = {
-  REFRESH_TOKEN_NOT_FOUND: '',
+  REFRESH_TOKEN_NOT_FOUND: 'NO_REFRESH_TOKEN',
 };
 
 exports.user_dao = {
-    EMAIL_EXISTS: '',
-    REGISTER: '',
-    VERIFICATION_EXISTS: '',
-    FIND_USER_BY_EMAIL: '',
-    PASSWORDS_DO_NOT_MATCH: '',
-    USER_BLOCKED: '',
-    USER_NOT_FOUND: '',
-    WRONG_CURRENT_PASSWORD: '',
+    EMAIL_EXISTS: 'ایمیل قبلا ثبت شده است',
+    NOT_FOUND_OR_ALREADY_VERIFIED: 'کاربر یافت نشد یا اینکه تایید نشده است',
+    PASSWORDS_DO_NOT_MATCH: 'رمز عبور اشتباه است',
+    USER_BLOCKED: 'این اکانت مسدود شد لطفا بعدا تلاش کنید',
+    USER_NOT_FOUND: 'کاربر یافت نشد',
+    WRONG_CURRENT_PASSWORD: 'رمز عبور اشتباه است',
 };
 /*******************
  * VALIDATION
  */
 exports.auth_validation = {
-    NAME_MISSING: '',
-    NAME_IS_EMPTY: '',
-    EMAIL_MISSING: '',
-    EMAIL_IS_EMPTY: '',
-    EMAIL_IS_NOT_VALID: '',
-    PASSWORD_MISSING: '',
-    PASSWORD_IS_EMPTY: '',
-    PASSWORD_IS_TOO_SHORT_MIN_5: '',
-    VERIFICATION_BAD_REQUEST: '',
-    REFRESH_TOKEN_MISSING: '',
-    REFRESH_TOKEN_IS_EMPTY: '',
+    NAME_MISSING: 'نام را وارد کنید',
+    NAME_IS_EMPTY: 'نام خالی است',
+    EMAIL_MISSING: 'ایمیل را وارد کنید',
+    EMAIL_IS_EMPTY: 'ایمیل خالی است',
+    EMAIL_IS_NOT_VALID: 'ایمیل اشتباه است',
+    PASSWORD_MISSING: 'رمز عبور را وارد کنید',
+    PASSWORD_IS_EMPTY: 'رمز عبور خالی است',
+    PASSWORD_IS_TOO_SHORT_MIN_5: 'رمز عبور کوتاه است حداقل ۵ کاراکتر',
+    VERIFICATION_BAD_REQUEST: 'درخواست نامعتبر است',
+    REFRESH_TOKEN_MISSING: 'REFRESH_TOKEN_MISSING',
+    REFRESH_TOKEN_IS_EMPTY: 'REFRESH_TOKEN_IS_EMPTY',
 };
 
 exports.request_validation = {
-    REQUEST_ID_MISSING: '',
-    REQUEST_ID_IS_NOT_VALID: '',
+    REQUEST_ID_MISSING: 'درخواست نامعتبر بدون درخواست',
+    REQUEST_ID_IS_NOT_VALID: 'درخواست نامعتبر است',
 };
 
 exports.profile_vlidation = {
-    NAME_IS_EMPTY: '',
-    PHONE_IS_EMPTY: '',
-    INVALID_PHONE: '',
-    CITY_IS_EMPTY: '',
-    PROVINCE_IS_EMPTY: '',
-    ABOUT_ME_IS_EMPTY: '',
-    ABOUT_ME_LENGTH: '',
-    MOTTO_IS_EMPTY: '',
-    MOTTO_LENGTH: '',
-    BAD_REQUEST: '',
-    CURRENT_PASSWORD_MISSING: '',
-    CURRENT_PASSWORD_IS_EMPTY: '',
-    CURRENT_PASSWORD_IS_TOO_SHORT_MIN_5: '',
-    NEW_PASSWORD_MISSING: '',
-    NEW_PASSWORD_IS_EMPTY: '',
-    NEW_PASSWORD_IS_TOO_SHORT_MIN_5: '',
-    PROFILE_IMAGE_MISSING: '',
-    I_WILL_SHOW_YOU_MOST_BE_AN_ARRAY: '',
-    TRAVEL_FACILITIES_MOST_BE_AN_ARRAY: '',
+    NAME_IS_EMPTY: 'نام خالی است',
+    PHONE_IS_EMPTY: 'تلفن خالی است',
+    INVALID_PHONE: 'تلفن اشتباه است',
+    CITY_IS_EMPTY: 'شهر خالی است',
+    PROVINCE_IS_EMPTY: 'استان خالی است',
+    ABOUT_ME_IS_EMPTY: 'درباره من خالی است',
+    ABOUT_ME_LENGTH: 'درباره من طولانی است',
+    MOTTO_IS_EMPTY: 'شعار خالی است',
+    MOTTO_LENGTH: 'شعار طولانی است',
+    BAD_REQUEST: 'درخواست نامعتبر است',
+    CURRENT_PASSWORD_MISSING: 'رمز عبور کنونی را وارد کنید',
+    CURRENT_PASSWORD_IS_EMPTY: 'رمز عبور کنونی خالی است',
+    CURRENT_PASSWORD_IS_TOO_SHORT_MIN_5: 'رمز عبور باید حداقل ۵ کاراکتر باشد',
+    NEW_PASSWORD_MISSING: 'رمز عبور جدید را وارد کنید',
+    NEW_PASSWORD_IS_EMPTY: 'رمز عبور جدید خالی است',
+    NEW_PASSWORD_IS_TOO_SHORT_MIN_5: 'رمز عبور جدید باید حداقل ۵ کاراکتر باشد',
+    PROFILE_IMAGE_MISSING: 'پروفایلی وجود ندارد',
+    I_WILL_SHOW_YOU_MOST_BE_AN_ARRAY: 'درخواست نامعتبر است باید ارایه باشد',
+    TRAVEL_FACILITIES_MOST_BE_AN_ARRAY: 'درخواست نامعتبر است باید ارایه باشد',
 };
 
 exports.rate_validation = {
-    LEADER_ID_MISSING: '',
-    LEADER_ID_IS_EMPTY: '',
-    LEADER_ID_IS_NOT_VALID: '',
-    REQUEST_ID_MISSING: '',
-    REQUEST_ID_IS_EMPTY: '',
-    REQUEST_ID_IS_NOT_VALID: '',
-    STAR_IS_EMPTY: '',
-    STAR_SHOULD_BE_NUMERIC: '',
-    COMMENT_IS_EMPTY: '',
+    LEADER_ID_MISSING: 'شماره راهنما وجود ندارد',
+    LEADER_ID_IS_EMPTY: 'شماره راهنما خالی است',
+    LEADER_ID_IS_NOT_VALID: 'شماره راهنما اشتباه است',
+    REQUEST_ID_MISSING: 'شماره درخواست وجود ندارد',
+    REQUEST_ID_IS_EMPTY: 'شماره درخواست خالی است',
+    REQUEST_ID_IS_NOT_VALID: 'شماره درخواست اشتباه است',
+    STAR_IS_EMPTY: 'ستاره خالی است',
+    STAR_SHOULD_BE_NUMERIC: 'ستاره باید به صورت عدد باشد',
+    COMMENT_IS_EMPTY: 'نظر خالی است',
 };
 
 exports.request_validation = {
-    LEADER_ID_MISSING: '',
-    LEADER_ID_IS_EMPTY: '',
-    LEADER_ID_IS_NOT_VALID: '',
-    EXPERIENCES_MISSING: '',
-    EXPERIENCES_IS_EMPTY: '',
-    EXPERIENCES_MOST_BE_AN_ARRAY: '',
-    REQUEST_ID_MISSING: '',
-    REQUEST_ID_IS_NOT_VALID: '',
-    SATISFACTION_MISSING: '',
-    SATISFACTION_MALFORMED: ''
+    LEADER_ID_MISSING: 'شماره راهنما وجود ندارد',
+    LEADER_ID_IS_EMPTY: 'شماره راهنما خالی است',
+    LEADER_ID_IS_NOT_VALID: 'شماره راهنما اشتباه است',
+    EXPERIENCES_MISSING: 'تجربه وجود ندارد',
+    EXPERIENCES_IS_EMPTY: 'تجربه خالی است',
+    EXPERIENCES_MOST_BE_AN_ARRAY: 'تجربه باید یک ارایه باشد',
+    REQUEST_ID_MISSING: 'شماره درخواست وجود ندارد',
+    REQUEST_ID_IS_NOT_VALID: 'شماره درخواست اشتباه است',
+    SATISFACTION_MISSING: 'رضایت وجود ندارد',
+    SATISFACTION_MALFORMED: 'رضایت اشتباه است'
 };
 
 exports.leader_validation = {
-    EXPERIENCES_MISSING: '',
-    EXPERIENCES_IS_EMPTY: '',
-    EXPERIENCES_MOST_BE_AN_ARRAY: '',
+    EXPERIENCES_MISSING: 'تجربه وجود ندارد',
+    EXPERIENCES_IS_EMPTY: 'تجربه خالی است',
+    EXPERIENCES_MOST_BE_AN_ARRAY: 'تجربه باید یک ارایه باشد',
 };
