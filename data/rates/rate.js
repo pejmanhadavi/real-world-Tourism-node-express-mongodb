@@ -5,15 +5,17 @@ let rate;
 const leaders = require('../tourleaders/tourleader').ids;
 const users = require('../users/user').ids;
 for( let i = 0 ; i < 20 ; i ++ ) {
-    rate = {
-        _id: new ObjectId(),
-        tourLeader: leaders[ 20 - i ],
-        user: users[i],
-        star: Math.floor(Math.random() * 5 + 1),
-        comment: `this is some comment ${i+1}`
-    };
+    for(let j = 0 ; j < Math.floor(Math.random() * 10 + 1 ) ; j ++ ){
+        rate = {
+            _id: new ObjectId(),
+            tourLeader: leaders[ 19 - i ],
+            user: users[Math.floor(Math.random() * 20 )],
+            star: Math.floor(Math.random() * 5 + 1),
+            comment: `this is some comment ${i*j+1}`
+        };
+        rates.push(rate);
+    }
 
-    rates.push(rate);
 
 }
 
