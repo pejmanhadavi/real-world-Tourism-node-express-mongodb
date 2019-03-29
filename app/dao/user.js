@@ -27,7 +27,8 @@ const HOURS_TO_BLOCK = 12;
 userSchema.statics.emailExists= email=>{
 	return new Promise((resolve, reject)=>{
 		User.findOne({
-			email
+			email,
+			verified: true,
 		})
 			.then(result => {
 				if (!result)
