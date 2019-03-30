@@ -7,6 +7,7 @@ const tourLeaderRouter = require('../app/routes/tour_leader');
 const requestRoute = require('../app/routes/request');
 const rateRoute = require('../app/routes/rate');
 const payRoute = require('../app/routes/pay');
+const panelRoute = require('../app/routes/panel');
 const cors = require('cors');
 
 
@@ -14,6 +15,7 @@ module.exports = app => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cors());
+    app.set('view engine', 'ejs');
 
     app.use('/', indexRouter);
     app.use('/users', usersRouter);
@@ -23,4 +25,5 @@ module.exports = app => {
     app.use('/request', requestRoute);
     app.use('/rate', rateRoute);
     app.use('/pay', payRoute);
+    app.use('/panel', panelRoute);
 };
