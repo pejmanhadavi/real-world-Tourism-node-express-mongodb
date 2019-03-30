@@ -11,8 +11,13 @@ const localLogin = new localStrategy((email, password, done) => {
         .then(async result => {
             if (!result)
                 return done(null, false);
-            bcrypt.compare(password, result.password, (err, isMatch) =>
-                err ? done(null, false) : done(null, result)
+            bcrypt.compare(password, result.password, (err, isMatch) => {
+                if (err)
+                    done(null, false);
+                if(!isMatch)
+                    done(null, false);
+                done(null, result);
+                }
             );
         })
         .catch(err => {
