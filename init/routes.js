@@ -1,4 +1,6 @@
 const express = require('express');
+const cors = require('cors');
+const passport = require('passport');
 const indexRouter = require('../app/routes/index');
 const usersRouter = require('../app/routes/users');
 const authRouter = require('../app/routes/auth');
@@ -8,13 +10,20 @@ const requestRoute = require('../app/routes/request');
 const rateRoute = require('../app/routes/rate');
 const payRoute = require('../app/routes/pay');
 const panelRoute = require('../app/routes/panel');
-const cors = require('cors');
 
 
 module.exports = app => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cors());
+    app.use(require('cookie-parser')());
+    app.use(require('express-session')({
+        secret: process.env.JWT_SECRET,
+        resave: false,
+        saveUninitialized: false
+    }));
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.set('view engine', 'ejs');
 
     app.use('/', indexRouter);
