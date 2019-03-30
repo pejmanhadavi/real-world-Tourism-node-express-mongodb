@@ -15,3 +15,4 @@ tour leader registration is done = > done
 -search
 -cost start from
 -add user roles
+-pages for reset password and verification
