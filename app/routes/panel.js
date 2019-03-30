@@ -9,8 +9,12 @@ router.get('/login', (req, res) => {
    res.render('index', {title: 'this is the new shit'});
 });
 
+router.post('/login', requireAuth, (req, res) => {
+    res.redirect('index', {title: 'this is the new shit stand up and ADMIIIIIIIIIIIT'});
+});
+
 router.get('/dashboard', requireAuth, (req, res) => {
-    res.status(200).send('this is the new shit stand up and admit')
+    res.render('index', {title: 'this is the new shit stand up and ADMIIIIIIIIIIIT'});
 });
 
 
