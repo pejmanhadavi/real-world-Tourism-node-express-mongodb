@@ -1,4 +1,4 @@
-const passport = require('passport');
+const passportJwt = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const User = require('../app/dao/user').User;
 const {decrypt} = require('../app/services/auth');
@@ -34,4 +34,4 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 		});
 });
 
-passport.use(jwtLogin);
+passportJwt.use(jwtLogin);

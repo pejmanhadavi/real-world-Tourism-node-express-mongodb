@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-require('../../init/passport');
+require('../../init/passport-jwt');
 const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', {
 	session: false
