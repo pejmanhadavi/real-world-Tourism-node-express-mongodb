@@ -2,6 +2,7 @@ const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const User = require('../app/dao/user').User;
 const bcrypt = require('bcrypt');
+const {saveLoginAttemptsToDB} = require('../app/dao/user');
 
 const localLogin = new localStrategy((email, password, done) => {
     User.findOne({
@@ -11,11 +12,40 @@ const localLogin = new localStrategy((email, password, done) => {
         .then(async result => {
             if (!result)
                 return done(null, false);
-            bcrypt.compare(password, result.password, (err, isMatch) => {
+
+            /*******************
+             *                  *
+             *    USER CHECK    *
+             *                  *
+             *                  */
+            await User.userIsBlocked(result);
+            await User.checkLoginAttemptsAndBlockExpires(result);
+            /*                  *
+             ********************/
+
+            bcrypt.compare(password, result.password, async (err, isMatch) => {
                 if (err)
                     done(null, false);
-                if(!isMatch)
+                if(!isMatch){
+                    /*******************
+                     *                  *
+                     *    USER CHECK    *
+                     *                  *
+                     *                  */
+                    await User.passwordsDoNotMatch(result);
+                    /*                  *
+                     ********************/
                     done(null, false);
+                }
+                /*******************
+                 *                  *
+                 *    USER CHECK    *
+                 *                  *
+                 *                  */
+                result.loginAttempts = 0;
+                /*                  *
+                 ********************/
+                await saveLoginAttemptsToDB(result);
                 done(null, result);
                 }
             );
