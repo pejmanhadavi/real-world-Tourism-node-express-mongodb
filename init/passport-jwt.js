@@ -5,7 +5,10 @@ const {decrypt} = require('../app/services/auth');
 
 const jwtExtractor = req => {
 	let token = null;
-	if (req.headers.authorization)
+	if (req.header('x-token')){
+		token = req.get('x-token');
+	}
+	else if (req.headers.authorization)
 		token = req.headers.authorization.replace('Bearer ','').replace(' ', '');
 	else if (req.body.token)
 		token = req.body.token.replace(' ', '');

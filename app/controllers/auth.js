@@ -128,7 +128,10 @@ exports.login = async (req, res, next) => {
 			user.loginAttempts = 0;
 			await saveLoginAttemptsToDB(user);
 			const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
-			handleResponse(res, 200, auth_controller.LOGGED_IN, response);
+			res.set('Access-Control-Expose-Headers', 'x-token', 'x-refresh-token');
+			res.set('x-token', response.token);
+			res.set('x-refresh_token', response.refreshToken);
+			handleResponse(res, 200, auth_controller.LOGGED_IN, response.user);
 		}
 	} catch (err) {
 		next(err);
@@ -144,11 +147,12 @@ exports.login = async (req, res, next) => {
  */
 exports.token = async (req, res, next) => {
 	try{
-		const refreshToken = req.get('refresh_token');
+		const refreshToken = req.header('x-refresh-token');
 		const userId = await UserRefresh.findRefreshAndReturnUserId(refreshToken);
 		const response = {
 			token: generateToken(userId),
 		};
+		res.set('x-token', response.token);
 		handleResponse(res, 200, auth_controller.TOKEN_REFRESHED, response);
 
 	}catch (err) {
