@@ -1,4 +1,5 @@
 const express = require('express');
+// const {refreshToken} = require('../app/services/refresh_token_middleware');
 const cors = require('cors');
 const passport = require('passport');
 const indexRouter = require('../app/routes/index');
@@ -24,6 +25,7 @@ module.exports = app => {
     }));
     app.use(passport.initialize());
     app.use(passport.session());
+    // app.use(refreshToken);
     app.set('view engine', 'ejs');
 
     app.use('/', indexRouter);

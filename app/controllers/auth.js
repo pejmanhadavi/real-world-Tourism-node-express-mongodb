@@ -128,10 +128,10 @@ exports.login = async (req, res, next) => {
 			user.loginAttempts = 0;
 			await saveLoginAttemptsToDB(user);
 			const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
-			res.set('Access-Control-Expose-Headers', 'x-token', 'x-refresh-token');
+			res.set('Access-Control-Expose-Headers', 'x-token, x-refresh-token');
 			res.set('x-token', response.token);
 			res.set('x-refresh_token', response.refreshToken);
-			handleResponse(res, 200, auth_controller.LOGGED_IN, response.user);
+			handleResponse(res, 200, auth_controller.LOGGED_IN, response);
 		}
 	} catch (err) {
 		next(err);
