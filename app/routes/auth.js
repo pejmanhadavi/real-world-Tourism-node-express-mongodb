@@ -20,6 +20,6 @@ router.post('/reset/:verification', validate.postResetPassword, controller.postR
 
 router.post('/login', validate.login, controller.login);
 
-router.post('/token', validate.token, controller.token);
+router.post('/token', controller.token);
 
 module.exports = router;

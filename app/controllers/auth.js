@@ -144,7 +144,7 @@ exports.login = async (req, res, next) => {
  */
 exports.token = async (req, res, next) => {
 	try{
-		const refreshToken = req.body.refreshToken;
+		const refreshToken = req.get('refresh_token');
 		const userId = await UserRefresh.findRefreshAndReturnUserId(refreshToken);
 		const response = {
 			token: generateToken(userId),
