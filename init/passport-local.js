@@ -28,13 +28,21 @@ passport.use(new LocalStrategy(
             email: username,
             verified: true
         })
-            .then(user => {
+            .then(async user => {
                 if (!user)
                     return done(null, false, {message: user_dao.USER_NOT_FOUND});
-                    bcrypt.compare(password, user.password, (err, isMatch) => {
+                await User.userIsBlocked(user);
+                await User.checkLoginAttemptsAndBlockExpires(user);
+                    bcrypt.compare(password, user.password, async (err, isMatch) => {
                         if (err) return done(err);
-                        if (isMatch) return done(null, user);
-                        else return done(null, false, {message: user_dao.PASSWORDS_DO_NOT_MATCH});
+                        if (isMatch) {
+                            user.loginAttempts = 0;
+                            await saveLoginAttemptsToDB(user);
+                            return done(null, user);
+                        } else {
+                            User.passwordsDoNotMatch(user);
+                            return done(null, false, {message: user_dao.PASSWORDS_DO_NOT_MATCH})
+                        }
                     });
 
             })
