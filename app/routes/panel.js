@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 require('../../init/passport-local');
 const passport = require('passport');
+const {ensureAuthenticated} = require('../../init/passport-local');
 const requireAuth =  passport.authenticate('local', { failureRedirect: '/panel/login' , failureFlash: 'Invalid username or password'});
 
-const ensureAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) { return next(); }
-    res.redirect('/panel/login')
-};
+
 
 router.get('/login', (req, res) => {
    res.render('login');

@@ -42,3 +42,8 @@ passport.use(new LocalStrategy(
                 return done(err);
             });
 }));
+
+exports.ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) { return next(); }
+    res.redirect('/panel/login')
+};
