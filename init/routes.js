@@ -2,6 +2,11 @@ const express = require('express');
 // const {refreshToken} = require('../app/services/refresh_token_middleware');
 const cors = require('cors');
 const passport = require('passport');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
+const messages = require('express-messages');
+
 const indexRouter = require('../app/routes/index');
 const usersRouter = require('../app/routes/users');
 const authRouter = require('../app/routes/auth');
@@ -17,14 +22,21 @@ module.exports = app => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cors());
-    app.use(require('cookie-parser')());
-    app.use(require('express-session')({
+    app.use(cookieParser());
+
+    app.use(session({
         secret: process.env.JWT_SECRET,
-        resave: false,
-        saveUninitialized: false
+        saveUninitialized: true,
+        resave: true
     }));
     app.use(passport.initialize());
     app.use(passport.session());
+    app.use(flash());
+
+    app.use((req, res, next) => {
+        res.locals.messages = messages(req, res);
+        next();
+    });
     // app.use(refreshToken);
     app.set('view engine', 'ejs');
 
