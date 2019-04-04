@@ -13,6 +13,7 @@ tour leader registration is done = > done
 -edit error messages to persian => done
 -add admin for user schema => done
 -add user roles => done
+-use connect flash => done
 
 -search
 -cost start from
@@ -23,6 +24,5 @@ tour leader registration is done = > done
 -email forgot password page
 -verification email page
 
--use connect flash
 -add login conditions for admin panel
 -add user check for admin panel
