@@ -89,6 +89,10 @@ const userSchema = new Schema({
 		type: ObjectId,
 		ref: 'Facility'
 	}],
+	isAdmin: {
+		type: Boolean,
+		default: false
+	}
 },{
 	versionKey: false,
 	timestamps: true

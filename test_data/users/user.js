@@ -18,7 +18,8 @@ module.exports = [
         verification: uuid.v4(),
         blockExpires: faker.date.past(),
         createdAt: faker.date.past(),
-        updatedAt: faker.date.past()
+        updatedAt: faker.date.past(),
+        isAdmin: false
     },
     {
         _id: new ObjectId('5c8d5a4a545e5728e469cf6b'),
@@ -35,7 +36,8 @@ module.exports = [
         verification: uuid.v4(),
         blockExpires: faker.date.past(),
         createdAt: faker.date.past(),
-        updatedAt: faker.date.past()
+        updatedAt: faker.date.past(),
+        isAdmin: false
     },
     {
         _id: new ObjectId('5c8e067751ca6c325c34b2db'),
@@ -52,6 +54,7 @@ module.exports = [
         verification: uuid.v4(),
         blockExpires: faker.date.past(),
         createdAt: faker.date.past(),
-        updatedAt: faker.date.past()
+        updatedAt: faker.date.past(),
+        isAdmin: false
     }
 ];

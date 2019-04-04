@@ -20,7 +20,8 @@ for( let i = 0 ; i < 20 ; i ++ ) {
             faker.image.avatar(),
             faker.image.avatar(),
             faker.image.avatar(),
-        ]
+        ],
+        isAdmin: false
     };
 
     users.push(user);
