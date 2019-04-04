@@ -26,6 +26,7 @@ passport.use(new LocalStrategy(
     (username, password, done) => {
         User.findOne({
             email: username,
+            isAdmin: true,
             verified: true
         })
             .then(async user => {

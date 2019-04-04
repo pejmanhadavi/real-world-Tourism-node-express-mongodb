@@ -15,6 +15,7 @@ tour leader registration is done = > done
 -add user roles => done
 -use connect flash => done
 -add login conditions for admin panel => done
+-add user check for admin panel => done
 
 -search
 -cost start from
@@ -25,4 +26,3 @@ tour leader registration is done = > done
 -email forgot password page
 -verification email page
 
--add user check for admin panel
