@@ -20,6 +20,8 @@ tour leader registration is done = > done
 -verification page
 -reset password page
 -404 page
+-email forgot password page
+-verification email page
 
 -use connect flash
 -add login conditions for admin panel
