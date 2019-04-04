@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../app/dao/user').User;
 const bcrypt = require('bcrypt');
 const {saveLoginAttemptsToDB} = require('../app/dao/user');
-
+const {user_dao} = require('../messages');
 
 
 
@@ -30,11 +30,11 @@ passport.use(new LocalStrategy(
         })
             .then(user => {
                 if (!user)
-                    return done(null, false, {message: 'Unknown User'});
+                    return done(null, false, {message: user_dao.USER_NOT_FOUND});
                     bcrypt.compare(password, user.password, (err, isMatch) => {
                         if (err) return done(err);
                         if (isMatch) return done(null, user);
-                        else return done(null, false, {message: 'Invalid Password'});
+                        else return done(null, false, {message: user_dao.PASSWORDS_DO_NOT_MATCH});
                     });
 
             })

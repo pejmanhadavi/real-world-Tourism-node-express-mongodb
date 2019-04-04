@@ -3,7 +3,8 @@ const router = express.Router();
 require('../../init/passport-local');
 const passport = require('passport');
 const {ensureAuthenticated} = require('../../init/passport-local');
-const requireAuth =  passport.authenticate('local', { failureRedirect: '/panel/login' , failureFlash: 'Invalid username or password'});
+const {user_dao} = require('../../messages');
+const requireAuth =  passport.authenticate('local', { failureRedirect: '/panel/login' , failureFlash: user_dao.USER_NOT_FOUND});
 
 
 

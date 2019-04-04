@@ -24,6 +24,7 @@
     <div class="card-body login-card-body">
       <p class="login-box-msg">فرم زیر را تکمیل کنید و ورود بزنید</p>
 
+      <p><%- messages('message_template', locals) %></p>
       <form action="/panel/login" method="post">
         <div class="input-group mb-3">
           <input name="email" type="email" class="form-control" placeholder="ایمیل">
