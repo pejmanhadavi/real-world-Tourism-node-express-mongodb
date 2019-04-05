@@ -25,4 +25,5 @@ tour leader registration is done = > done
 -404 page
 -email forgot password page
 -verification email page
+-Leader read schema
 
