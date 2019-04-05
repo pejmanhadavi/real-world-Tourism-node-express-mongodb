@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>پنل مدیریت | صفحه ورود</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+  <!-- bootstrap rtl -->
+  <link rel="stylesheet" href="/stylesheets/bootstrap-rtl.min.css">
+  <!-- template rtl version -->
+  <link rel="stylesheet" href="/stylesheets/custom-style.css">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <p><b>ورود به تورآسو</b></p>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">فرم زیر را تکمیل کنید و ورود بزنید</p>
+
+      <p><%- messages('message_template', locals) %></p>
+      <form action="/panel/login" method="post">
+        <div class="input-group mb-3">
+          <input name="email" type="email" class="form-control" placeholder="ایمیل">
+        </div>
+        <div class="input-group mb-3">
+          <input name="password" type="password" class="form-control" placeholder="رمز عبور">
+        </div>
+        <div class="row">
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">ورود</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+</body>
+</html>

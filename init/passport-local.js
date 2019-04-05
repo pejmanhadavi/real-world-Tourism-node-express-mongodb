@@ -56,3 +56,10 @@ exports.ensureAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) { return next(); }
     res.redirect('/panel/login')
 };
+
+exports.rememberMe = req => {
+  if (req.body.remember)
+      req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+  else
+      req.session.cookie.expires = false; // Cookie expires at end of session
+};

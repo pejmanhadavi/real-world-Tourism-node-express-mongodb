@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 require('../../init/passport-local');
 const passport = require('passport');
-const {ensureAuthenticated} = require('../../init/passport-local');
+const {ensureAuthenticated, rememberMe} = require('../../init/passport-local');
 const {user_dao} = require('../../messages');
 const requireAuth =  passport.authenticate('local', { failureRedirect: '/panel/login' , failureFlash: user_dao.USER_NOT_FOUND});
 
@@ -13,6 +13,7 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', requireAuth, (req, res) => {
+    rememberMe(req);
     req.flash('success', 'You are now logged in');
     res.redirect('/panel/dashboard');
 });
