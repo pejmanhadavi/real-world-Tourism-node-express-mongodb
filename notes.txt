@@ -26,4 +26,6 @@ tour leader registration is done = > done
 -email forgot password page
 -verification email page
 -Leader read schema
+-change pay to payment
+-add api before api routes
 
