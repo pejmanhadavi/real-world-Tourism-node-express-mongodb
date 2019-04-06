@@ -1,5 +1,11 @@
 const {rememberMe} = require('../../init/passport-local');
-
+/*********************************
+ * Get login controller
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 exports.getLogin = async (req, res, next) => {
     try{
         res.render('panel/login');
@@ -8,7 +14,12 @@ exports.getLogin = async (req, res, next) => {
     }
 };
 
-
+/******************************
+ * POST login controller
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.postLogin = (req, res, next) => {
     try {
         rememberMe(req);
@@ -19,7 +30,12 @@ exports.postLogin = (req, res, next) => {
     }
 };
 
-
+/*************************************
+ * GET dashboard controller
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.dashboard = (req, res, next) => {
     try {
         res.render('panel/dashboard', {
@@ -30,7 +46,7 @@ exports.dashboard = (req, res, next) => {
             totalLeadersReviews:30,
             totalExperiencesReviews:50,
             totalComments:90,
-            totalcommentsReviews:150});
+            totalCommentsReviews:150});
     }catch (err) {
         next(err);
     }
