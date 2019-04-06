@@ -2,25 +2,19 @@ const express = require('express');
 const router = express.Router();
 require('../../init/passport-local');
 const passport = require('passport');
-const {ensureAuthenticated, rememberMe} = require('../../init/passport-local');
+const {ensureAuthenticated} = require('../../init/passport-local');
 const {user_dao} = require('../../messages');
 const requireAuth =  passport.authenticate('local', { failureRedirect: '/panel/login' , failureFlash: user_dao.USER_NOT_FOUND});
 
+const controller = require('../controllers/panel');
 
 
-router.get('/login', (req, res) => {
-   res.render('login');
-});
+router.get('/login', controller.getLogin);
 
-router.post('/login', requireAuth, (req, res) => {
-    rememberMe(req);
-    req.flash('success', 'You are now logged in');
-    res.redirect('/panel/dashboard');
-});
+router.post('/login', requireAuth, controller.postLogin);
 
-router.get('/dashboard', ensureAuthenticated, (req, res) => {
-    res.render('index', {title: 'this is the new shit stand up and ADMIIIIIIIIIIIT'});
-});
+router.get('/dashboard', ensureAuthenticated, controller.dashboard);
+
 
 
 
