@@ -28,4 +28,5 @@ tour leader registration is done = > done
 -Leader read schema
 -change pay to payment
 -add api before api routes
+-add index controller methods to dao
 
