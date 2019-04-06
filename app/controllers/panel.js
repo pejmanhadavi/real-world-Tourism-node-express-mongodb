@@ -1,4 +1,9 @@
 const {rememberMe} = require('../../init/passport-local');
+const {} = require('../dao/user');
+const {} = require('../dao/tour_leader');
+const {} = require('../dao/experience');
+const {} = require('../dao/pay');
+
 /*********************************
  * Get login controller
  * @param req

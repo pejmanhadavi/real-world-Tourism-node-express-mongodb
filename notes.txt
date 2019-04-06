@@ -29,4 +29,6 @@ tour leader registration is done = > done
 -change pay to payment
 -add api before api routes
 -add index controller methods to dao
+-add number of reviews for requested models
+-add payment data
 
