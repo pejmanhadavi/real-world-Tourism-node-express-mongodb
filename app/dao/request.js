@@ -277,6 +277,19 @@ requestSchema.statics.findRequestByFactorNumber = factorNumber => {
 	});
 };
 
+
+//NUMBER OF REQUESTS
+requestSchema.statics.numberOfRequests= () => {
+	return new Promise((resolve, reject) => {
+		Request.find({})
+			.then(result => {
+				const countOfUsers = result.length;
+				resolve(countOfUsers);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/

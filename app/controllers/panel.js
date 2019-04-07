@@ -50,7 +50,7 @@ exports.dashboard = async (req, res, next) => {
             registeredUsers: await User.numberOfRegisteredUsers(),
             registeredLeaders: await TourLeader.numberOfRegisteredLeaders(),
             totalPayment: await Pay.calculateTotalPayment(),
-            totalReserved:100,
+            totalReserved: await Request.numberOfRequests(),
             totalLeadersReviews:30,
             totalExperiencesReviews:50,
             totalComments:90,
