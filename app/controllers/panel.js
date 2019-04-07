@@ -48,7 +48,7 @@ exports.dashboard = async (req, res, next) => {
 
         res.render('panel/dashboard', {
             registeredUsers: await User.numberOfRegisteredUsers(),
-            registeredLeaders:32,
+            registeredLeaders: await TourLeader.numberOfRegisteredLeaders(),
             totalPayment:12000,
             totalReserved:100,
             totalLeadersReviews:30,

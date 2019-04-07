@@ -168,6 +168,19 @@ tourLeaderSchema.statics.getLeaderByExperience = id => {
 };
 
 
+//NUMBER OF REGISTERED LEADERS
+tourLeaderSchema.statics.numberOfRegisteredLeaders = () => {
+	return new Promise((resolve, reject) => {
+		TourLeader.find({verified: true})
+			.then(result => {
+				const count = result.length;
+				resolve(count);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+
 /**************************
  * CREATE AND EXPORT MODEL
  **************************/
