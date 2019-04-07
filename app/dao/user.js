@@ -326,6 +326,17 @@ userSchema.statics.deleteBackgroundImage = (id) => {
 	});
 };
 
+//NUMBER OF REGISTERED USERS
+userSchema.statics.numberOfRegisteredUsers = () => {
+	return new Promise((resolve, reject) => {
+		User.find({verified: true})
+			.then(result => {
+				const countOfUsers = result.length;
+				resolve(countOfUsers);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
 /************************
  * METHODS *
  ***********************/

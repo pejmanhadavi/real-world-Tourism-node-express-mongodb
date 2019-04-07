@@ -1,8 +1,10 @@
 const {rememberMe} = require('../../init/passport-local');
-const {} = require('../dao/user');
-const {} = require('../dao/tour_leader');
-const {} = require('../dao/experience');
-const {} = require('../dao/pay');
+const {User} = require('../dao/user');
+const {TourLeader} = require('../dao/tour_leader');
+const {Experience} = require('../dao/experience');
+const {Pay} = require('../dao/pay');
+const {Request} = require('../dao/request');
+const {Rate} = require('../dao/rate');
 
 /*********************************
  * Get login controller
@@ -41,10 +43,11 @@ exports.postLogin = (req, res, next) => {
  * @param res
  * @param next
  */
-exports.dashboard = (req, res, next) => {
+exports.dashboard = async (req, res, next) => {
     try {
+
         res.render('panel/dashboard', {
-            registeredUsers: 12,
+            registeredUsers: await User.numberOfRegisteredUsers(),
             registeredLeaders:32,
             totalPayment:12000,
             totalReserved:100,
@@ -52,6 +55,8 @@ exports.dashboard = (req, res, next) => {
             totalExperiencesReviews:50,
             totalComments:90,
             totalCommentsReviews:150});
+
+
     }catch (err) {
         next(err);
     }
