@@ -24,7 +24,7 @@ const userSchema = new Schema({
 		minlength: 5,
 		maxlength: 1024,
 		required: [true, 'PASSWORD_IS_BLANK'],
-	} ,
+	},
 	email: {
 		type: String,
 		lowercase: true,

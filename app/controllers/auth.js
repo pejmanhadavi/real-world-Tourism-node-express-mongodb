@@ -21,10 +21,7 @@ exports.register = async(req, res, next) => {
 		const data = matchedData(req);
 		await User.phoneExists(data.phone);
 		const user = await User.registerUser(data);
-		console.log('++++++++++++++++++++');
 		const userInfo = User.setUserInfo(user);
-		// const response = user.returnRegistrationToken(user, userInfo);
-		// // sendRegistrationEmailMessage(user);
 		sendVerificationCode(res, user.phone, user.phoneVerification);
 		handleResponse(res, 201, 'VERIFICATION_SMS_SENT_VERIFY_PHONE', userInfo);
 	}catch(err){
