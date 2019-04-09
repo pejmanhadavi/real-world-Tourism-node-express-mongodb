@@ -12,15 +12,14 @@ exports.register = [
 		.not()
 		.isEmpty()
 		.withMessage(auth_validation.NAME_IS_EMPTY),
-	check('email')
+	check('phone')
 		.exists()
-		.withMessage(auth_validation.EMAIL_MISSING)
+		.withMessage('PHONE_MISSING')
 		.not()
 		.isEmpty()
-		.withMessage(auth_validation.EMAIL_IS_EMPTY)
-		.isEmail()
-		.withMessage(auth_validation.EMAIL_IS_NOT_VALID)
-		.normalizeEmail(),
+		.withMessage('PHONE_IS_EMPTY')
+		.isMobilePhone()
+		.withMessage('PHONE_NOT_VALID'),
 	check('password')
 		.exists()
 		.withMessage(auth_validation.PASSWORD_MISSING)
