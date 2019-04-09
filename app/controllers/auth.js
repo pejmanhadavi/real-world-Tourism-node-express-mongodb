@@ -82,6 +82,28 @@ exports.forgotPassword = async (req, res, next) => {
 };
 
 
+
+/*****************************************
+ * FORGOT_PASSWORD VERIFY CONTROLLER *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
+exports.forgotVerify = async (req, res, next) => {
+	try{
+		const data = matchedData(req);
+		const user = await User.findUserByPhone(data.phone);
+		const forgotPassword = await ForgotPassword.getForgotPassword(data);
+		await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
+		const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
+		handleResponse(res, 200, 'NOW_RESET_PASSWORD', response);
+	}catch (err) {
+		next(err);
+	}
+};
+
+
 /******************************************
  * GET REQ RESET PASSWORD
  * @param req

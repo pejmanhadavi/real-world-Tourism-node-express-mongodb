@@ -21,6 +21,8 @@ router.post('/finalize', requireAuth, validate.finalize, controller.finalize);
 
 router.post('/forgot', validate.forgotPassword, controller.forgotPassword);
 
+router.post('/forgotVerify', validate.forgotVerify, controller.forgotVerify);
+
 router.get('/reset/:verification', validate.getResetPassword, controller.getResetPassword);
 
 router.post('/reset/:verification', validate.postResetPassword, controller.postResetPassword);

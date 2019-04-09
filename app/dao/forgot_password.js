@@ -45,6 +45,24 @@ forgotPasswordSchema.statics.findForgotPassword = verification => {
 	});
 };
 
+//GET FORGOT PASSWORD
+forgotPasswordSchema.statics.getForgotPassword = (data) => {
+	return new Promise((resolve, reject) => {
+		ForgotPassword.findOne(
+			{
+				phone: data.phone,
+				verification: data.phoneVerification,
+				used: false
+			})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404,forgotPassword_dao.NOT_FOUND_OR_ALREADY_USED));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 
 forgotPasswordSchema.statics.markResetPasswordAsUsed = (req, forgotPass) => {
 	return new Promise((resolve, reject) => {
@@ -57,7 +75,7 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = (req, forgotPass) => {
 				if (!result)
 					reject(buildErrObject(404, forgotPassword_dao.FORGOT_PASSWORD_NOT_FOUND));
 				resolve({
-					email: result.email
+					phone: result.phone
 				});
 			})
 			.catch(err =>reject(buildErrObject(422, err.message)));
