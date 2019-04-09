@@ -28,7 +28,6 @@ const userSchema = new Schema({
 	email: {
 		type: String,
 		lowercase: true,
-		unique: true,
 		match: [/\S+@\S+\.\S+/, 'IS_INVALID'],
 		maxlength: 255,
 		validate: {
@@ -105,7 +104,7 @@ const userSchema = new Schema({
 //INDEX
 userSchema.index({
 	username: 'text',
-	email: 'text',
+	phone: 'text',
 	verification: 'text'
 });
 

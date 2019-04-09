@@ -43,9 +43,22 @@ exports.register = [
 
 
 exports.verify = [
-	param('verification')
-		.isUUID()
-		.withMessage(auth_validation.VERIFICATION_BAD_REQUEST),
+	check('phone')
+		.exists()
+		.withMessage('PHONE_MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('PHONE_IS_EMPTY')
+		.isMobilePhone()
+		.withMessage('PHONE_NOT_VALID'),
+	check('phoneVerification')
+		.exists()
+		.withMessage('PHONE_VERIFICATION_MISSING')
+		.not()
+		.isEmpty()
+		.withMessage('PHONE_VERIFICATION_IS_EMPTY')
+		.isNumeric()
+		.withMessage('PHONE_VERIFICATION_NOT_VALID'),
 	(req, res, next) => {
 		try {
 			validationResult(req).throw();

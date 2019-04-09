@@ -21,6 +21,7 @@ exports.register = async(req, res, next) => {
 		const data = matchedData(req);
 		await User.phoneExists(data.phone);
 		const user = await User.registerUser(data);
+		console.log('++++++++++++++++++++');
 		const userInfo = User.setUserInfo(user);
 		// const response = user.returnRegistrationToken(user, userInfo);
 		// // sendRegistrationEmailMessage(user);
@@ -41,7 +42,8 @@ exports.register = async(req, res, next) => {
  */
 exports.verify = async (req, res, next) => {
 	try {
-		const user = await User.verificationExists(req.params.verification);
+		const data = matchedData(req);
+		const user = await User.phoneVerificationExists(data);
 		const response = await User.verifyUser(user);
 		handleResponse(res, 200, auth_controller.EMAIL_VERIFIED_NOW_LOGIN, response);
 	} catch (err) {

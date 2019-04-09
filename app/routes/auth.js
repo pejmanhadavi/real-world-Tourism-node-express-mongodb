@@ -10,7 +10,7 @@ ROUTES
 
 router.post('/register', validate.register, controller.register);
 
-router.get('/verify/:verification', validate.verify, controller.verify);
+router.post('/verify', validate.verify, controller.verify);
 
 router.post('/forgot', validate.forgotPassword, controller.forgotPassword);
 

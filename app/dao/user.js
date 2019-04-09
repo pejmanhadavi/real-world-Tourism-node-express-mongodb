@@ -71,16 +71,20 @@ userSchema.statics.setUserInfo = data => {
 };
 
 //CHECK EMAIL VERIFICATION EXISTS
-userSchema.statics.verificationExists = verification => {
+userSchema.statics.phoneVerificationExists = data => {
 	return new Promise((resolve, reject) => {
 		User.findOne(
 			{
-				verification,
-				verified: false
+				phone: data.phone,
+				phoneVerification: data.phoneVerification,
+                phoneVerified: false
 			})
 			.then(result => {
 				if (!result)
 					reject(buildErrObject(404, user_dao.NOT_FOUND_OR_ALREADY_VERIFIED));
+				if (result.phoneVerificationExpires<Date.now())
+					reject(buildErrObject(400, 'TOKEN_EXPIRED'));
+
 				resolve(result);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -95,8 +99,8 @@ userSchema.statics.verifyUser = user => {
 		user.save()
 			.then(result => {
 				const response = {
-					email: result.email,
-					verified: result.verified
+					phone: result.phone,
+					phoneVerified: result.phoneVerified
 				};
 				resolve(response);
 			})
