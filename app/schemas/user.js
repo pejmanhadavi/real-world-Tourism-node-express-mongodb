@@ -15,6 +15,10 @@ const userSchema = new Schema({
 		index: true,
 		required: [true, 'NAME_IS_BLANK'],
 	},
+	phone: {
+		required: [true, 'PHONE_IS_BLANK'],
+		type: String,
+	},
 	password: {
 		type: String ,
 		minlength: 5,
@@ -22,7 +26,6 @@ const userSchema = new Schema({
 		required: [true, 'PASSWORD_IS_BLANK'],
 	} ,
 	email: {
-		required: [true, 'EMAIL_IS_BLANK'],
 		type: String,
 		lowercase: true,
 		unique: true,
@@ -39,9 +42,6 @@ const userSchema = new Schema({
 	verified: {
 		type: Boolean,
 		default: false
-	},
-	phone: {
-		type: String
 	},
 	loginAttempts: {
 		type: Number,
