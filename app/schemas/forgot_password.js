@@ -4,14 +4,9 @@ const validator = require('validator');
 //SCHEMA
 const forgotPasswordSchema = new mongoose.Schema(
 	{
-		email: {
+		phone: {
+			required: [true, 'PHONE_IS_BLANK'],
 			type: String,
-			validate: {
-				validator: validator.isEmail,
-				message: 'EMAIL_IS_NOT_VALID'
-			},
-			lowercase: true,
-			required: true
 		},
 		verification: {
 			type: String

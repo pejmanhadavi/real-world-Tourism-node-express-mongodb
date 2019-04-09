@@ -5,6 +5,7 @@ const {buildErrObject} = require('../services/error_handler');
 const uuid = require('uuid');
 const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access');
 const {forgotPassword_dao} = require('../../messages');
+const generateCode = require('generate-sms-verification-code');
 
 /**************
  * STATICS
@@ -14,8 +15,8 @@ const {forgotPassword_dao} = require('../../messages');
 forgotPasswordSchema.statics.saveForgotPassword = req => {
 	return new Promise((resolve, reject) => {
 		const forgot = new ForgotPassword({
-			email: req.body.email,
-			verification: uuid.v4(),
+			phone: req.body.phone,
+			verification: generateCode(6),
 			ipRequest: getIP(req),
 			browserRequest: getBrowserInfo(req),
 			countryRequest: getCountry(req)

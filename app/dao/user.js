@@ -144,13 +144,13 @@ userSchema.statics.finalize = (id, email) => {
 			.catch(err => buildErrObject(422, err.message));
 	});
 };
-//FIND USER BY EMAIL
-userSchema.statics.findUserByEmail = email => {
+//FIND USER BY PHONE
+userSchema.statics.findUserByPhone= phone => {
 	return new Promise((resolve, reject) => {
 		User.findOne(
 			{
-				email,
-				verified: true
+				phone,
+				phoneVerified: true
 			},
 			'password loginAttempts blockExpires name email role verified',)
 			.then(result => {

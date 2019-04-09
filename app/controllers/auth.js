@@ -72,10 +72,10 @@ exports.finalize = async (req, res, next) => {
 exports.forgotPassword = async (req, res, next) => {
 	try{
 		const data = matchedData(req);
-		await User.findUserByEmail(data.email);
+		await User.findUserByPhone(data.phone);
 		const forgotPass = await ForgotPassword.saveForgotPassword(req);
-		sendResetPasswordEmailMessage(forgotPass);
-		handleResponse(res, 200, auth_controller.RESET_EMAIL_SENT, data.email);
+		sendVerificationCode(res, data.phone, forgotPass.verification);
+		handleResponse(res, 200, 'VERIFICATION_CODE_SENT', data.phone);
 	}catch (err) {
 		next(err);
 	}
