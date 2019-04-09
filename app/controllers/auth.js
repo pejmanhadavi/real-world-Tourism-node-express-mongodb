@@ -137,7 +137,7 @@ exports.postResetPassword = async (req, res, next) => {
 exports.login = async (req, res, next) => {
 	try {
 		const data = matchedData(req);
-		const user = await User.findUserByEmail(data.email);
+		const user = await User.findUserByPhone(data.phone);
 		await User.userIsBlocked(user);
 		await User.checkLoginAttemptsAndBlockExpires(user);
 		const isPasswordMatch = await User.checkPassword(data.password, user);
