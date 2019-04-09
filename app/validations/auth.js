@@ -70,6 +70,28 @@ exports.verify = [
 ];
 
 
+exports.finalize = [
+	check('email')
+		.exists()
+		.withMessage(auth_validation.EMAIL_MISSING)
+		.not()
+		.isEmpty()
+		.withMessage(auth_validation.EMAIL_IS_EMPTY)
+		.isEmail()
+		.withMessage(auth_validation.EMAIL_IS_NOT_VALID)
+		.normalizeEmail(),
+	(req, res, next) => {
+		try {
+			validationResult(req).throw();
+			return next();
+		} catch (err) {
+			next(buildErrObject(validationErrCode, err.array()[0].msg));
+		}
+	}
+];
+
+
+
 exports.forgotPassword = [
 	check('email')
 		.exists()

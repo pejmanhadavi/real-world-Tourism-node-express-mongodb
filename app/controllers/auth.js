@@ -8,6 +8,7 @@ const {generateToken} = require('../services/auth');
 const {handleResponse} = require('../services/response_handler');
 const {auth_controller} = require('../../messages');
 const {sendVerificationCode} = require('../services/send_sms');
+const {isIDGood} = require('./base');
 
 /**************************************
  * 1_REGISTER CONTROLLER *
@@ -41,9 +42,22 @@ exports.verify = async (req, res, next) => {
 	try {
 		const data = matchedData(req);
 		const user = await User.phoneVerificationExists(data);
-		const response = await User.verifyUser(user);
+		User.verifyUser(user);
+		const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
 		handleResponse(res, 200, 'PHONE_VERIFIED_NOW_FINALIZE_YOUR_REGISTRATION', response);
 	} catch (err) {
+		next(err);
+	}
+};
+
+exports.finalize = async (req, res, next) => {
+	try{
+		const data = matchedData(req);
+		const id = await isIDGood(req.user._id);
+		await User.getUserForFinalize(id);
+		const response = await User.finalize(id, data.email);
+		handleResponse(res, 200, 'REGISTRAION_FINALIZED', response);
+	}catch (err) {
 		next(err);
 	}
 };

@@ -45,6 +45,10 @@ const userSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
+	finalizedRegistraion: {
+		type: Boolean,
+		default: false
+	},
 	loginAttempts: {
 		type: Number,
 		default: 0,

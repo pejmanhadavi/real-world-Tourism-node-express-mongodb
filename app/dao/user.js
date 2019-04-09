@@ -25,7 +25,7 @@ const HOURS_TO_BLOCK = 12;
 /*************************
  * STATICS *
  ************************/
-//EMAIL EXISTS
+//PHONE EXISTS
 userSchema.statics.phoneExists= phone=>{
 	return new Promise((resolve, reject)=>{
 		User.findOne({
@@ -70,7 +70,7 @@ userSchema.statics.setUserInfo = data => {
 	return user;
 };
 
-//CHECK EMAIL VERIFICATION EXISTS
+//CHECK PHONE VERIFICATION EXISTS
 userSchema.statics.phoneVerificationExists = data => {
 	return new Promise((resolve, reject) => {
 		User.findOne(
@@ -95,7 +95,7 @@ userSchema.statics.phoneVerificationExists = data => {
 //VERIFY USER
 userSchema.statics.verifyUser = user => {
 	return new Promise((resolve, reject) => {
-		user.verified = true;
+		user.phoneVerified= true;
 		user.save()
 			.then(result => {
 				const response = {
@@ -108,6 +108,42 @@ userSchema.statics.verifyUser = user => {
 	});
 };
 
+//GET USER FOR FINALIZE REGISTRATION
+userSchema.statics.getUserForFinalize = (id) => {
+	return new Promise((resolve, reject) => {
+		User.find({
+			_id: id,
+			phoneVerified: true,
+			finalizedRegistraion: false
+		})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404, 'DATA_NOT_FOUND'));
+				resolve(result);
+			})
+			.catch(err => buildErrObject(422, err.message));
+	});
+};
+
+//FINALIZE REGISTRATION
+userSchema.statics.finalize = (id, email) => {
+	return new Promise((resolve, reject) => {
+		User.findById(id)
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, 'USER_NOT_FOUND'));
+				result.email = email;
+				result.finalizedRegistraion = true;
+
+				await result.save();
+				resolve({
+					email: result.email,
+					finalize: result.finalizedRegistraion
+				});
+			})
+			.catch(err => buildErrObject(422, err.message));
+	});
+};
 //FIND USER BY EMAIL
 userSchema.statics.findUserByEmail = email => {
 	return new Promise((resolve, reject) => {
