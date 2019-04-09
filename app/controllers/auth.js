@@ -7,6 +7,7 @@ const {sendRegistrationEmailMessage, sendResetPasswordEmailMessage} = require('.
 const {generateToken} = require('../services/auth');
 const {handleResponse} = require('../services/response_handler');
 const {auth_controller} = require('../../messages');
+const {sendVerificationCode} = require('../services/send_sms');
 
 /**************************************
  * 1_REGISTER CONTROLLER *
@@ -18,12 +19,13 @@ const {auth_controller} = require('../../messages');
 exports.register = async(req, res, next) => {
 	try{
 		const data = matchedData(req);
-		await User.emailExists(data.email);
+		await User.phoneExists(data.phone);
 		const user = await User.registerUser(data);
 		const userInfo = User.setUserInfo(user);
-		const response = user.returnRegistrationToken(user, userInfo);
-		sendRegistrationEmailMessage(user);
-		handleResponse(res, 201, auth_controller.USER_REGISTERED_VERIFY_EMAIL, response);
+		// const response = user.returnRegistrationToken(user, userInfo);
+		// // sendRegistrationEmailMessage(user);
+		sendVerificationCode(res, user.phone, user.phoneVerification);
+		handleResponse(res, 201, 'VERIFICATION_SMS_SENT_VERIFY_PHONE', userInfo);
 	}catch(err){
 		next(err);
 	}

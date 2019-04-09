@@ -36,10 +36,13 @@ const userSchema = new Schema({
 			message: 'EMAIL_IS_NOT_VALID'
 		}
 	},
-	verification: {
+	phoneVerification: {
 		type: String
 	},
-	verified: {
+	phoneVerificationExpires: {
+		type: Date,
+	},
+	phoneVerified: {
 		type: Boolean,
 		default: false
 	},

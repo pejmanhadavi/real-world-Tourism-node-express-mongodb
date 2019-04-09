@@ -3,6 +3,7 @@ const dateFns = require('date-fns');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const fs = require('fs');
+const generateCode = require('generate-sms-verification-code');
 
 
 
@@ -12,6 +13,7 @@ const {generateToken} = require('../services/auth');
 
 const {user_dao} = require('../../messages');
 
+const MINUTES_TO_VERIFY = 2;
 const LOGIN_ATTEMPTS = 5;
 const HOURS_TO_BLOCK = 12;
 
@@ -24,16 +26,16 @@ const HOURS_TO_BLOCK = 12;
  * STATICS *
  ************************/
 //EMAIL EXISTS
-userSchema.statics.emailExists= email=>{
+userSchema.statics.phoneExists= phone=>{
 	return new Promise((resolve, reject)=>{
 		User.findOne({
-			email,
+			phone,
 			verified: true,
 		})
 			.then(result => {
 				if (!result)
 					resolve(result);
-				reject(buildErrObject(409, user_dao.EMAIL_EXISTS));
+				reject(buildErrObject(409, 'PHONE_EXISTS'));
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -45,8 +47,9 @@ userSchema.statics.registerUser = data => {
 		const user = new User({
 			name: data.name,
 			password: data.password,
-			email: data.email,
-			verification: uuid.v4()
+			phone: data.phone,
+			phoneVerification: generateCode(6),
+			phoneVerificationExpires: dateFns.addMinutes(new Date(), MINUTES_TO_VERIFY)
 		});
 
 		await user.genSalt();
@@ -61,8 +64,8 @@ userSchema.statics.setUserInfo = data => {
 	const user = {
 		_id: data._id,
 		name: data.name,
-		email: data.email,
-		verified: data.verified
+		phone: data.phone,
+		phoneVerified: data.phoneVerified
 	};
 	return user;
 };
