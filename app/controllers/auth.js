@@ -42,7 +42,7 @@ exports.verify = async (req, res, next) => {
 		const data = matchedData(req);
 		const user = await User.phoneVerificationExists(data);
 		const response = await User.verifyUser(user);
-		handleResponse(res, 200, auth_controller.EMAIL_VERIFIED_NOW_LOGIN, response);
+		handleResponse(res, 200, 'PHONE_VERIFIED_NOW_FINALIZE_YOUR_REGISTRATION', response);
 	} catch (err) {
 		next(err);
 	}
