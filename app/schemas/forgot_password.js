@@ -15,6 +15,10 @@ const forgotPasswordSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false
 		},
+		finalUsed: {
+			type: Boolean,
+			default: false
+		},
 		ipRequest: {
 			type: String
 		},

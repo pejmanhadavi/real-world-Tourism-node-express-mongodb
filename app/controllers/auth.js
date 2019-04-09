@@ -94,33 +94,16 @@ exports.forgotVerify = async (req, res, next) => {
 	try{
 		const data = matchedData(req);
 		const user = await User.findUserByPhone(data.phone);
-		const forgotPassword = await ForgotPassword.getForgotPassword(data);
+		const forgotPassword = await ForgotPassword.firstGetForgotPassword(data);
 		await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
 		const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
+		await ForgotPassword.deleteUnusedForgotPasswords(forgotPassword.phone);
 		handleResponse(res, 200, 'NOW_RESET_PASSWORD', response);
 	}catch (err) {
 		next(err);
 	}
 };
 
-
-/******************************************
- * GET REQ RESET PASSWORD
- * @param req
- * @param res
- * @param next
- * @returns {Promise<void>}
- */
-exports.getResetPassword = async (req, res, next) => {
-	try{
-		await ForgotPassword.findForgotPassword(req.params.verification);
-		handleResponse(res, 200, auth_controller.RESET_PASSWORD_PAGE, {
-			msg:'RESET_PASSWORD'
-		});
-	}catch (err) {
-		next(err);
-	}
-};
 
 /******************************************
  * POST REQ RESET PASSWORD
@@ -132,11 +115,11 @@ exports.getResetPassword = async (req, res, next) => {
 exports.postResetPassword = async (req, res, next) => {
 	try{
 		const data = matchedData(req);
-		const forgotPassword = await ForgotPassword.findForgotPassword(req.params.verification);
-		const user = await User.findUserByEmail(forgotPassword.email);
+		const id = await isIDGood(req.user._id);
+		const user = await User.findById(id);
+		const forgotPassword = await ForgotPassword.finalGetForgotPassword(user);
 		await User.updatePassword(user, data.password);
-		const result = await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
-		await ForgotPassword.deleteUnusedForgotPasswords(forgotPassword.email);
+		const result = await ForgotPassword.markResetPasswordAsFinalUsed(req, forgotPassword);
 		handleResponse(res, 200, auth_controller.PASSWORD_CHANGED, result);
 	}catch (err) {
 		next(err);

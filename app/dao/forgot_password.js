@@ -46,13 +46,32 @@ forgotPasswordSchema.statics.findForgotPassword = verification => {
 };
 
 //GET FORGOT PASSWORD
-forgotPasswordSchema.statics.getForgotPassword = (data) => {
+forgotPasswordSchema.statics.firstGetForgotPassword = (data) => {
 	return new Promise((resolve, reject) => {
 		ForgotPassword.findOne(
 			{
 				phone: data.phone,
 				verification: data.phoneVerification,
-				used: false
+				used: false,
+				finalUsed: false,
+			})
+			.then(result => {
+				if (!result)
+					reject(buildErrObject(404,forgotPassword_dao.NOT_FOUND_OR_ALREADY_USED));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
+//GET FORGOT PASSWORD
+forgotPasswordSchema.statics.finalGetForgotPassword = (user) => {
+	return new Promise((resolve, reject) => {
+		ForgotPassword.findOne(
+			{
+				phone: user.phone,
+				used: true,
+				finalUsed: false,
 			})
 			.then(result => {
 				if (!result)
@@ -82,11 +101,27 @@ forgotPasswordSchema.statics.markResetPasswordAsUsed = (req, forgotPass) => {
 	});
 };
 
+//MARK FINAL USED
+forgotPasswordSchema.statics.markResetPasswordAsFinalUsed = (req, forgotPass) => {
+	return new Promise((resolve, reject) => {
+		forgotPass.finalUsed = true;
+		forgotPass.save()
+			.then(async result => {
+				if (!result)
+					reject(buildErrObject(404, forgotPassword_dao.FORGOT_PASSWORD_NOT_FOUND));
+				resolve({
+					phone: result.phone
+				});
+			})
+			.catch(err =>reject(buildErrObject(422, err.message)));
+	});
+};
 
-forgotPasswordSchema.statics.deleteUnusedForgotPasswords = email => {
+
+forgotPasswordSchema.statics.deleteUnusedForgotPasswords = phone => {
 	return new Promise((resolve, reject) => {
 		ForgotPassword.deleteMany({
-			email: email,
+			phone,
 			used: false
 		})
 			.then(result => {

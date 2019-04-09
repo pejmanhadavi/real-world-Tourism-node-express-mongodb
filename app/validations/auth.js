@@ -153,9 +153,6 @@ exports.getResetPassword = [
 	}
 ];
 exports.postResetPassword = [
-	param('verification')
-		.isUUID()
-		.withMessage(auth_validation.VERIFICATION_BAD_REQUEST),
 	check('password')
 		.exists()
 		.withMessage(auth_validation.PASSWORD_MISSING)
