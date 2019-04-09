@@ -19,6 +19,9 @@ const forgotPasswordSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false
 		},
+		expires: {
+			type: Date,
+		},
 		ipRequest: {
 			type: String
 		},

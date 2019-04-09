@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const {forgotPasswordSchema} = require('../schemas/forgot_password');
 const {buildErrObject} = require('../services/error_handler');
-
+const dateFns = require('date-fns');
 const uuid = require('uuid');
 const {getIP, getCountry, getBrowserInfo} = require('../services/get_user_access');
 const {forgotPassword_dao} = require('../../messages');
 const generateCode = require('generate-sms-verification-code');
 
+const MINUTES_TO_VERIFY = 5;
 /**************
  * STATICS
  */
@@ -19,7 +20,8 @@ forgotPasswordSchema.statics.saveForgotPassword = req => {
 			verification: generateCode(6),
 			ipRequest: getIP(req),
 			browserRequest: getBrowserInfo(req),
-			countryRequest: getCountry(req)
+			countryRequest: getCountry(req),
+			expires: dateFns.addMinutes(new Date(), MINUTES_TO_VERIFY)
 		});
 
 		forgot.save()
@@ -54,6 +56,7 @@ forgotPasswordSchema.statics.firstGetForgotPassword = (data) => {
 				verification: data.phoneVerification,
 				used: false,
 				finalUsed: false,
+				expires : {$gt: Date.now()}
 			})
 			.then(result => {
 				if (!result)

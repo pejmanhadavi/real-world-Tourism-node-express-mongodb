@@ -96,8 +96,8 @@ exports.forgotVerify = async (req, res, next) => {
 		const user = await User.findUserByPhone(data.phone);
 		const forgotPassword = await ForgotPassword.firstGetForgotPassword(data);
 		await ForgotPassword.markResetPasswordAsUsed(req, forgotPassword);
-		const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
 		await ForgotPassword.deleteUnusedForgotPasswords(forgotPassword.phone);
+		const response = await UserRefresh.saveUserRefreshAndReturnToken(req, user);
 		handleResponse(res, 200, 'NOW_RESET_PASSWORD', response);
 	}catch (err) {
 		next(err);
