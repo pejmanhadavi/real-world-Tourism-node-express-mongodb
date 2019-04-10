@@ -53,8 +53,8 @@ exports.dashboard = async (req, res, next) => {
             totalReserved: await Request.numberOfRequests(),
             totalLeadersReviews:30,
             totalExperiencesReviews:50,
-            totalComments:90,
-            totalCommentsReviews:150});
+            totalComments: await Rate.numberOfRates(),
+        });
 
 
     }catch (err) {

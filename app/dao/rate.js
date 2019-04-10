@@ -26,7 +26,17 @@ rateSchema.statics.saveRate = (req, tourLeaderId, userId) => {
 
 
 
-
+//NUMBER OF RATES
+rateSchema.statics.numberOfRates= () => {
+	return new Promise((resolve, reject) => {
+		Rate.find({})
+			.then(result => {
+				const countOfRates = result.length;
+				resolve(countOfRates);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
 
 
 
