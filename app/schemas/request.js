@@ -22,29 +22,7 @@ const requestSchema = new Schema({
 		type :ObjectId,
 		required: true
 	},
-	tourLeaderFirstValidate: {
-		type: Boolean,
-		default: false
-	},
-	userFinalValidate: {
-		type: Boolean,
-		default: false
-	},
-	tourLeaderFinalValidate: {
-		type: Boolean,
-		default: false
-	},
 	paid: {
-		type: Boolean,
-		default: false
-	},
-	userSatisfaction: {
-		type: Boolean
-	},
-	tourLeaderSatisfaction: {
-		type: Boolean
-	},
-	rated: {
 		type: Boolean,
 		default: false
 	},

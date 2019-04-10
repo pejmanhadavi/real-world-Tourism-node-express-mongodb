@@ -33,6 +33,7 @@ requestSchema.statics.requestExists = (requestId) => {
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
+
 //IS TOUR LEADER FOR THIS REQUEST
 requestSchema.statics.checkTourLeaderForRequest = (requestId, tourLeaderId) => {
 	return new Promise((resolve, reject) => {
@@ -44,112 +45,6 @@ requestSchema.statics.checkTourLeaderForRequest = (requestId, tourLeaderId) => {
 				if (!result)
 					reject(buildErrObject(404, request_dao.REQUEST_WITH_TOUR_LEADER_NOT_FOUND));
 				resolve(true);
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//TOUR LEADER FIRST VALIDATE
-requestSchema.statics.tourLeaderFirstValidate = requestId => {
-	return new Promise((resolve, reject) => {
-		Request.findById(requestId)
-			.then(async result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
-				result.tourLeaderFirstValidate = true;
-				await result.save();
-				resolve({
-					id: result._id,
-				});
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//TOUR LEADER FINAL VALIDATE
-requestSchema.statics.tourLeaderFinalValidate = requestId => {
-	return new Promise((resolve, reject) => {
-		Request.findById(requestId)
-			.then(async result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
-				result.tourLeaderFinalValidate = true;
-				await result.save();
-				resolve({
-					id: result._id
-				});
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//USER FINAL VALIDATE
-requestSchema.statics.userFinalValidate = (requestId, userId) => {
-	return new Promise((resolve, reject) => {
-		Request.findOne({
-			_id: requestId,
-			user: userId
-		})
-			.then(async result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
-				result.userFinalValidate = true;
-				await result.save();
-				resolve({
-					id: result._id
-				});
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-
-//USER SATISFACTION
-requestSchema.statics.userSatisfaction= (requestId, userId, satisfaction) => {
-	return new Promise((resolve, reject) => {
-		Request.findOne({
-			_id: requestId,
-			user: userId,
-			tourLeaderFirstValidate: true,
-			tourLeaderFinalValidate: true,
-			userFinalValidate: true
-		})
-			.then(async result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
-				if (result.userSatisfaction)
-					reject(buildErrObject(409, request_dao.SATISFACTION_ALREADY_EXISTS));
-				result.userSatisfaction = satisfaction;
-				await result.save();
-				resolve({
-					id: result._id
-				});
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-
-//TOUR LEADER SATISFACTION
-requestSchema.statics.tourLeaderSatisfaction= (requestId, tourLeaderId, satisfaction) => {
-	return new Promise((resolve, reject) => {
-		Request.findOne({
-			_id: requestId,
-			tourLeader: tourLeaderId,
-			tourLeaderFirstValidate: true,
-			tourLeaderFinalValidate: true,
-			userFinalValidate: true
-		})
-			.then(async result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
-				if (result.tourLeaderSatisfaction)
-					reject(buildErrObject(409, request_dao.SATISFACTION_ALREADY_EXISTS));
-				result.tourLeaderSatisfaction= satisfaction;
-				await result.save();
-				resolve({
-					id: result._id
-				});
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
@@ -200,45 +95,6 @@ requestSchema.statics.getRequestById = id => {
 	});
 };
 
-//IS REQUEST RATED
-requestSchema.statics.isRequestRated = (requestId, userId) => {
-	return new Promise((resolve, reject) => {
-		Request.findOne({
-			_id: requestId,
-			user: userId,
-			tourLeaderFirstValidate: true,
-			userFinalValidate: true,
-			tourLeaderFinalValidate: true,
-			paid: true,
-			// userSatisfaction: true,
-			// tourLeaderSatisfaction: true,
-			rated: false
-		})
-			.then(result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND_OR_RATED));
-				resolve(true);
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
-
-//SET RATE  TO TRUE
-requestSchema.statics.setRate = requestId => {
-	return new Promise((resolve, reject) => {
-		Request.findById(requestId)
-			.then(async result => {
-				if (!result)
-					reject(buildErrObject(404, request_dao.REQUEST_NOT_FOUND));
-				result.rated= true;
-				await result.save();
-				resolve({
-					id: result._id
-				});
-			})
-			.catch(err => reject(buildErrObject(422, err.message)));
-	});
-};
 
 //FIND REQUEST FOR PAY
 requestSchema.statics.findRequestForPay = (requestId, userId) => {
