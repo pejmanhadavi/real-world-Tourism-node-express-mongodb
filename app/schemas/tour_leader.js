@@ -20,6 +20,10 @@ const tourLeaderSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
+	read: {
+		type: Boolean,
+		default: false
+	},
 	experiences: [{
 		type: ObjectId,
 		ref: 'Experience'

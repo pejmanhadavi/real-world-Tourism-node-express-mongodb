@@ -258,7 +258,9 @@ userSchema.statics.getProfileFromDB = id => {
 userSchema.statics.updateProfileInDB = (req, id) => {
 	return new Promise((resolve, reject) => {
 		delete req.body._id;
-		delete req.body.email;
+		delete req.body.phone;
+		delete req.body.isAdmin;
+		delete req.body.finalize;
 		User.findById(id)
 			.then(async result => {
 				if (!result)

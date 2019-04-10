@@ -13,14 +13,6 @@ exports.rateTourLeader = [
 		.withMessage(rate_validation.LEADER_ID_IS_EMPTY)
 		.isMongoId()
 		.withMessage(rate_validation.LEADER_ID_IS_NOT_VALID),
-	check('requestId')
-		.exists()
-		.withMessage(rate_validation.REQUEST_ID_MISSING)
-		.not()
-		.isEmpty()
-		.withMessage(rate_validation.REQUEST_ID_IS_EMPTY)
-		.isMongoId()
-		.withMessage(rate_validation.REQUEST_ID_IS_NOT_VALID),
 	check('star')
 		.optional()
 		.not()
