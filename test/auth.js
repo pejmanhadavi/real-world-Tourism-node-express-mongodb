@@ -10,18 +10,18 @@ const should = chai.should();
 
 
 const loginDetails = {
-	email: 'admin@admin.com',
+	phone: '09091234567',
 	password: 'admin'
 };
 
 const wrongLoginDetails = {
-	email: 'admin@admin.com',
+	phone: '09091234567',
 	password: 'wrongPass'
 };
 
 const registerDetails = {
 	name: faker.random.words(),
-	email : 'pejmanhadaviph@yahoo.com',
+	phone : '09121234567',
 	password : faker.internet.password()
 };
 const server = require('../bin/www').server;
@@ -78,28 +78,28 @@ describe('*********** AUTH ***********', () => {
 				.send(registerDetails)
 				.end(async (err, res) => {
 					res.should.have.status(201);
-					createdID = res.body.data.user._id;
+					createdID = res.body.data._id;
 					User.findById(createdID, (err, result) => {
-						verification = result.verification;
+						verification = result.phoneVerification;
 					});
 					done();
 				});
 		});
 
-		it('it should NOT POST a register if email already exists', done => {
-			chai
-				.request(server)
-				.post('/auth/register')
-				.send(registerDetails)
-				.end((err, res) => {
-					res.should.have.status(409);
-					done();
-				});
-		});
-		it('it should NOT POST a register if email is not valid', done => {
+		// it('it should NOT POST a register if phone already exists', done => {
+		// 	chai
+		// 		.request(server)
+		// 		.post('/auth/register')
+		// 		.send(registerDetails)
+		// 		.end((err, res) => {
+		// 			res.should.have.status(409);
+		// 			done();
+		// 		});
+		// });
+		it('it should NOT POST a register if phone is not valid', done => {
 			const user = {
 				name: faker.random.words(),
-				email: 'this is not an email',
+				phone: 'this is not an email',
 				password: faker.random.words()
 			};
 			chai
@@ -113,34 +113,33 @@ describe('*********** AUTH ***********', () => {
 		});
 	});
 
-	describe('/GET verify', () => {
-		it('it should GET verify', done => {
-			console.log('VERIFICATION: '+verification);
-			chai
-				.request(server)
-				.get('/auth/verify/'+verification)
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.data.verified.should.equal(true);
-					done();
-				});
-		});
+	describe('/POST verify', () => {
 
-		it('it should NOT GET verify with wrong uuid', done => {
+		it('it should NOT POST verify with wrong verification', done => {
 			chai
 				.request(server)
-				.get('/auth/verify/'+uuid.v4())
+				.post('/auth/verify')
+				.send({
+					phone: registerDetails.phone,
+					phoneVerification: '4444444444444'
+				})
 				.end((err, res) => {
 					res.should.have.status(404);
 					done();
 				});
 		});
-		it('it should NOT GET verify with wrong VERIFICATION', done => {
+
+		it('it should POST verify', done => {
 			chai
 				.request(server)
-				.get('/auth/verify/'+faker.random.words())
+				.post('/auth/verify')
+				.send({
+					phone: registerDetails.phone,
+					phoneVerification: verification
+				})
 				.end((err, res) => {
-					res.should.have.status(400);
+					res.should.have.status(200);
+					res.body.data.user.phoneVerified.should.equal(true);
 					done();
 				});
 		});
@@ -148,17 +147,17 @@ describe('*********** AUTH ***********', () => {
 
 	describe('/POST forgotPassword', () => {
 		it('it should POST forgotPassword', done => {
-			const email = registerDetails.email;
+			const phone = registerDetails.phone;
 			chai
 				.request(server)
 				.post('/auth/forgot')
 				.send({
-					email
+					phone
 				})
 				.end((err, res) => {
 					res.should.have.status(200);
 					ForgotPassword.findOne({
-						email,
+						phone,
 						used: false
 					}, (err, result) => {
 						verificationForgot = result.verification;
@@ -166,40 +165,12 @@ describe('*********** AUTH ***********', () => {
 					done();
 				});
 		});
-		it('it should NOT POST forgotPassword with wrong EMAIL', done => {
+		it('it should NOT POST forgotPassword with wrong PHONE', done => {
 			chai
 				.request(server)
 				.post('/auth/forgot')
 				.send({
-					email: faker.internet.email()
-				})
-				.end((err, res) => {
-					res.should.have.status(404);
-					done();
-				});
-		});
-	});
-
-	describe('/POST resetPassword', () => {
-		it('it should POST resetPassword', done => {
-			chai
-				.request(server)
-				.post('/auth/reset/'+verificationForgot)
-				.send({
-					password: 'admin'
-				})
-				.end((err, res) => {
-					res.should.have.status(200);
-					done();
-				});
-		});
-
-		it('it should NOT POST resetPassword with wrong uuid', done => {
-			chai
-				.request(server)
-				.post('/auth/reset/'+uuid.v4())
-				.send({
-					password: '12345'
+					phone: faker.phone.phoneNumber('###########')
 				})
 				.end((err, res) => {
 					res.should.have.status(404);
