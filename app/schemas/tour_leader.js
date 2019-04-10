@@ -27,7 +27,11 @@ const tourLeaderSchema = new Schema({
 	experiences: [{
 		type: ObjectId,
 		ref: 'Experience'
-	}]
+	}],
+	reviews: {
+		type: Number,
+		default: 0
+	}
 }, {
 	versionKey: false,
 	timestamps: true

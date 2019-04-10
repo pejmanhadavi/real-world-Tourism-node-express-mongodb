@@ -1,34 +1,36 @@
--delete async from dao files => done
--block user => done
--edit handle error => done
--edit response pattern => done
--send request with experiences => done
--calculate amount of request => done
--set tour leader edit experiences like send request dao test => done
--check the other side of experiences => done
--edit pay calculate experience payment => done
-tour leader registration is done = > done
--edit route names => not important
--index => done
--edit error messages to persian => done
--add admin for user schema => done
--add user roles => done
--use connect flash => done
--add login conditions for admin panel => done
--add user check for admin panel => done
+-delete async from dao files
+-block user
+-edit handle error
+-edit response pattern
+-send request with experiences
+-calculate amount of request
+-set tour leader edit experiences like send request dao test
+-check the other side of experiences
+-edit pay calculate experience payment
+tour leader registration is done
+-edit route names
+-index
+-edit error messages to persian
+-add admin for user schema
+-add user roles
+-use connect flash
+-add login conditions for admin panel
+-add user check for admin panel
+-Leader read schema
+-add number of reviews for requested models
+
+-verification page
+-reset password page
+
+-email forgot password page
+-verification email page
 
 -search
 -cost start from
 
--verification page
--reset password page
 -404 page
--email forgot password page
--verification email page
--Leader read schema
 -change pay to payment
 -add api before api routes
 -add index controller methods to dao
--add number of reviews for requested models
 -add payment data
-
+-add increment for experiment and leader page

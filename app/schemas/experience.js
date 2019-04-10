@@ -21,6 +21,10 @@ const experienceSchema = new Schema({
 	images: {
 		type: [String],
 		required: true
+	},
+	reviews: {
+		type: Number,
+		default: 0
 	}
 }, {
 	versionKey: false
