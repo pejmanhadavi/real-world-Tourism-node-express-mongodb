@@ -19,15 +19,14 @@ passport.deserializeUser((id, done) => {
 
 passport.use(new LocalStrategy(
     {
-    usernameField: 'email',
+    usernameField: 'phone',
     passwordField: 'password',
     session: false
 },
     (username, password, done) => {
         User.findOne({
-            email: username,
-            isAdmin: true,
-            verified: true
+            phone: username,
+            isAdmin: true
         })
             .then(async user => {
                 if (!user)
