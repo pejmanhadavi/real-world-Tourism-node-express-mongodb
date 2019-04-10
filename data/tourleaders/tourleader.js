@@ -10,6 +10,7 @@ for( let i = 0 ; i < 20 ; i ++ ) {
         _id: new ObjectId(),
         user: users[i],
         verified: true,
+        read: true,
         experiences: [
             new ObjectId(experiences[Math.floor(Math.random() * 20)]),
             new ObjectId(experiences[Math.floor(Math.random() * 20)]),

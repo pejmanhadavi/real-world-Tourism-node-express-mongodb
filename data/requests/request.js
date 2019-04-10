@@ -17,13 +17,8 @@ for( let i = 0 ; i < 20 ; i ++ ) {
             new ObjectId(experiences[Math.floor(Math.random() * 20)]),
         ],
         tourLeaderUserId: users[i],
-        tourLeaderFirstValidate: true,
-        userFinalValidate: true,
-        tourLeaderFinalValidate: true,
         paid: true,
-        userSatisfaction: true,
-        tourLeaderSatisfaction: true,
-        rated: true,
+        factorNumber: faker.random.number(),
     };
 
     requests.push(request);

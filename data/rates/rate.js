@@ -11,7 +11,7 @@ for( let i = 0 ; i < 20 ; i ++ ) {
             tourLeader: leaders[ 19 - i ],
             user: users[Math.floor(Math.random() * 20 )],
             star: Math.floor(Math.random() * 5 + 1),
-            comment: `this is some comment ${i*j+1}`
+            comment: faker.lorem.text(),
         };
         rates.push(rate);
     }

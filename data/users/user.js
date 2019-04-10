@@ -11,8 +11,13 @@ for( let i = 0 ; i < 20 ; i ++ ) {
         name: faker.name.firstName(),
         password: '$2b$10$7JFz3Ah9Nnk5jwbj.gkAmOwusKA.T6XAYMrtSihxlJ/9bU2ZGmERG',
         email: faker.internet.email(),
-        verification: uuid.v4(),
+        phoneVerification: faker.random.number(),
+        phoneVerified: true,
+        phoneVerificationExpires: faker.date.past(),
         verified: true,
+        finalizedRegistraion: true,
+        aboutMe: faker.lorem.text(),
+        motto: faker.lorem.text(),
         phone: faker.phone.phoneNumber('###########'),
         city: cities[i],
         province: provinces[i],
@@ -21,7 +26,9 @@ for( let i = 0 ; i < 20 ; i ++ ) {
             faker.image.avatar(),
             faker.image.avatar(),
         ],
-        isAdmin: false
+        isAdmin: false,
+        createdAt: faker.date.past(),
+        updatedAt: faker.date.recent(),
     };
 
     users.push(user);
