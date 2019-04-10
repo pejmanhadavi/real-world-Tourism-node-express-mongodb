@@ -80,9 +80,9 @@ const userSchema = new Schema({
 		},
 		message: 'PROFILE_SHOULD_BE_AT_MOST_5'}
 	},
-	backgroundImage: {
-		type: String
-	},
+	// backgroundImage: {
+	// 	type: String
+	// },
 	languages: [{
 		type: String,
 		maxlength: 50,

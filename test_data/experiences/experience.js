@@ -4,10 +4,10 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = [
     {
-    _id: new ObjectId('5c8e33466c3165282fbcc2ab'),
-    title: 'EX1',
-    cost: 80000,
-    description: 'this is some description',
+        _id: new ObjectId('5c8e33466c3165282fbcc2ab'),
+        title: 'EX1',
+        cost: 80000,
+        description: 'this is some description',
     },
     {
         _id: new ObjectId('5c8e342f7bcd6d2b56114945'),
