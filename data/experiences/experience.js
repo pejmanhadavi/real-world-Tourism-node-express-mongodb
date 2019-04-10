@@ -14,7 +14,8 @@ for( let i = 0 ; i < 20 ; i ++ ) {
             faker.image.nature(),
             faker.image.nature(),
             faker.image.nature()
-        ]
+        ],
+        reviews: Math.floor(Math.random() * 50 )
     };
 
     experiences.push(experience);

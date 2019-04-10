@@ -45,14 +45,13 @@ exports.postLogin = (req, res, next) => {
  */
 exports.dashboard = async (req, res, next) => {
     try {
-
         res.render('panel/dashboard', {
             registeredUsers: await User.numberOfRegisteredUsers(),
             registeredLeaders: await TourLeader.numberOfRegisteredLeaders(),
             totalPayment: await Pay.calculateTotalPayment(),
             totalReserved: await Request.numberOfRequests(),
-            totalLeadersReviews:30,
-            totalExperiencesReviews:50,
+            totalLeadersReviews: await TourLeader.calculateTotalReviews(),
+            totalExperiencesReviews: await Experience.calculateTotalReviews(),
             totalComments: await Rate.numberOfRates(),
         });
 

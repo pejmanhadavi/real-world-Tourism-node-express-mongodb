@@ -103,6 +103,27 @@ experienceSchema.statics.getProfileAndCostOfExperiences = experiences => {
 	});
 };
 
+
+
+
+
+//CALCULATE TOTAL REVIEWS
+experienceSchema.statics.calculateTotalReviews = () => {
+	return new Promise((resolve, reject) => {
+		Experience.find({})
+			.then(result => {
+				console.log(result);
+				let sum = 0;
+				result.forEach(item => {
+					sum += item.reviews;
+				});
+				console.log(sum);
+				resolve(sum);
+			})
+			.catch(err => reject(buildErrObject(422, err.message)));
+	});
+};
+
 /**************************
  * HELPERS
  *************************/

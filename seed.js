@@ -2,7 +2,7 @@ const {Seeder} = require('mongo-seeding');
 const path = require('path');
 
 const config = {
-    database: "mongodb://localhost:27017/touraso_test",
+    database: "mongodb://localhost:27017/touraso",
     inputPath: path.resolve(__dirname, './data'),
     dropDatabase: false
 };
