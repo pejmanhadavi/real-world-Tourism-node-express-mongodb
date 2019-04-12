@@ -38,7 +38,7 @@ experienceSchema.statics.calculateAmount  = experiences => {
 
 				const idArr = pushIdsInArray(result);
 				const amountArr = pushAmountsInArray(result);
-				console.log(experiences[0].toString());
+				// console.log(experiences[0].toString());
 				for ( let i = 0 ; i < experiences.length ; i ++) {
 					amount += amountArr[idArr.indexOf(experiences[i].toString())];
 				}
@@ -59,7 +59,7 @@ experienceSchema.statics.checkTheExperiences =  experiences => {
 				const arrayOfIds = pushIdsInArray(result);
 				for(let i in experiences){
 					if (arrayOfIds.indexOf(experiences[i])<0)
-						reject(buildErrObject(400, experience_dao.BAD_REQUEST))
+						reject(buildErrObject(400, experience_dao.BAD_REQUEST));
 				}
 				resolve(true);
 			})
@@ -112,12 +112,10 @@ experienceSchema.statics.calculateTotalReviews = () => {
 	return new Promise((resolve, reject) => {
 		Experience.find({})
 			.then(result => {
-				console.log(result);
 				let sum = 0;
 				result.forEach(item => {
 					sum += item.reviews;
 				});
-				console.log(sum);
 				resolve(sum);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
@@ -163,8 +161,6 @@ const getIdProfileTitle = (json, experiences) => {
 		arrayOFExperiencesProperties.push(exProperty);
 		exProperty = {};
 	});
-
-	console.log(arrayOFExperiencesProperties);
 	return arrayOFExperiencesProperties;
 };
 /**************************

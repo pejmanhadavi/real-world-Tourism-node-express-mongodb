@@ -32,8 +32,8 @@ exports.mainPage  = async (req, res, next) => {
 			{
 				$group: {
 					_id: '$tourLeader',
-					averageStar: { $avg: "$star" },
-					comments: {$push: "$comment"}
+					averageStar: { $avg: '$star' },
+					comments: {$push: '$comment'}
 				}
 			}
 		]);

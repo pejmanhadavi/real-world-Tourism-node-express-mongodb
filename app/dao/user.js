@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const dateFns = require('date-fns');
 const bcrypt = require('bcrypt');
-const uuid = require('uuid');
 const fs = require('fs');
 const generateCode = require('generate-sms-verification-code');
 
@@ -77,7 +76,7 @@ userSchema.statics.phoneVerificationExists = data => {
 			{
 				phone: data.phone,
 				phoneVerification: data.phoneVerification,
-                phoneVerified: false
+				phoneVerified: false
 			})
 			.then(result => {
 				if (!result)
@@ -345,6 +344,7 @@ userSchema.statics.deleteProfileImage = (id, profileImage) => {
 					const path = './public/uploads/'+profileImage;
 					fs.unlinkSync(path);
 				} catch(err) {
+					// eslint-disable-next-line no-console
 					console.error(err);
 				}
 				resolve({

@@ -14,11 +14,11 @@ const {Rate} = require('../dao/rate');
  * @returns {Promise<void>}
  */
 exports.getLogin = async (req, res, next) => {
-    try{
-        res.render('panel/login');
-    }catch(err){
-        next(err);
-    }
+	try{
+		res.render('panel/login');
+	}catch(err){
+		next(err);
+	}
 };
 
 /******************************
@@ -28,13 +28,13 @@ exports.getLogin = async (req, res, next) => {
  * @param next
  */
 exports.postLogin = (req, res, next) => {
-    try {
-        rememberMe(req);
-        req.flash('success', 'You are now logged in');
-        res.redirect('/panel/dashboard');
-    }catch (err) {
-        next(err);
-    }
+	try {
+		rememberMe(req);
+		req.flash('success', 'You are now logged in');
+		res.redirect('/panel/dashboard');
+	}catch (err) {
+		next(err);
+	}
 };
 
 /*************************************
@@ -44,19 +44,19 @@ exports.postLogin = (req, res, next) => {
  * @param next
  */
 exports.dashboard = async (req, res, next) => {
-    try {
-        res.render('panel/dashboard', {
-            registeredUsers: await User.numberOfRegisteredUsers(),
-            registeredLeaders: await TourLeader.numberOfRegisteredLeaders(),
-            totalPayment: await Pay.calculateTotalPayment(),
-            totalReserved: await Request.numberOfRequests(),
-            totalLeadersReviews: await TourLeader.calculateTotalReviews(),
-            totalExperiencesReviews: await Experience.calculateTotalReviews(),
-            totalComments: await Rate.numberOfRates(),
-        });
+	try {
+		res.render('panel/dashboard', {
+			registeredUsers: await User.numberOfRegisteredUsers(),
+			registeredLeaders: await TourLeader.numberOfRegisteredLeaders(),
+			totalPayment: await Pay.calculateTotalPayment(),
+			totalReserved: await Request.numberOfRequests(),
+			totalLeadersReviews: await TourLeader.calculateTotalReviews(),
+			totalExperiencesReviews: await Experience.calculateTotalReviews(),
+			totalComments: await Rate.numberOfRates(),
+		});
 
 
-    }catch (err) {
-        next(err);
-    }
+	}catch (err) {
+		next(err);
+	}
 };

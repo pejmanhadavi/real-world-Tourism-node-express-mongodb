@@ -33,12 +33,10 @@ paySchema.statics.calculateTotalPayment = () => {
 	return new Promise((resolve, reject) => {
 		Pay.find({})
 			.then(result => {
-				console.log(result);
 				let sum = 0;
 				result.forEach(item => {
 					sum += parseInt(item.amount);
 				});
-				console.log(sum);
 				resolve(sum);
 			})
 			.catch(err => reject(buildErrObject(422, err.message)));
