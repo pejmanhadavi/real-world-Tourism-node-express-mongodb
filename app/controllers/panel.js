@@ -5,6 +5,7 @@ const {Experience} = require('../dao/experience');
 const {Pay} = require('../dao/pay');
 const {Request} = require('../dao/request');
 const {Rate} = require('../dao/rate');
+const {dateConverter} = require('./base');
 
 /*********************************
  * Get login controller
@@ -59,4 +60,58 @@ exports.dashboard = async (req, res, next) => {
 	}catch (err) {
 		next(err);
 	}
+};
+
+/*************************************
+ * GET users list
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.users_list = async (req, res, next) => {
+	try{
+		const users = await User.find().populate('city').lean();
+		const leaders = await TourLeader.find();
+		createdAtConverter(users);
+		updatedAtConverter(users);
+		setUserStatus(users, leaders);
+		res.render('panel/users_list', {users: users});
+	}catch(err) {
+		next(err);
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+/***************
+ * PRIVATE FUNCTIONS
+ */
+const createdAtConverter = (items) => {
+	items.forEach ( item => {
+		item.createdAt = dateConverter(item.createdAt);
+	});
+};
+
+const updatedAtConverter = (items) => {
+	items.forEach ( item => {
+		item.updatedAt = dateConverter(item.updatedAt);
+	});
+};
+
+const setUserStatus = (users, leaders) => {
+	leaders = leaders.map(a => a.user.toString());
+	users.forEach(user => {
+		if(leaders.indexOf(user._id.toString()) < 0)
+			user.isLeader = 'گردشگر';
+		else
+			user.isLeader = 'راهنما';
+	});
 };

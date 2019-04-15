@@ -382,6 +382,20 @@ userSchema.statics.numberOfRegisteredUsers = () => {
 			.catch(err => reject(buildErrObject(422, err.message)));
 	});
 };
+
+
+//GET ALL USERS
+userSchema.statics.getAllUsers = () => {
+	return new Promise((resolve, reject) => {
+		User.find().populate('city')
+			.then(result => {
+				if(!result)
+					reject(buildErrObject(404, 'THERE IS NO USER'));
+				resolve(result);
+			})
+			.catch(err => reject(buildErrObject(422, err.meesage)));
+	});
+};
 /************************
  * METHODS *
  ***********************/
