@@ -7,6 +7,9 @@
     "test": "mocha --timeout=5000"
   },
   "dependencies": {
+    "admin-bro": "^0.7.0",
+    "admin-bro-expressjs": "^0.1.6",
+    "admin-bro-mongoose": "^0.2.1",
     "bcrypt": "^3.0.3",
     "compression": "^1.7.3",
     "config": "^3.0.1",
