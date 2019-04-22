@@ -36,7 +36,18 @@ AdminBro.registerAdapter(AdminBroMongoose);
 
 
 const adminBro = new AdminBro({
-	resources: [User, Experience, ForgotPassword, Rate, Request, TourLeader, UserRefresh, Pay],
+	resources: [
+		{resource: User,options: {name: 'مدیریت کاربران'}},
+		{resource: Experience, options: {name: 'مدیریت تجربه ها'}},
+		{resource: TourLeader, options: {name: 'مدیریت راهنما ها'}},
+		{resource: Request, options: {name: 'مدیریت درخواست ها'}},
+		{resource: Pay, options: {name: 'مدیریت پرداخت ها'}},
+		{resource: Rate, options: {name: 'مدیریت نظرات'}},
+		ForgotPassword,
+		UserRefresh,],
+	branding: {
+		companyName: 'پنل مدیریتی تورآسو',
+	},
 	rootPath: '/admin'
 });
 
