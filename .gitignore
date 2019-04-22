@@ -45,8 +45,6 @@ jspm_packages/
 
 #uploads
 public/uploads/
-public/assets/
-public/bower_components/
 
 # Typescript v1 declaration files
 typings/

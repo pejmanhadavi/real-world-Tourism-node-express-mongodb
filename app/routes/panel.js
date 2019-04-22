@@ -13,9 +13,6 @@ router.get('/login', controller.getLogin);
 
 router.post('/login', requireAuth, controller.postLogin);
 
-// router.get('/dashboard', ensureAuthenticated, controller.dashboard);
-
-// router.get('/users/list', ensureAuthenticated, controller.users_list);
 
 router.get('/admin/*', ensureAuthenticated);
 
