@@ -32,7 +32,7 @@ exports.postLogin = (req, res, next) => {
 	try {
 		rememberMe(req);
 		req.flash('success', 'You are now logged in');
-		res.redirect('/panel/dashboard');
+		res.redirect('/admin');
 	}catch (err) {
 		next(err);
 	}

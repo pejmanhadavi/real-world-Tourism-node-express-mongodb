@@ -53,7 +53,7 @@ passport.use(new LocalStrategy(
 
 exports.ensureAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) { return next(); }
-	res.redirect('/panel/login');
+	res.redirect('/login');
 };
 
 exports.rememberMe = req => {

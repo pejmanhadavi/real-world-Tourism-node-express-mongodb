@@ -30,12 +30,13 @@ const {Rate} = require('../app/dao/rate');
 const {Request} = require('../app/dao/request');
 const {TourLeader} = require('../app/dao/tour_leader');
 const {UserRefresh} = require('../app/dao/user_refresh');
+const {Pay} = require('../app/dao/pay');
 
 AdminBro.registerAdapter(AdminBroMongoose);
 
 
 const adminBro = new AdminBro({
-	resources: [User, Experience, ForgotPassword, Rate, Request, TourLeader, UserRefresh],
+	resources: [User, Experience, ForgotPassword, Rate, Request, TourLeader, UserRefresh, Pay],
 	rootPath: '/admin'
 });
 
@@ -65,6 +66,8 @@ module.exports = app => {
 	// app.use(refreshToken);
 	app.set('view engine', 'ejs');
 	//admin panel
+
+	app.use('', panelRoute);
 	app.use(adminBro.options.rootPath, router);
 
 	app.use('/', indexRouter);
@@ -75,5 +78,4 @@ module.exports = app => {
 	app.use('/request', requestRoute);
 	app.use('/rate', rateRoute);
 	app.use('/pay', payRoute);
-	app.use('/panel', panelRoute);
 };
