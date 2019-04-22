@@ -18,7 +18,7 @@ router.get('/me', requireAuth, controller.me);
 
 router.get('/profileSetting', requireAuth, controller.profileSetting);
 
-router.get('/tourLeader/:userId', requireAuth, controller.tourLeaderPage);
+router.get('/tourLeader/:userId', controller.tourLeaderPage);
 
 router.get('/experience/:experienceId', controller.experiencePage);
 
