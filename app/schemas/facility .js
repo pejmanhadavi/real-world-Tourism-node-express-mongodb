@@ -18,7 +18,8 @@ facilitySchema.index({
 	name: 'text'
 });
 facilitySchema.plugin(mongoosePaginate);
-  
+
 
 //EXPORT SCHEMA
 exports.facilitySchema = facilitySchema;
+exports.Facility = mongoose.model('Facility', facilitySchema);

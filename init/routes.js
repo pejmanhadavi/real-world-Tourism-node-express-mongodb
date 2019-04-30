@@ -17,41 +17,8 @@ const rateRoute = require('../app/routes/rate');
 const payRoute = require('../app/routes/pay');
 const panelRoute = require('../app/routes/panel');
 
+const {adminBro, router} = require('./admin');
 
-//admin panel
-const AdminBro = require('admin-bro');
-const AdminBroExpressjs = require('admin-bro-expressjs');
-const AdminBroMongoose = require('admin-bro-mongoose');
-
-const {User} = require('../app/dao/user');
-const {Experience} = require('../app/dao/experience');
-const {ForgotPassword} = require('../app/dao/forgot_password');
-const {Rate} = require('../app/dao/rate');
-const {Request} = require('../app/dao/request');
-const {TourLeader} = require('../app/dao/tour_leader');
-const {UserRefresh} = require('../app/dao/user_refresh');
-const {Pay} = require('../app/dao/pay');
-
-AdminBro.registerAdapter(AdminBroMongoose);
-
-
-const adminBro = new AdminBro({
-	resources: [
-		{resource: User,options: {name: 'مدیریت کاربران'}},
-		{resource: Experience, options: {name: 'مدیریت تجربه ها'}},
-		{resource: TourLeader, options: {name: 'مدیریت راهنما ها'}},
-		{resource: Request, options: {name: 'مدیریت درخواست ها'}},
-		{resource: Pay, options: {name: 'مدیریت پرداخت ها'}},
-		{resource: Rate, options: {name: 'مدیریت نظرات'}},
-		ForgotPassword,
-		UserRefresh,],
-	branding: {
-		companyName: 'پنل مدیریتی تورآسو',
-	},
-	rootPath: '/admin'
-});
-
-const router = AdminBroExpressjs.buildRouter(adminBro);
 
 
 
@@ -77,7 +44,6 @@ module.exports = app => {
 	// app.use(refreshToken);
 	app.set('view engine', 'ejs');
 	//admin panel
-
 	app.use('', panelRoute);
 	app.use(adminBro.options.rootPath, router);
 
