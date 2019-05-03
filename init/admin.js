@@ -17,6 +17,11 @@ const {Pay} = require('../app/dao/pay');
 
 AdminBro.registerAdapter(AdminBroMongoose);
 
+const extraInfo = {
+	name: 'extra info',
+};
+
+const util = require('util');
 
 const adminBro = new AdminBro({
 	resources: [
@@ -26,11 +31,17 @@ const adminBro = new AdminBro({
 		{resource: Facility, options: {name: 'امکانات سفر', listProperties: ['name']}},
 		{resource: Experience, options: {name: 'مدیریت تجربه ها',  listProperties: ['title', 'cost', 'profile', 'reviews']}},
 		{resource: Request, options: {name: 'مدیریت درخواست ها', listProperties: ['user', 'tourLeader', 'experiences', 'paid', 'factorNumber']}},
-		{resource: TourLeader, options: {name: 'مدیریت راهنما ها', listProperties: ['user', 'verified', 'reviews', 'experiences']}},
+		{resource: TourLeader, options: {name: 'مدیریت راهنما ها', properties: {
+			experiences: { render: {
+				list: (property, record, h) => {
+					console.log('++++++++++++++++++++++++++++'+util.inspect(record.param('experiences.0')));
+					return record.param('experiences.0');
+				}
+			} }}, listProperties: ['user', 'verified', 'reviews', 'experiences']}},
 		{resource: Pay, options: {name: 'مدیریت پرداخت ها', listProperties: ['amount', 'factorNumber', 'transactionId', 'cardNumber']}},
 		{resource: Rate, options: {name: 'مدیریت نظرات', listProperties: ['tourLeader', 'user', 'star', 'comment']}},
-		ForgotPassword,
-		UserRefresh],
+		{resource: ForgotPassword, options: {parent: extraInfo,}},
+		{resource: UserRefresh, options: {parent: extraInfo}}],
 	branding: {
 		companyName: 'پنل مدیریتی تورآسو',
 	},
