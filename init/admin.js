@@ -21,7 +21,7 @@ const extraInfo = {
 	name: 'extra info',
 };
 
-const util = require('util');
+// const util = require('util');
 
 const adminBro = new AdminBro({
 	resources: [
@@ -33,8 +33,8 @@ const adminBro = new AdminBro({
 		{resource: Request, options: {name: 'مدیریت درخواست ها', listProperties: ['user', 'tourLeader', 'experiences', 'paid', 'factorNumber']}},
 		{resource: TourLeader, options: {name: 'مدیریت راهنما ها', properties: {
 			experiences: { render: {
-				list: (property, record, h) => {
-					console.log('++++++++++++++++++++++++++++'+util.inspect(record.param('experiences.0')));
+				list: (property, record) => {
+					// console.log('++++++++++++++++++++++++++++'+util.inspect(record.param('experiences.0')));
 					return record.param('experiences.0');
 				}
 			} }}, listProperties: ['user', 'verified', 'reviews', 'experiences']}},

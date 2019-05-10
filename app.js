@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-require('./init/routes')(app);
+require('./init/routes')(express, app);
 require('./init/production')(app);
 
 // catch 404 and forward to error handler
@@ -32,14 +32,14 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	// res.locals.error = req.app.get('env') === 'development' ? err : {};
 
 	// render the error page
 	res.status(err.status || 500);
-	console.log(err);
+	// console.log(err);
 	handleError(res, buildErrObject(err.code, err.message));
 
 });
