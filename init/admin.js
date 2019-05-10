@@ -15,8 +15,8 @@ const {Pay} = require('../app/dao/pay');
 
 User.formage = {
 	label: 'کاربران',
-	list: ['name', 'phone', 'city'],
-	list_populate: ['city'],
+	list: ['name', 'phone', 'city', 'province', 'email', 'createdAt'],
+	list_populate: ['city', 'province']
 };
 
 City.formage = {
@@ -32,22 +32,27 @@ Facility.formage = {
 
 Experience.formage = {
 	label: 'تجربه ها',
+	list: ['title', 'cost', 'reviews'],
 };
 ForgotPassword.formage = {
 };
 Rate.formage = {
 	label: 'نظرات و ستاره ها',
+	list: ['tourLeader', 'user', 'star', 'comment'],
 };
 Request.formage = {
 	label: 'درخواست ها',
+	list: ['user', 'tourLeaderUserId', 'experiences', 'paid', 'factorNumber', 'createdAt'],
 };
 TourLeader.formage = {
 	label: 'راهنما ها',
+	list: ['user', 'verified', 'experiences', 'reviews', 'createdAt'],
 };
 UserRefresh.formage = {
 };
 Pay.formage = {
 	label: 'پرداخت ها',
+	list: ['factorNumber', 'transactionId', 'amount', 'cardNumber', 'createdAt'],
 };
 
 
