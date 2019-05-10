@@ -1,9 +1,4 @@
-
-//CONFIGURE ADMIN PANEL
-const AdminBro = require('admin-bro');
-const AdminBroExpressjs = require('admin-bro-expressjs');
-const AdminBroMongoose = require('admin-bro-mongoose');
-
+const formage = require('formage');
 const {User} = require('../app/dao/user');
 const {City, Province} = require('../app/schemas/city-province');
 const {Facility} = require('../app/schemas/facility ');
@@ -15,40 +10,71 @@ const {TourLeader} = require('../app/dao/tour_leader');
 const {UserRefresh} = require('../app/dao/user_refresh');
 const {Pay} = require('../app/dao/pay');
 
-AdminBro.registerAdapter(AdminBroMongoose);
 
-const extraInfo = {
-	name: 'extra info',
+
+User.formage = {
+	// one-document models
+	// is_single: true,
+ 
+	// labels
+	label: 'مدیریت کاربران',
+	singular: 'Song',
+ 
+	// filters: ['artist', 'year'],
+ 
+	// // additional actions on this model
+	// actions: [
+	// 	{
+	// 		id: 'release',
+	// 		label: 'Release',
+	// 		func: function (user, ids, callback) {
+	// 			console.log('You just released songs ' + ids);
+	// 			callback();
+	// 		}
+	// 	}
+	// ],
+ 
+	// // list of fields to be displayed by formage for this model
+	// list: ['number', 'title', 'album', 'artist', 'year'],
+	
+	// // order documents, save order in this field (type: Number)
+	// sortable: 'order',
+ 
+	// // list of order fields
+	// order_by: ['-year', 'album', 'number'],
+ 
+	// // list of fields that must be populated
+	// // (see http://mongoosejs.com/docs/api.html#document_Document-populate)
+	// list_populate: ['album'],
+ 
+	// // list of fields on which full-text search is available
+	// search: ['title', 'album', 'artist']
 };
+	
+	
+const models = {
+	Facility: Facility,
+	Experience: Experience,
+	ForgotPassword: ForgotPassword,
+	UserRefresh: UserRefresh,
+	Province: Province,
+	City: City,
+	User: User,
+	TourLeader: TourLeader,
+	Rate: Rate,
+	Request: Request,
+	Pay: Pay,
+};
+	
 
-// const util = require('util');
-
-const adminBro = new AdminBro({
-	resources: [
-		{resource: User, options: {name: 'کاربران', listProperties: ['name', 'email', 'phone', 'isAdmin', 'phoneVerified', 'city', 'createdAt', 'updatedAt']}},
-		{resource: Province, options: {name: 'استان', listProperties: ['name']}},
-		{resource: City, options: {name: 'شهر', listProperties: ['name', 'province']}},
-		{resource: Facility, options: {name: 'امکانات سفر', listProperties: ['name']}},
-		{resource: Experience, options: {name: 'مدیریت تجربه ها',  listProperties: ['title', 'cost', 'profile', 'reviews']}},
-		{resource: Request, options: {name: 'مدیریت درخواست ها', listProperties: ['user', 'tourLeader', 'experiences', 'paid', 'factorNumber']}},
-		{resource: TourLeader, options: {name: 'مدیریت راهنما ها', properties: {
-			experiences: { render: {
-				list: (property, record) => {
-					// console.log('++++++++++++++++++++++++++++'+util.inspect(record.param('experiences.0')));
-					return record.param('experiences.0');
-				}
-			} }}, listProperties: ['user', 'verified', 'reviews', 'experiences']}},
-		{resource: Pay, options: {name: 'مدیریت پرداخت ها', listProperties: ['amount', 'factorNumber', 'transactionId', 'cardNumber']}},
-		{resource: Rate, options: {name: 'مدیریت نظرات', listProperties: ['tourLeader', 'user', 'star', 'comment']}},
-		{resource: ForgotPassword, options: {parent: extraInfo,}},
-		{resource: UserRefresh, options: {parent: extraInfo}}],
-	branding: {
-		companyName: 'پنل مدیریتی تورآسو',
-	},
-	rootPath: '/admin'
-});
-
-const router = AdminBroExpressjs.buildRouter(adminBro);
-
-exports.router = router;
-exports.adminBro = adminBro;
+module.exports = (express, app) => {
+	
+	formage.init(app, express, models , {
+		title: 'پنل ادمین تورآسو',
+		root: '/admin',
+		default_section: 'main',
+		username: 'admin',
+		password: 'admin',
+		admin_users_gui: true
+	});
+};
