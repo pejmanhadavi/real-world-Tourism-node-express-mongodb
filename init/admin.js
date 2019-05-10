@@ -1,4 +1,5 @@
 const formage = require('formage');
+
 const {User} = require('../app/dao/user');
 const {City, Province} = require('../app/schemas/city-province');
 const {Facility} = require('../app/schemas/facility ');
@@ -13,43 +14,44 @@ const {Pay} = require('../app/dao/pay');
 
 
 User.formage = {
-	// one-document models
-	// is_single: true,
- 
-	// labels
-	label: 'مدیریت کاربران',
-	singular: 'Song',
- 
-	// filters: ['artist', 'year'],
- 
-	// // additional actions on this model
-	// actions: [
-	// 	{
-	// 		id: 'release',
-	// 		label: 'Release',
-	// 		func: function (user, ids, callback) {
-	// 			console.log('You just released songs ' + ids);
-	// 			callback();
-	// 		}
-	// 	}
-	// ],
- 
-	// // list of fields to be displayed by formage for this model
-	// list: ['number', 'title', 'album', 'artist', 'year'],
-	
-	// // order documents, save order in this field (type: Number)
-	// sortable: 'order',
- 
-	// // list of order fields
-	// order_by: ['-year', 'album', 'number'],
- 
-	// // list of fields that must be populated
-	// // (see http://mongoosejs.com/docs/api.html#document_Document-populate)
-	// list_populate: ['album'],
- 
-	// // list of fields on which full-text search is available
-	// search: ['title', 'album', 'artist']
+	label: 'کاربران',
+	list: ['name', 'phone', 'city'],
+	list_populate: ['city'],
 };
+
+City.formage = {
+	label: 'شهر ها',
+};
+Province.formage = {
+	label: 'استان ها',
+};
+
+Facility.formage = {
+	label: 'امکانات سفر',
+};
+
+Experience.formage = {
+	label: 'تجربه ها',
+};
+ForgotPassword.formage = {
+};
+Rate.formage = {
+	label: 'نظرات و ستاره ها',
+};
+Request.formage = {
+	label: 'درخواست ها',
+};
+TourLeader.formage = {
+	label: 'راهنما ها',
+};
+UserRefresh.formage = {
+};
+Pay.formage = {
+	label: 'پرداخت ها',
+};
+
+
+
 	
 	
 const models = {
