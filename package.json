@@ -30,7 +30,7 @@
     "jalali-moment": "^3.3.1",
     "jsonwebtoken": "^8.4.0",
     "mongo-seeding": "^3.1.0",
-    "mongoose": "^5.4.5",
+    "mongoose": "^5.7.5",
     "mongoose-paginate": "^5.0.3",
     "morgan": "~1.9.0",
     "multer": "^1.4.1",
